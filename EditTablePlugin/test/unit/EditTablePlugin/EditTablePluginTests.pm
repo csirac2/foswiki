@@ -1,4 +1,6 @@
+# See bottom of file for license and copyright information
 use strict;
+use warnings;
 
 # tests for basic formatting
 
@@ -8,6 +10,7 @@ use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
 
 use strict;
+use warnings;
 use Foswiki::UI::Save;
 use Error qw( :try );
 use Foswiki::Plugins::EditTablePlugin;
@@ -27,7 +30,8 @@ sub set_up {
     #    $this->{sup} = $this->{session}->getScriptUrl(0, 'view');
     $Foswiki::cfg{AntiSpam}{RobotsAreWelcome} = 1;
     $Foswiki::cfg{AllowInlineScript} = 0;
-    $Foswiki::cfg{Plugins}{TablePlugin}{DefaultAttributes} = 'tableborder="1" valign="top" headercolor="#fff" headerbg="#687684" headerbgsorted="#334455" databg="#ddd,#edf4f9" databgsorted="#f1f7fc,#ddebf6" tablerules="rows" headerrules="cols"';
+    $Foswiki::cfg{Plugins}{TablePlugin}{DefaultAttributes} =
+'tableborder="1" valign="top" headercolor="#fff" headerbg="#687684" headerbgsorted="#334455" databg="#ddd,#edf4f9" databgsorted="#f1f7fc,#ddebf6" tablerules="rows" headerrules="cols"';
 
     $ENV{SCRIPT_NAME} = '';    #  required by fake sort URLs in expected text
 }
@@ -454,7 +458,7 @@ INPUT
     my $fatwilly = new Foswiki( undef, $query );
     $Foswiki::Plugins::SESSION = $fatwilly;
 
-	my $expected = '';
+    my $expected = '';
     my $result =
       Foswiki::Func::expandCommonVariables( $input, $this->{test_topic},
         $this->{test_web}, undef );
@@ -541,9 +545,9 @@ EXPECTED
 }
 
 sub test_delete_last_row {
-	my $this = shift;
-	
-	    my $topicName = $this->{test_topic};
+    my $this = shift;
+
+    my $topicName = $this->{test_topic};
     my $webName   = $this->{test_web};
     my $viewUrlAuth =
       Foswiki::Func::getScriptUrl( $webName, $topicName, 'viewauth' );
@@ -572,9 +576,9 @@ INPUT
     # delete row
     $query = new Unit::Request(
         {
-            etedit       => ['on'],
-            etdelrow     => ['1'],
-            ettablenr    => ['1'],
+            etedit    => ['on'],
+            etdelrow  => ['1'],
+            ettablenr => ['1'],
         }
     );
 
@@ -634,7 +638,6 @@ EXPECTED
 
     $fatwilly->finish();
 }
-
 
 =pod
 
@@ -1052,7 +1055,7 @@ INPUT
 
     my ( $meta, $newtext ) = Foswiki::Func::readTopic( $webName, $topicName );
 
-    # Expected is that saving causes the TABLE and EDITTABLE tags to be saved on two lines.
+# Expected is that saving causes the TABLE and EDITTABLE tags to be saved on two lines.
     my $expected = <<NEWEXPECTED;
 %TABLE{columnwidths="80,80,50,110,150,50,50,50,50,50,70,70,50" dataalign="left,left,center,left,left,center,center,center,center,center,center,right,right,center" headeralign="center" headerrows="1" footerrows="1" headerislabel="on"}%
 %EDITTABLE{format="|text,10|text,10|text,3|text,15|text,15|text,3|text,3|text,3|text,3|text,3|text,3|text,10|label,0|text,5|" }%
@@ -2297,7 +2300,7 @@ INPUT
 <noautolink>
 <a name="edittable1"></a>
 <div class="editTable editTableEdit">
-<form name="edittable1" action="'  .$viewUrlAuth . '#edittable1" method="post">
+<form name="edittable1" action="' . $viewUrlAuth . '#edittable1" method="post">
 <input type="hidden" name="ettablenr" value="1" />
 <input type="hidden" name="etedit" value="on" />
 | <input class="foswikiInputField editTableInput" type="text" name="etcell1x1" size="16" value="--EditTableEncodeStart--.P.r.o.j.e.c.t. .A--EditTableEncodeEnd--" /> | <input class="foswikiInputField editTableInput" type="text" name="etcell1x2" size="16" value="--EditTableEncodeStart--.S.W--EditTableEncodeEnd--" /> | <input class="foswikiInputField editTableInput" type="text" name="etcell1x3" size="16" value="--EditTableEncodeStart--.P.1--EditTableEncodeEnd--" /> | <input class="foswikiInputField editTableInput" type="text" name="etcell1x4" size="16" value="--EditTableEncodeStart--.C.T.5--EditTableEncodeEnd--" /> | <input class="foswikiInputField editTableInput" type="text" name="etcell1x5" size="16" value="--EditTableEncodeStart--.S.W. .D.e.v--EditTableEncodeEnd--" /> | <input class="foswikiInputField editTableInput" type="text" name="etcell1x6" size="16" value="--EditTableEncodeStart--.2--EditTableEncodeEnd--" /> | <input class="foswikiInputField editTableInput" type="text" name="etcell1x7" size="16" value="--EditTableEncodeStart--.4--EditTableEncodeEnd--" /> | <input class="foswikiInputField editTableInput" type="text" name="etcell1x8" size="16" value="--EditTableEncodeStart--.2--EditTableEncodeEnd--" /> | <input class="foswikiInputField editTableInput" type="text" name="etcell1x9" size="16" value="" /> | <input class="foswikiInputField editTableInput" type="text" name="etcell1x10" size="16" value="--EditTableEncodeStart--.2--EditTableEncodeEnd--" /> | <input class="foswikiInputField editTableInput" type="text" name="etcell1x11" size="16" value="" /> | <input class="foswikiInputField editTableInput" type="text" name="etcell1x12" size="16" value="--EditTableEncodeStart--.6.3.4.5--EditTableEncodeEnd--" /> | <input class="foswikiInputField editTableInput" type="text" name="etcell1x13" size="16" value="--EditTableEncodeStart--.%.C.A.L.C.{.".$.E.V.A.L.(.$.T.(.R.$.R.O.W.(.).:.C.6.). .*. .$.T.(.R.$.R.O.W.(.).:.C.$.C.O.L.U.M.N.(.-.1.).).).".}.%--EditTableEncodeEnd--" /> | <input class="foswikiInputField editTableInput" type="text" name="etcell1x14" size="16" value="--EditTableEncodeStart--.Q.4--EditTableEncodeEnd--" /> |
@@ -2496,7 +2499,6 @@ END
     $this->do_testHtmlOutput( $expected, $result, 0 );
 }
 
-
 # EditTableData tests
 
 =pod
@@ -2506,10 +2508,12 @@ END
 sub test_createTableChangesMap {
     my $this = shift;
 
-	my $map = Foswiki::Plugins::EditTablePlugin::EditTableData::createTableChangesMap(' 0 = 0 , 1 = 1 , 3 = -1 ');
-	$this->assert_equals($map->{0}, 0);
-	$this->assert_equals($map->{1}, 1);
-	$this->assert_equals($map->{3}, -1);
+    my $map =
+      Foswiki::Plugins::EditTablePlugin::EditTableData::createTableChangesMap(
+        ' 0 = 0 , 1 = 1 , 3 = -1 ');
+    $this->assert_equals( $map->{0}, 0 );
+    $this->assert_equals( $map->{1}, 1 );
+    $this->assert_equals( $map->{3}, -1 );
 }
 
 =pod
@@ -2519,14 +2523,16 @@ sub test_createTableChangesMap {
 sub test_tableChangesMapToParamString {
     my $this = shift;
 
-	my $map = {
-		'0' => '0',
-		'1' => '-1',
-		'5' => '1',
-	};
-	
-	my $paramString = Foswiki::Plugins::EditTablePlugin::EditTableData::tableChangesMapToParamString($map);
-	$this->assert_equals($paramString, '0=0,1=-1,5=1');
+    my $map = {
+        '0' => '0',
+        '1' => '-1',
+        '5' => '1',
+    };
+
+    my $paramString =
+      Foswiki::Plugins::EditTablePlugin::EditTableData::tableChangesMapToParamString(
+        $map);
+    $this->assert_equals( $paramString, '0=0,1=-1,5=1' );
 }
 
 =pod
@@ -2536,22 +2542,22 @@ sub test_tableChangesMapToParamString {
 sub test_getTableStatistics {
     my $this = shift;
 
-	my $editTableData = Foswiki::Plugins::EditTablePlugin::EditTableData->new();
-	$editTableData->{rowCount} = 3;
-	$editTableData->{headerRowCount} = 1;
-	$editTableData->{footerRowCount} = 0;
-		
-	my $changesMap = {
-		'0' => '0',
-		'5' => '1',
-	};
-	
-	my $stats = $editTableData->getTableStatistics( $changesMap );
-	
-	$this->assert_equals($stats->{rowCount}, 4);
-	$this->assert_equals($stats->{added}, 1);
-	$this->assert_equals($stats->{deleted}, 0);
-	$this->assert_equals($stats->{bodyRowCount}, 3);
+    my $editTableData = Foswiki::Plugins::EditTablePlugin::EditTableData->new();
+    $editTableData->{rowCount}       = 3;
+    $editTableData->{headerRowCount} = 1;
+    $editTableData->{footerRowCount} = 0;
+
+    my $changesMap = {
+        '0' => '0',
+        '5' => '1',
+    };
+
+    my $stats = $editTableData->getTableStatistics($changesMap);
+
+    $this->assert_equals( $stats->{rowCount},     4 );
+    $this->assert_equals( $stats->{added},        1 );
+    $this->assert_equals( $stats->{deleted},      0 );
+    $this->assert_equals( $stats->{bodyRowCount}, 3 );
 }
 
 =pod
@@ -2561,25 +2567,25 @@ sub test_getTableStatistics {
 sub test_applyChangesToChangesMap {
     my $this = shift;
 
-	my $editTableData = Foswiki::Plugins::EditTablePlugin::EditTableData->new();
-	
-	my $changesMap = {};
-	my $newChangesMap = {
-		'0' => '1',
-		'1' => '1',
-	};
-	
-	$changesMap = Foswiki::Plugins::EditTablePlugin::EditTableData::applyChangesToChangesMap( $changesMap, $newChangesMap );
-	
-	my $stats = $editTableData->getTableStatistics( $changesMap );
-	
-	$this->assert_equals($stats->{rowCount}, 2);
-	$this->assert_equals($stats->{added}, 2);
-	$this->assert_equals($stats->{deleted}, 0);
-	$this->assert_equals($stats->{bodyRowCount}, 2);
+    my $editTableData = Foswiki::Plugins::EditTablePlugin::EditTableData->new();
+
+    my $changesMap    = {};
+    my $newChangesMap = {
+        '0' => '1',
+        '1' => '1',
+    };
+
+    $changesMap =
+      Foswiki::Plugins::EditTablePlugin::EditTableData::applyChangesToChangesMap(
+        $changesMap, $newChangesMap );
+
+    my $stats = $editTableData->getTableStatistics($changesMap);
+
+    $this->assert_equals( $stats->{rowCount},     2 );
+    $this->assert_equals( $stats->{added},        2 );
+    $this->assert_equals( $stats->{deleted},      0 );
+    $this->assert_equals( $stats->{bodyRowCount}, 2 );
 }
-
-
 
 =pod
 
@@ -2612,3 +2618,21 @@ limit="5"
 =cut
 
 1;
+__END__
+Foswiki - The Free and Open Source Wiki, http://foswiki.org/
+
+Copyright (C) 2008-2010 Foswiki Contributors. Foswiki Contributors
+are listed in the AUTHORS file in the root of this distribution.
+NOTE: Please extend that file, not this notice.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version. For
+more details read LICENSE in the root of this distribution.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+As per the GPL, removal of this notice is prohibited.

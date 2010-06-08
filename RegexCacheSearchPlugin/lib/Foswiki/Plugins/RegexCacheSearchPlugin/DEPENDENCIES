@@ -1,0 +1,6 @@
+# Dependencies for RegexCacheSearchPlugin
+# Example:
+# Time::ParseDate,>=2003.0211,cpan,Required.
+# Foswiki::Plugins,>=1.2,perl,Requires version 1.2 of handler API.
+DB_File,>=1.820,cpan,Required
+#TODO: [[http://www.oracle.com/technology/products/berkeley-db/index.html][Berkeley DB]]

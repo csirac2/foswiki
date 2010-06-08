@@ -171,6 +171,9 @@ sub bulkRegister {
         );
     }
 
+    # Validate
+    Foswiki::UI::checkValidationKey( $session );
+
     #-- Read the topic containing the table of people to be registered
     my $meta = Foswiki::Meta->load( $session, $web, $topic );
 
@@ -218,9 +221,9 @@ sub bulkRegister {
     $log .= "----\n";
 
     my $logWeb;
-    my $logTopic = Foswiki::Sandbox::untaint(
-        $query->param('LogTopic'),
-        \&Foswiki::Sandbox::validateTopicName) || $topic . 'Result';
+    my $logTopic = Foswiki::Sandbox::untaint( $query->param('LogTopic'),
+        \&Foswiki::Sandbox::validateTopicName )
+      || $topic . 'Result';
     ( $logWeb, $logTopic ) = $session->normalizeWebTopicName( '', $logTopic );
 
     #-- Save the LogFile as designated, link back to the source topic
@@ -373,7 +376,6 @@ sub _innerRegister {
     my $data = _getDataFromQuery( $query, $query->param() );
 
     $data->{webName} = $session->{webName};
-    $data->{debug}   = 1;
 
     my $oldName = $data->{WikiName};
     $data->{WikiName} =
@@ -384,8 +386,8 @@ sub _innerRegister {
         def    => 'bad_wikiname',
         web    => $data->{webName},
         topic  => $session->{topicName},
-        params => [ $oldName ]
-       ) unless $data->{WikiName};
+        params => [$oldName]
+    ) unless $data->{WikiName};
 
     _validateRegistration( $session, $data, 1 );
 }
@@ -409,8 +411,8 @@ sub _requireVerification {
         def    => 'bad_wikiname',
         web    => $data->{webName},
         topic  => $session->{topicName},
-        params => [ $oldName ]
-       ) unless $data->{WikiName};
+        params => [$oldName]
+    ) unless $data->{WikiName};
     $data->{LoginName} ||= $data->{WikiName};
     $data->{webName} = $web;
 
@@ -557,6 +559,9 @@ sub deleteUser {
             params => [ $session->{users}->getWikiName($cUID), $list ]
         );
     }
+
+    # Check the validation key
+    Foswiki::UI::checkValidationKey($session);
 
     unless (
         $users->checkPassword(
@@ -863,8 +868,8 @@ sub _complete {
     # Plugin to do some other post processing of the user.
     # for legacy, (callback to set cookies - now should use LoginHandler)
     $session->{plugins}
-      ->dispatch( 'registrationHandler', $data->{WebName}, $data->{WikiName},
-        $data->{LoginName}, $data );
+      ->dispatch( 'registrationHandler', $session->{webName},
+                  $data->{WikiName}, $data->{LoginName}, $data );
 
     my $status;
     my $safe2login = 1;

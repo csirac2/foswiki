@@ -1,25 +1,7 @@
-# Plugin for Foswiki - The Free and Open Source Wiki, http://foswiki.org/
-#
-# Copyright (C) 2008-2010 Foswiki Contributors.
-# Copyright (C) 2005-2006 TWiki Contributors
-# Copyright (C) 2001-2004 Peter Thoeny, peter@thoeny.org
-# Copyright (C) 2001-2003 John Talintyre, jet@cheerful.com
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version. For
-# more details read LICENSE in the root of this distribution.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details, published at
-# http://www.gnu.org/copyleft/gpl.html
-#
-# As per the GPL, removal of this notice is prohibited.
+# See bottom of file for license and copyright information
 
 use strict;
+use warnings;
 use Foswiki::Func;
 
 package Foswiki::Plugins::TablePlugin::Core;
@@ -269,7 +251,7 @@ sub _parseAttributes {
     # include topic to read definitions
     my $includeTopicParam = $inParams->{include};
     $inParams = _getIncludeParams($includeTopicParam) if $includeTopicParam;
-    
+
     # table attributes
     # some will be used for css styling as well
 
@@ -418,7 +400,7 @@ sub _getIncludeParams {
 
     _debug("_getIncludeParams:$inIncludeTopic");
     _debug("\t includeTopic=$includeTopic") if $includeTopic;
-    
+
     if ( !Foswiki::Func::topicExists( $includeWeb, $includeTopic ) ) {
         _debug("TablePlugin: included topic $inIncludeTopic does not exist.");
         die("TablePlugin: included topic $inIncludeTopic does not exist.");
@@ -462,10 +444,11 @@ sub _convertStringToDate {
     return undef if !defined $text;
     return undef if $text eq '';
     return undef if ( $text =~ /^\s*$/ );
-    
+
     my $date = undef;
-    
-    if ( $text =~ /^\s*-?[0-9]+(\.[0-9])*\s*$/ && $text !~ /^\s*(-*\d{4})\s*$/ ) {
+
+    if ( $text =~ /^\s*-?[0-9]+(\.[0-9])*\s*$/ && $text !~ /^\s*(-*\d{4})\s*$/ )
+    {
         _debug("\t this is a number");
     }
     else {
@@ -480,7 +463,7 @@ sub _convertStringToDate {
         };
     }
 
-	return $date;
+    return $date;
 }
 
 =pod
@@ -500,7 +483,8 @@ sub _convertStringToNumber {
     return undef if ( $text =~ /^\s*$/ );
 
     # very course testing on IP (could in fact be anything with n.n. syntax
-    if ($text =~ m/
+    if (
+        $text =~ m/
     	^		
     	\s*			# any space
     	(?:			# don't need to capture
@@ -510,13 +494,17 @@ sub _convertStringToNumber {
     	{2,}		# repeat more than once: exclude decimal numbers 
     	.*?			# any string
     	$
-    	/x ) {
-		_debug("\t $text looks like an IP address, or something similar");
-		# should be sorted by text
-		return undef;
-	}
-        
-	if ($text =~ m/
+    	/x
+      )
+    {
+        _debug("\t $text looks like an IP address, or something similar");
+
+        # should be sorted by text
+        return undef;
+    }
+
+    if (
+        $text =~ m/
 		^
 		\s*			# any space
 		(			# 
@@ -526,13 +514,16 @@ sub _convertStringToNumber {
 		[0-9]*		# possible fracture digits
 		)			# end capture of number
 		.*$			# any string
-		/x) {
-		
-		_debug("\t $1 is a number");
-		# make sure to return a number, not a string
-		return $1 * 1.0;
-	}
-	return undef;
+		/x
+      )
+    {
+
+        _debug("\t $1 is a number");
+
+        # make sure to return a number, not a string
+        return $1 * 1.0;
+    }
+    return undef;
 }
 
 sub _processTableRow {
@@ -698,29 +689,32 @@ Sets a sort key for each cell.
 =cut
 
 sub _setSortTypeForCells {
-    my ( $col, $table )         = @_;
+    my ( $col, $table ) = @_;
 
     foreach my $row ( @{$table} ) {
-       
+
         my $rowText = _stripHtml( $row->[$col]->{text} );
-        
-        my $num = _convertStringToNumber( $rowText );
-        my $date = _convertStringToDate( $rowText );
-        
-        $row->[$col]->{sortText} = '';
-        $row->[$col]->{number} = 0;
+
+        my $num  = _convertStringToNumber($rowText);
+        my $date = _convertStringToDate($rowText);
+
+        $row->[$col]->{sortText}   = '';
+        $row->[$col]->{number}     = 0;
         $row->[$col]->{dateString} = '';
-        
+
         if ( defined $date ) {
-        	# date has just converted to a number
+
+            # date has just converted to a number
             $row->[$col]->{number} = $date;
+
             # add dateString value in case dates are equal
             $row->[$col]->{dateString} = $rowText;
         }
         elsif ( defined $num ) {
             $row->[$col]->{number} = $num;
-        	# when sorting mixed numbers and text, make the text sort value as low as possible
-        	$row->[$col]->{sortText} = ' ';
+
+# when sorting mixed numbers and text, make the text sort value as low as possible
+            $row->[$col]->{sortText} = ' ';
         }
         else {
             $row->[$col]->{sortText} = lc $rowText;
@@ -1330,22 +1324,27 @@ sub emitTable {
 
         # only get the column type if within bounds
         if ( $sortCol < $maxCols ) {
-            _setSortTypeForCells($sortCol, \@curTable);
+            _setSortTypeForCells( $sortCol, \@curTable );
         }
 
         _debug("currentSortDirection:$currentSortDirection");
-        
+
         if ( $currentSortDirection == $SORT_DIRECTION->{'ASCENDING'} ) {
-			@curTable = sort {
-					$a->[$sortCol]->{sortText} cmp $b->[$sortCol]->{sortText} || $a->[$sortCol]->{number} <=> $b->[$sortCol]->{number} ||
-					$a->[$sortCol]->{dateString} cmp $b->[$sortCol]->{dateString}
-			} @curTable;
-		} elsif ( $currentSortDirection == $SORT_DIRECTION->{'DESCENDING'} ) {
-			@curTable = sort {
-					$b->[$sortCol]->{sortText} cmp $a->[$sortCol]->{sortText} || $b->[$sortCol]->{number} <=> $a->[$sortCol]->{number} ||
-					$b->[$sortCol]->{dateString} cmp $a->[$sortCol]->{dateString}
-			} @curTable;
-		}
+            @curTable = sort {
+                     $a->[$sortCol]->{sortText} cmp $b->[$sortCol]->{sortText}
+                  || $a->[$sortCol]->{number} <=> $b->[$sortCol]->{number}
+                  || $a->[$sortCol]->{dateString}
+                  cmp $b->[$sortCol]->{dateString}
+            } @curTable;
+        }
+        elsif ( $currentSortDirection == $SORT_DIRECTION->{'DESCENDING'} ) {
+            @curTable = sort {
+                     $b->[$sortCol]->{sortText} cmp $a->[$sortCol]->{sortText}
+                  || $b->[$sortCol]->{number} <=> $a->[$sortCol]->{number}
+                  || $b->[$sortCol]->{dateString}
+                  cmp $a->[$sortCol]->{dateString}
+            } @curTable;
+        }
 
         # DG 08 Aug 2002: Cleanup after the header/trailer splicing
         # this is probably awfully inefficient - but how big is a table?
@@ -1400,7 +1399,7 @@ sub emitTable {
                 # Removing the line below hides the marking of sorted columns
                 # until the user clicks on a header (KJL)
                 # && defined $requestedTable && $requestedTable == $tableCount
-#                && $sortType ne ''
+                #                && $sortType ne ''
               )
             {
                 $isSorted     = 1;
@@ -1719,3 +1718,28 @@ sub _debugData {
 }
 
 1;
+__END__
+Foswiki - The Free and Open Source Wiki, http://foswiki.org/
+
+Copyright (C) 2008-2010 Foswiki Contributors. Foswiki Contributors
+are listed in the AUTHORS file in the root of this distribution.
+NOTE: Please extend that file, not this notice.
+
+Additional copyrights apply to some or all of the code in this
+file as follows:
+
+Copyright (C) 2005-2006 TWiki Contributors
+Copyright (C) 2001-2004 Peter Thoeny, peter@thoeny.org
+Copyright (C) 2001-2003 John Talintyre, jet@cheerful.com
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version. For
+more details read LICENSE in the root of this distribution.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+As per the GPL, removal of this notice is prohibited.

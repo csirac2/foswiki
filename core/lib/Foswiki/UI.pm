@@ -443,7 +443,7 @@ Handler for "logon" action.
 sub logon {
     my $session = shift;
 
-    my $action  = $session->{request}->param('foswikiloginaction');
+    my $action = $session->{request}->param('foswikiloginaction');
     $session->{request}->delete('foswikiloginaction');
 
     if ( defined $action && $action eq 'validate' ) {

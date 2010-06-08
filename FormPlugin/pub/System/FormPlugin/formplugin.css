@@ -1,7 +1,12 @@
 .formPluginNotification {
 	background-color:#fff3d8;
 	padding:0 .25em;
-	white-space:nowrap;
+}
+.formPluginNotification,
+.formPluginNotification code,
+div.formPluginNotification a:link,
+div.formPluginNotification a:visited {
+	color:#EE3312;
 }
 .formPluginNotification,
 .formPluginNotification code,
@@ -18,7 +23,8 @@ div.formPluginNotification {
 	background-position:20px .7em;
 }
 div.formPluginNotification ul {
-	margin-bottom:.25em;
+	margin:0 0 .25em 30px;
+	padding:0;
 	list-style:none;
 }
 div.formPluginNotification a:link,
@@ -38,17 +44,6 @@ fieldset.formPluginGroupWithHint {
 .formPluginError input,
 .formPluginError .formPluginGroup {
 	background-color:#ffc23c;
-}
-.formPluginError .formPluginTitle {
-	font-weight:bold;
-	color:#EE3312;
-}
-.formPluginNotification .formPluginTitle,
-.formPluginNotification .formPluginErrorItem {
-	margin:0 0 0 30px;
-}
-.formPluginNotification .formPluginErrorItem {
-	display:block;
 }
 .formPluginHint {
 	color:#777;

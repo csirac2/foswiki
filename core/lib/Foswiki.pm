@@ -434,8 +434,7 @@ BEGIN {
     $regex{headerPatternNoTOC} = '(\!\!+|%NOTOC%)';
 
     # Foswiki concept regexes
-    $regex{wikiWordRegex} =
-      qr(
+    $regex{wikiWordRegex} = qr(
             [$regex{upperAlpha}]+
             [$regex{lowerAlphaNum}]+
             [$regex{upperAlpha}]+
@@ -444,8 +443,7 @@ BEGIN {
     $regex{webNameBaseRegex} =
       qr/[$regex{upperAlpha}]+[$regex{mixedAlphaNum}_]*/o;
     if ( $Foswiki::cfg{EnableHierarchicalWebs} ) {
-        $regex{webNameRegex} =
-          qr(
+        $regex{webNameRegex} = qr(
                 $regex{webNameBaseRegex}
                 (?:(?:[\.\/]$regex{webNameBaseRegex})+)*
            )xo;
@@ -784,14 +782,16 @@ s/${TranslationToken}RENDERZONE{(.*?)}${TranslationToken}/_renderZoneById($this,
 
     # Check that the templates specified clean HTML
     if (DEBUG) {
+
         # When tracing is enabled in Foswiki::Templates, then there will
         # always be a <!--bodyend--> after </html>. So we need to disable
         # this check.
         require Foswiki::Templates;
-        if (!Foswiki::Templates->TRACE
-              && $contentType =~ m#text/html#
-                && $text =~ m#</html>(.*?\S.*)$#s) {
-            ASSERT(0, <<BOGUS );
+        if (   !Foswiki::Templates->TRACE
+            && $contentType =~ m#text/html#
+            && $text =~ m#</html>(.*?\S.*)$#s )
+        {
+            ASSERT( 0, <<BOGUS );
 Junk after </html>: $1. Templates may be bogus
 - Check for excess blank lines at ends of .tmpl files
 -  or newlines after %TMPL:INCLUDE
@@ -895,22 +895,22 @@ sub generateHTTPHeaders {
             if ( $cachedPage && !$cachedPage->{isDirty} ) {
                 $text = $cachedPage->{text};
             }
-
-            # Either there was no cache, or cache was not compressed
-            if (   !$Foswiki::cfg{Cache}{Compress}
-                || !$cachedPage
-                || $cachedPage->{isDirty} )
-            {
+            else {
                 require Compress::Zlib;
                 $text = Compress::Zlib::memGzip($text);
             }
         }
         elsif ($cachedPage
             && !$cachedPage->{isDirty}
-            && $Foswiki::cfg{Cache}{Compress} )
+            && $Foswiki::cfg{HttpCompress} )
         {
 
-            # sorry, we need to uncompressed pages from cache again
+            # Outch, we need to uncompressed pages from cache again
+            # Note, this is effort to avoid under any circumstances as
+            # the page has been compressed when it has been created and now
+            # is uncompressed again to get back the original. For now the
+            # only know situation this can happen is for older browsers like IE6
+            # which does not understand gzip'ed http encodings
             require Compress::Zlib;
             $text = Compress::Zlib::memGunzip($text);
         }
@@ -1662,7 +1662,7 @@ sub new {
     else {
         $this->{urlHost} = $Foswiki::cfg{DefaultUrlHost};
     }
-    ASSERT($this->{urlHost}) if DEBUG;
+    ASSERT( $this->{urlHost} ) if DEBUG;
 
     # Load (or create) the CGI session
     $this->{remoteUser} = $this->{users}->loadSession($defaultUser);
@@ -1681,7 +1681,6 @@ sub new {
         $ENV{PATH} = Foswiki::Sandbox::untaintUnchecked( $ENV{PATH} );
     }
     delete @ENV{qw( IFS CDPATH ENV BASH_ENV )};
-
 
     if (   $Foswiki::cfg{GetScriptUrlFromCgi}
         && $url
@@ -1702,8 +1701,10 @@ sub new {
         if (   $topic =~ m#^$regex{linkProtocolPattern}://#o
             && $this->{request} )
         {
-
-            # redirect to URI
+            # SMELL: this is a result of Codev.GoBoxUnderstandsURLs,
+            # an unrequested, undocumented, and AFAICT pretty useless
+            #"feature". It should be deprecated (or silently removed; I
+            # really, really doubt anyone is using it)
             $this->{webName} = '';
             $this->redirect($topic);
             return $this;
@@ -1753,18 +1754,20 @@ sub new {
     $topic = ucfirst($topic);
 
     # Validate and untaint topic name from path info
-    $this->{topicName} = Foswiki::Sandbox::untaint(
-        $topic, \&Foswiki::Sandbox::validateTopicName);
+    $this->{topicName} = Foswiki::Sandbox::untaint( $topic,
+        \&Foswiki::Sandbox::validateTopicName );
 
     $this->{topicName} = $Foswiki::cfg{HomeTopicName}
-      unless (defined $this->{topicName} );
+      unless ( defined $this->{topicName} );
 
     # Validate web name from path info
-    $this->{requestedWebName} = Foswiki::Sandbox::untaint(
-        $web,\&Foswiki::Sandbox::validateWebName);
+    $this->{requestedWebName} =
+      Foswiki::Sandbox::untaint( $web, \&Foswiki::Sandbox::validateWebName );
 
-    $this->{webName} = $this->{requestedWebName}
-      ? $this->{requestedWebName} : $Foswiki::cfg{UsersWebName};
+    $this->{webName} =
+        $this->{requestedWebName}
+      ? $this->{requestedWebName}
+      : $Foswiki::cfg{UsersWebName};
 
     # Convert UTF-8 web and topic name from URL into site charset if
     # necessary
@@ -2308,39 +2311,40 @@ sub expandMacrosOnTopicCreation {
 
     my $text = $topicObject->text();
     if ($text) {
+
         # Chop out templateonly sections
         my ( $ntext, $sections ) = parseSections($text);
         if ( scalar(@$sections) ) {
-            
+
             # Note that if named templateonly sections overlap,
             # the behaviour is undefined.
             foreach my $s ( reverse @$sections ) {
                 if ( $s->{type} eq 'templateonly' ) {
                     $ntext =
-                      substr( $ntext, 0, $s->{start} )
-                        . substr( $ntext, $s->{end}, length($ntext) );
+                        substr( $ntext, 0, $s->{start} )
+                      . substr( $ntext, $s->{end}, length($ntext) );
                 }
                 else {
-                    
+
                     # put back non-templateonly sections
                     my $start = $s->remove('start');
                     my $end   = $s->remove('end');
                     $ntext =
-                      substr( $ntext, 0, $start )
-                        . '%STARTSECTION{'
-                          . $s->stringify() . '}%'
-                            . substr( $ntext, $start, $end - $start )
-                              . '%ENDSECTION{'
-                                . $s->stringify() . '}%'
-                                  . substr( $ntext, $end, length($ntext) );
+                        substr( $ntext, 0, $start )
+                      . '%STARTSECTION{'
+                      . $s->stringify() . '}%'
+                      . substr( $ntext, $start, $end - $start )
+                      . '%ENDSECTION{'
+                      . $s->stringify() . '}%'
+                      . substr( $ntext, $end, length($ntext) );
                 }
             }
             $text = $ntext;
         }
-                
+
         $text = _processMacros( $this, $text, \&_expandMacroOnTopicCreation,
-                                $topicObject, 16 );
-        
+            $topicObject, 16 );
+
         # expand all variables for type="expandvariables" sections
         ( $ntext, $sections ) = parseSections($text);
         if ( scalar(@$sections) ) {
@@ -2350,38 +2354,38 @@ sub expandMacrosOnTopicCreation {
                       substr( $ntext, $s->{start}, $s->{end} - $s->{start} );
                     $this->innerExpandMacros( \$etext, $topicObject );
                     $ntext =
-                      substr( $ntext, 0, $s->{start} ) 
-                        . $etext
-                          . substr( $ntext, $s->{end}, length($ntext) );
+                        substr( $ntext, 0, $s->{start} ) 
+                      . $etext
+                      . substr( $ntext, $s->{end}, length($ntext) );
                 }
                 else {
-                    
+
                     # put back non-expandvariables sections
                     my $start = $s->remove('start');
                     my $end   = $s->remove('end');
                     $ntext =
-                      substr( $ntext, 0, $start )
-                        . '%STARTSECTION{'
-                          . $s->stringify() . '}%'
-                            . substr( $ntext, $start, $end - $start )
-                              . '%ENDSECTION{'
-                                . $s->stringify() . '}%'
-                                  . substr( $ntext, $end, length($ntext) );
+                        substr( $ntext, 0, $start )
+                      . '%STARTSECTION{'
+                      . $s->stringify() . '}%'
+                      . substr( $ntext, $start, $end - $start )
+                      . '%ENDSECTION{'
+                      . $s->stringify() . '}%'
+                      . substr( $ntext, $end, length($ntext) );
                 }
             }
             $text = $ntext;
         }
-        
+
         # kill markers used to prevent variable expansion
         $text =~ s/%NOP%//g;
         $topicObject->text($text);
     }
 
     # Expand preferences
-    my @prefs = $topicObject->find( 'PREFERENCE' );
+    my @prefs = $topicObject->find('PREFERENCE');
     foreach my $p (@prefs) {
-        $p->{value} = _processMacros(
-            $this, $p->{value}, \&_expandMacroOnTopicCreation,
+        $p->{value} =
+          _processMacros( $this, $p->{value}, \&_expandMacroOnTopicCreation,
             $topicObject, 16 );
     }
 }
@@ -3405,7 +3409,7 @@ A web _has_ to have a preferences topic to be a web.
 sub webExists {
     my ( $this, $web ) = @_;
 
-    ASSERT(UNTAINTED($web)) if DEBUG;
+    ASSERT( UNTAINTED($web) ) if DEBUG;
     return $this->{store}->webExists($web);
 }
 
@@ -3421,8 +3425,8 @@ Test if topic exists
 
 sub topicExists {
     my ( $this, $web, $topic ) = @_;
-    ASSERT(UNTAINTED($web)) if DEBUG;
-    ASSERT(UNTAINTED($topic)) if DEBUG;
+    ASSERT( UNTAINTED($web) )   if DEBUG;
+    ASSERT( UNTAINTED($topic) ) if DEBUG;
     return $this->{store}->topicExists( $web, $topic );
 }
 

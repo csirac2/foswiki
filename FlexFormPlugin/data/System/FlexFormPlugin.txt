@@ -45,6 +45,8 @@ In addition, !FlexFormPlugin facilitates the extraction of field default values 
 | separator="..." | string to be put between each formatted output per formfield | &lt;empty string> |
 | include="..." | regular expression fieldnames must match to be included in the output | undefined |
 | exclude="..." | regular expression fieldnames must match to be excluded from the output | undefined |
+| includeattr="..." | regular expression field attributes must match to be included in the output | undefined |
+| excludeattr="..." | regular expression field attributes must match to be excluded from the output | undefined |
 | hidden="..." | those fields that match this regular expression will be rendered hidden | undefined |
 | map="&lt;fieldname1>=&lt;title1>, &lt;fieldname2>=&lt;title2>, ..." | allows to map a fieldname to a different title string in the edit interface (*deprecated*: please use &lt;fieldname>_title to redefine the title) | original fieldnames are used as title string |
 
@@ -69,6 +71,8 @@ In addition, !FlexFormPlugin facilitates the extraction of field default values 
 | valueseparator="..." | string to be put between each allowed value as defined in the form schema | , |
 | include="..." | regular expression fieldnames must match to be included in the output | undefined |
 | exclude="..." | regular expression fieldnames must match to be excluded from the output | undefined |
+| includeattr="..." | regular expression field attributes must match to be included in the output | undefined |
+| excludeattr="..." | regular expression field attributes must match to be excluded from the output | undefined |
 | map="&lt;fieldname1>=&lt;title1>, &lt;fieldname2>=&lt;title2>, ..." | allows to map a fieldname to a different title string (*deprecated*: please use &lt;fieldname>_title to redefine the title) | original fieldnames are used as title string |
 | labelformat="..." | format string used for labels exclusively; labels aren't real input fields; they are part of the form definition but carry read-only values only if at all  | same as =format= |
 
@@ -134,6 +138,7 @@ Many thanks to the following sponsors for supporting this work:
 |  Release: | %$RELEASE% |
 |  Version: | %$VERSION% |
 |  Change History: | <!-- versions below in reverse order -->&nbsp; |
+|  07 Jun 2010: | added =includeattr=, =excludeattr= to filter formfields by their attributes |
 |  24 Mar 2010: | fixed error where topic values were not inserted into the edit form properly |
 |  12 Mar 2010: | cleaned up =$value= and =$values= variable in both RENDERFOREDIT and RENDERFORIDPLSAY;\
                   added =$default= |

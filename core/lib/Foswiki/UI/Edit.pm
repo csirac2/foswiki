@@ -17,27 +17,15 @@ use Error qw( :try );
 use Foswiki                ();
 use Foswiki::UI            ();
 use Foswiki::OopsException ();
-use Foswiki::Form ();
+use Foswiki::Form          ();
 
 =begin TML
 
 ---++ StaticMethod edit( $session )
 
 Edit command handler.
-This method is designed to be
-invoked via the =UI::run= method.
-Most parameters are in the CGI query:
 
-| =cmd= | Undocumented save command, passed on to save script |
-| =onlywikiname= | if defined, requires a wiki name for the topic name if this is a new topic |
-| =onlynewtopic= | if defined, and the topic exists, then moans |
-| =formtemplate= | name of the form for the topic; will replace existing form |
-| =templatetopic= | name of the topic to copy if creating a new topic |
-| =skin= | skin(s) to use |
-| =topicparent= | what to put in the topic prent meta data |
-| =text= | text that will replace the old topic text if a formtemplate is defined (what the heck is this for?) |
-| =contenttype= | optional parameter that defines the application type to write into the CGI header. Defaults to text/html. |
-| =action= | Optional. If supplied, use the edit${action} template instead of the standard edit template. An empty value means edit both form and text, "form" means edit form only, "text" means edit text only |
+CGI parameters are documented in System.CommandAndCGIScripts.
 
 =cut
 
@@ -66,7 +54,7 @@ sub init_edit {
     my $formTemplate  = $query->param('formtemplate') || '';
     my $templateTopic = $query->param('templatetopic') || '';
 
-    # apptype is undocumented legacy
+    # apptype is deprecated undocumented legacy
     my $cgiAppType =
          $query->param('contenttype')
       || $query->param('apptype')
@@ -230,26 +218,24 @@ sub init_edit {
     }
     else {
         if ($templateTopic) {
+
             # User specified template. Validate it.
             my ( $invalidTemplateWeb, $invalidTemplateTopic ) =
-              $session->normalizeWebTopicName(
-                  $templateWeb, $templateTopic );
+              $session->normalizeWebTopicName( $templateWeb, $templateTopic );
 
-            $templateWeb = Foswiki::Sandbox::untaint(
-                $invalidTemplateWeb,
-                \&Foswiki::Sandbox::validateWebName);
-            $templateTopic = Foswiki::Sandbox::untaint(
-                $invalidTemplateTopic,
-                \&Foswiki::Sandbox::validateTopicName);
+            $templateWeb = Foswiki::Sandbox::untaint( $invalidTemplateWeb,
+                \&Foswiki::Sandbox::validateWebName );
+            $templateTopic = Foswiki::Sandbox::untaint( $invalidTemplateTopic,
+                \&Foswiki::Sandbox::validateTopicName );
 
-            unless ($templateWeb && $templateTopic) {
+            unless ( $templateWeb && $templateTopic ) {
                 throw Foswiki::OopsException(
                     'accessdenied',
                     status => 403,
                     def    => 'no_such_topic_template',
                     web    => $invalidTemplateWeb,
                     topic  => $invalidTemplateTopic
-                   );  
+                );
             }
         }
         else {
@@ -300,7 +286,7 @@ sub init_edit {
         $topicObject->copyFrom( $ttom, 'PREFERENCE' );
 
         # Copy the text
-        $topicObject->text($ttom->text());
+        $topicObject->text( $ttom->text() );
 
         $topicObject->expandNewTopic();
     }
@@ -397,7 +383,9 @@ sub init_edit {
         my $formDef;
         try {
             $formDef = new Foswiki::Form( $session, $templateWeb, $form );
-        } catch Foswiki::OopsException with {
+        }
+        catch Foswiki::OopsException with {
+
             # Catch and ignore oops exception from this first call
         };
         if ( !$formDef ) {
@@ -424,7 +412,7 @@ sub init_edit {
     }
     else {
         my $webObject = Foswiki::Meta->new( $session, $web );
-        my @forms = Foswiki::Form::getAvailableForms( $topicObject );
+        my @forms = Foswiki::Form::getAvailableForms($topicObject);
         if ( scalar(@forms) ) {
             $formText = $session->templates->readTemplate('addform');
             $formText = $topicObject->expandMacros($formText);
@@ -443,7 +431,7 @@ sub finalize_edit {
 
     my $query = $session->{request};
 
-    # apptype is undocumented legacy
+    # apptype is deprecated undocumented legacy
     my $cgiAppType =
          $query->param('contenttype')
       || $query->param('apptype')

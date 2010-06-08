@@ -25,7 +25,6 @@ sub buildNewTopic {
     my ( $session, $topicObject, $script ) = @_;
 
     my $query = $session->{request};
-    my $revision = $query->param('rev') || undef;
 
     unless ( scalar( $query->param() ) ) {
 
@@ -81,7 +80,7 @@ sub buildNewTopic {
 
     my $templateTopic = $query->param('templatetopic');
 
-    my $templateWeb   = $topicObject->web;
+    my $templateWeb = $topicObject->web;
     my $ttom;    # template topic
 
     my $text = $topicObject->text();
@@ -103,36 +102,33 @@ sub buildNewTopic {
         my ( $invalidTemplateWeb, $invalidTemplateTopic ) =
           $session->normalizeWebTopicName( $templateWeb, $templateTopic );
 
-        $templateWeb = Foswiki::Sandbox::untaint(
-            $invalidTemplateWeb,
-            \&Foswiki::Sandbox::validateWebName);
-        $templateTopic = Foswiki::Sandbox::untaint(
-            $invalidTemplateTopic,
-            \&Foswiki::Sandbox::validateTopicName);
+        $templateWeb = Foswiki::Sandbox::untaint( $invalidTemplateWeb,
+            \&Foswiki::Sandbox::validateWebName );
+        $templateTopic = Foswiki::Sandbox::untaint( $invalidTemplateTopic,
+            \&Foswiki::Sandbox::validateTopicName );
 
         unless ( $templateWeb && $templateTopic ) {
             throw Foswiki::OopsException(
                 'attention',
-                def   => 'invalid_topic_parameter',
-                params => [$query->param('templatetopic'), 'templatetopic']
+                def    => 'invalid_topic_parameter',
+                params => [ $query->param('templatetopic'), 'templatetopic' ]
             );
         }
-        unless ($session->topicExists( $templateWeb, $templateTopic ) ) {
+        unless ( $session->topicExists( $templateWeb, $templateTopic ) ) {
             throw Foswiki::OopsException(
                 'attention',
                 def   => 'no_such_topic_template',
                 web   => $templateWeb,
                 topic => $templateTopic
-               );
+            );
         }
-
 
         # Initialise new topic from template topic
         $ttom = Foswiki::Meta->load( $session, $templateWeb, $templateTopic );
         Foswiki::UI::checkAccess( $session, 'VIEW', $ttom );
 
         $text = $ttom->text();
-        $text = '' if $query->param('newtopic');       # created by edit
+        $text = '' if $query->param('newtopic');    # created by edit
         $topicObject->text($text);
 
         foreach my $k ( keys %$ttom ) {
@@ -454,6 +450,7 @@ WARN
     my $edit       = $query->param('edit')             || 'edit';
 
     ## SMELL: The form affecting actions do not preserve edit and editparams
+    # preview+submitChangeForm is deprecated undocumented legacy
     if (   $saveaction eq 'addform'
         || $saveaction eq 'replaceform'
         || $saveaction eq 'preview' && $query->param('submitChangeForm') )

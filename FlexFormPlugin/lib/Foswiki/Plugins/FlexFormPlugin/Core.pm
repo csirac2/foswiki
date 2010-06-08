@@ -78,6 +78,8 @@ sub handleRENDERFORDISPLAY {
   my $theValueSep = $params->{valueseparator} || ', ';
   my $theInclude = $params->{include};
   my $theExclude = $params->{exclude};
+  my $theIncludeAttr = $params->{includeattr};
+  my $theExcludeAttr = $params->{excludeattr};
   my $theMap = $params->{map} || '';
   my $theLabelFormat = $params->{labelformat} || '';
 
@@ -207,6 +209,8 @@ sub handleRENDERFORDISPLAY {
 
     next if $theInclude && $fieldName !~ /^($theInclude)$/;
     next if $theExclude && $fieldName =~ /^($theExclude)$/;
+    next if $theIncludeAttr && $fieldAttrs !~ /^($theIncludeAttr)$/;
+    next if $theExcludeAttr && $fieldAttrs =~ /^($theExcludeAttr)$/;
 
     my $line = $theFormat;
     unless ($fieldName) { # label
@@ -222,6 +226,7 @@ sub handleRENDERFORDISPLAY {
       newline=>'$n', # SMELL: keep newlines
     }); # SMELL what about the attrs param in Foswiki::Form
         # SMELL wtf is this attr anyway
+
     $fieldTitle = $fieldTitles->{$fieldName} if $fieldTitles && $fieldTitles->{$fieldName};
 
     $line =~ s/\$name\b/$fieldName/g;
@@ -262,9 +267,11 @@ sub handleRENDERFOREDIT {
   my $theHeader = $params->{header};
   my $theFooter = $params->{footer};
   my $theSep = $params->{separator} || '';
-  my $theInclude = $params->{include};
   my $theValueSep = $params->{valueseparator} || ', ';
+  my $theInclude = $params->{include};
   my $theExclude = $params->{exclude};
+  my $theIncludeAttr = $params->{includeattr};
+  my $theExcludeAttr = $params->{excludeattr};
   my $theMap = $params->{map} || '';
   my $theMandatory = $params->{mandatory};
   my $theHidden = $params->{hidden};
@@ -412,6 +419,8 @@ sub handleRENDERFOREDIT {
 
     next if $theInclude && $fieldName !~ /^($theInclude)$/;
     next if $theExclude && $fieldName =~ /^($theExclude)$/;
+    next if $theIncludeAttr && $fieldAttrs !~ /^($theIncludeAttr)$/;
+    next if $theExcludeAttr && $fieldAttrs =~ /^($theExcludeAttr)$/;
 
     $fieldValue = "\0" unless $fieldValue; # prevent dropped value attr in CGI.pm
 

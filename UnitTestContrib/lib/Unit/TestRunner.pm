@@ -24,6 +24,7 @@ sub new {
             unexpected_passes => [],
             expected_failures => [],
             failures          => [],
+            number_of_asserts => 0,
         },
         $class
     );
@@ -132,6 +133,8 @@ sub start {
         }
     }
 
+    #marker so we can remove the above large output from the nightly emails
+    print "\nUnit test run Summary:\n";
     my $total = $passes;
     my $failed;
     if ( $failed = scalar @{ $this->{unexpected_passes} } ) {
@@ -150,10 +153,12 @@ sub start {
           "\n";
         $total += $failed;
         print "$passes of $total test cases passed\n";
+        ::PRINT_TAP_TOTAL();
         return $failed;
     }
     print "All tests passed ($passes"
       . ( $passes == $total ? '' : "/$total" ) . ")\n";
+    ::PRINT_TAP_TOTAL();
     return 0;
 }
 

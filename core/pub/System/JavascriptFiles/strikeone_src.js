@@ -178,8 +178,9 @@ var md5 = {
     str2binl: function(str) {
         var bin = Array();
         var mask = (1 << 8) - 1;
-        for(var i = 0; i < str.length * 8; i += 8)
+        for(var i = 0; i < str.length * 8; i += 8) {
             bin[i>>5] |= (str.charCodeAt(i / 8) & mask) << (i%32);
+        }
         return bin;
     },
 
@@ -226,29 +227,40 @@ var StrikeOne = {
         var ca = document.cookie.split(';');
         for (var i = 0; i < ca.length; i++) {
             var c = ca[i];
-            while (c.charAt(0) == ' ')
+            while (c.charAt(0) === ' ') {
                 c = c.substring(1, c.length);
-            if (c.indexOf(nameEQ) == 0)
+            }
+            if (c.indexOf(nameEQ) === 0) {
                 return c.substring(nameEQ.length, c.length);
+            }
         }
         return null;
     },
 
     /**
-     * If JS is available this will be run, if not the default message stays.
-     * The parts of the message in validate.tmpl have the css
-     * classes 's1js_missing' (meaning "show this when JS is missing" and
-     * 's1js_available' (meaning "show this when js is available")
+     * If JS is available this will be run during the onLoad.
+     * The parts of the message in validate.tmpl that are to be shown when
+     * JS is available must be surrounded with a DIV that has the css class
+     * 's1js_available' (meaning "show this when js is available").
+     * Sections that must be shown when JS is *not* available use <noscript>.
+     * It is done this way because inline <script> tags may be taken out
+     * by security.
      */
     pcd: function() {
-        var els = document.getElementsByClassName('s1js_missing');
-        if (els)
-            for (var i = 0; i < els.length; i++)
-                els[i].style.display = 'none';
-        els = document.getElementsByClassName('s1js_available');
-        if (els)
-            for (var i = 0; i < els.length; i++)
-                els[i].style.display = 'block';
+        // Use the browser getElementsByClassName implementation if available
+        if (document.getElementsByClassName != null) {
+            var js_ok = document.getElementsByClassName('s1js_available');
+            for (i = 0; i < js_ok.length; i++)
+                js_ok[i].style.display = 'inline';
+        } else {
+            // We *could* use the one in foswikilib.js, but that would mean
+            // a dependency, plus it is less efficient than this.....
+            var divs = document.getElementsByTagName('DIV');
+            for (var i = 0; i < divs.length; i++) {
+                if (/\bs1js_available\b/.test(divs[i].className))
+                    divs[i].style.display = 'inline';
+            }
+        }
     }
 };
 

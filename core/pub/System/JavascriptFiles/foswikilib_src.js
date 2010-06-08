@@ -22,8 +22,9 @@ As per the GPL, removal of this notice is prohibited.
 
 // Foswiki namespace
 var foswiki;
-if (foswiki == undefined)
+if (foswiki == undefined) {
     foswiki = {};
+}
 
 /**
  * Get the content of a META tag from the HEAD block of the document.
@@ -31,13 +32,16 @@ if (foswiki == undefined)
  * @param inKey Name of the meta-tag for which to retrieve the content
  */
 foswiki.getMetaTag = function(inKey) {
-    if (foswiki.metaTags == null || foswiki.metaTags.length == 0) {
+    // NOTE: == and != are used, not === and !==, because null == undefined
+    // but does not === it  - see
+    // https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Operators/Comparison_Operators
+    if (foswiki.metaTags == null || foswiki.metaTags.length === 0) {
         // Do this the brute-force way because of the problem
         // seen sporadically on Bugs web where the DOM appears complete, but
         // the META tags are not all found by getElementsByTagName
         var head = document.getElementsByTagName("META");
         head = head[0].parentNode.childNodes;
-        foswiki.metaTags = new Array();
+        foswiki.metaTags = [];
         for (var i = 0; i < head.length; i++) {
             if (head[i].tagName != null &&
                 head[i].tagName.toUpperCase() == 'META') {
@@ -68,8 +72,8 @@ foswiki.getPreference = function(key, useServer) {
     // listed in the %EXPORTEDPREFERENCES% Foswiki preference. See
     // System.DefaultPreferences for guidance on extending this from
     // Plugins.
-    if (foswiki.preferences != undefined) {
-        if (foswiki.preferences[key] != undefined) {
+    if (foswiki.preferences !== undefined) {
+        if (foswiki.preferences[key] !== undefined) {
             return foswiki.preferences[key];
         }
     }
@@ -77,10 +81,11 @@ foswiki.getPreference = function(key, useServer) {
     // Check for a preference passed in a meta tag (this is the classical
     // method)
     var metaVal = foswiki.getMetaTag(key);
-    if (metaVal != undefined) {
+    if (metaVal !== undefined) {
         // Cache it for future reference
-        if (foswiki.preferences == undefined)
+        if (foswiki.preferences === undefined) {
             foswiki.preferences = {};
+        }
         foswiki.preferences[key] = metaVal;
         return metaVal;
     }
@@ -89,8 +94,8 @@ foswiki.getPreference = function(key, useServer) {
     // a lot of context information to be passed to the server, and a REST
     // handler on the server, so has not been implemented yet.
     if (useServer) {
-        alert("Trying to get preference '" + key + "' from server, but "
-              + "this feature is not implemented yet.");
+        window.alert("Trying to get preference '" + key + "' from server, but " + 
+              "this feature is not implemented yet.");
     }
     return null;
 };
@@ -113,7 +118,7 @@ foswiki.getElementsByClassName = function(inRootElem, inClassName, inTag) {
 	var className = inClassName.replace(/\-/g, "\\-");
 	var re = new RegExp("\\b" + className + "\\b");
 	var el;
-	var hits = new Array();
+	var hits = [];
 	for (var i = 0; i < elms.length; i++) {
 		el = elms[i];
 		if (re.test(el.className)) {
@@ -121,4 +126,4 @@ foswiki.getElementsByClassName = function(inRootElem, inClassName, inTag) {
 		}
 	}
 	return hits;
-}
+};

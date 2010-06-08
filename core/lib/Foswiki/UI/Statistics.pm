@@ -64,6 +64,9 @@ sub statistics {
         #SMELL: this prevents us from reporting errors
         $session->{response}->status(200);
 
+        #SMELL: this prevents us from reporting errors
+        $session->{response}->status(200);
+
         # running from CGI
         $session->generateHTTPHeaders();
         $session->{response}->print(

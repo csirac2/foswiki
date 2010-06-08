@@ -1,0 +1,5 @@
+# Release manifest for RegexCacheSearchPlugin
+data/System/RegexCacheSearchPlugin.txt 0644 Documentation
+lib/Foswiki/Plugins/RegexCacheSearchPlugin.pm 0644 Perl module
+
+lib/Foswiki/Store/SearchAlgorithms/PurePerlCached.pm 0644 Perl module

@@ -1,4 +1,4 @@
-%META:TOPICINFO{author="ProjectContributor" comment="reprev" date="1258466835" format="1.1" reprev="1.2" version="1.2"}%
+%META:TOPICINFO{author="ProjectContributor" comment="reprev" date="1275898567" format="1.1" reprev="3" version="3"}%
 <!--
 
    PLEASE DO NOT EDIT THIS TOPIC
@@ -74,7 +74,6 @@ extract text from a topic. see [[#SUBST][SUBST]].
 
 extract content given inline. see [[#SUBST][SUBST]].
 
-
 ---+++ FORMATLIST
 *Syntax*: =%<nop>FORMATLIST{"&lt;list>" ...}%=
 
@@ -90,6 +89,7 @@ prepended with a header and appended with a footer in case the list is not empty
    * header="...": header string
    * footer="...": footer string
    * separator="...": string to be inserted between list items
+   * null="...": the format string to render the empty list
    * limit="...": max number of items to be taken out of the list (default "-1")
    * skip="...": number of list items to skip, not adding them to the result
    * sort="on,off,alpha,num,nocase" order of the formatted items (default "off")
@@ -100,13 +100,15 @@ prepended with a header and appended with a footer in case the list is not empty
    * selection="...": regular expression that a list item must match to be "selected"; if this matches the =$marker= is inserted
    * marker="...": string to be inserted when the =selection= regex matches; this will be inserted at the position =$marker= as
      indicated in =format= .
+   * map="key1=value1,key2=value2, ...": this establishes a key-value hash available via the =$map()= variable.
 
 The pattern string shall group matching substrings in the list item to which you can refer to by 
 using $1, $2, ... in the format string. Any format string (=format=, =header=, =footer=) may
 contain variables =$percnt$=, =$nop=, =$dollar= and =$n=. The variable
 =$index= referse to the position number within the list being formatted; using =$count= in the
 footer or header argument refers to the total number of list elements; =$marker= is set if
-the =selection= regular expression matches the current item.
+the =selection= regular expression matches the current item. The =$map(key)= macro returns the value for "key"
+as specified in the =map= argument.
 
 ---+++ MAKEINDEX
 *Syntax*: =%<nop>MAKEINDEX{"&lt;list>" ...}%=
@@ -139,23 +141,80 @@ to a navigation to jump to the groups within the index.
 
 ---++ Examples
 
----+++ Formating Comments
-| *Date* | *Author* | *Headline* |
-%EXTRACT{topic="%TOPIC%" expand="off" pattern=".div class=\"text\">.*?[\r\n]+(.*?)[\r\n]+(?:.*?[\r\n]+)+?-- (.*?) on (.*?)[\r\n]+" format="| $3 | $2 | $1 ... |$n"}%
+---+++ EXTRACT Example 1: convert table into text
+One of the uses of this plugin is to extract data from tables, which is useful for creating "database-like" wiki applications where data is stored in foswiki tables. While it is certainly possible to do that without this plugin the plugin makes these requests easier to create and maintain. Note, however, that best practice is to store database-like
+information using System.DataForms, so that you don't need to parse the format of the data to extract its records repeatedly.
 
+*The table:*
+|  *Pos* | *Description* | *Hours* | 
+|  1 | onsite troubleshooting |  3 | 
+|  2 | normalizing data to new format |  10 |
+|  3 | testing server performance |  5 |
+
+*You type:*
+
+<verbatim class="tml">
+%EXTRACT{topic="%TOPIC%" expand="off" 
+  pattern="^\|\s\s(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|" 
+  format="   * it took $3 hours $2$n"
+  skip="1"
+}%
+</verbatim>
+
+*Expected result (simulated):*
+
+   * it took 3 hours onsite troubleshooting 
+   * it took 10 hours normalizing data to new format 
+   * it took 5 hours testing server performance 
+
+*Actual result (this site):*
+
+%EXTRACT{topic="%TOPIC%" expand="off" 
+   pattern="^\|\s\s(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|" 
+   format="   * it took $3 hours $2$n"
+   skip="1"
+}%
+
+---+++ EXTRACT Example 2: convert text into table
+Use CSS tags to format text comments as a tabular data (e.g., to allow sorting).
+
+*The comments:*
 <div class="text"><div class="comment">
-This is a first comment.
+This is the first comment.
 </div><div class="posted">
 -- Michael Daum on 22 Aug 2005
 </div></div>
 
 <div class="text"><div class="comment">
-This is a second comment.
+This is the second comment.
 </div><div class="posted">
 -- Michael Daum on 22 Aug 2005
 </div></div>
 
----+++ MAKEINDEX example
+*You type:*
+
+<verbatim class="tml">
+%EXTRACT{
+   topic="%TOPIC%" expand="off"
+   pattern=".div class=\"text\">.*?[\r\n]+(.*?)[\r\n]+(?:.*?[\r\n]+)+?-- (.*?) on (.*?)[\r\n]+"
+   format="| $3 | $2 | $1 ... |$n" header="|*Date*|*Author*|*Headline*|$n"
+}%</verbatim>
+
+*Expected result (simulated):*
+
+|*Date*|*Author*|*Headline*|
+|22 Aug 2005 | Michael Daum | This is the first comment. ... |
+|22 Aug 2005 | Michael Daum | This is the second comment. ... |
+
+*Actual result (this site):*
+
+%EXTRACT{
+  topic="%TOPIC%" expand="off"
+  pattern=".div class=\"text\">.*?[\r\n]+(.*?)[\r\n]+(?:.*?[\r\n]+)+?-- (.*?) on (.*?)[\r\n]+"
+  format="| $3 | $2 | $1 ... |$n" header="|*Date*|*Author*|*Headline*|$n"
+}%
+
+---+++ MAKEINDEX example 1: creating an index from a chunk of text
 compare with [[http://en.wikipedia.org/wiki/Category:Philosophy_articles_needing_attention][Philosophy articles needing attention]]
 
 %MAKEINDEX{
@@ -164,7 +223,8 @@ compare with [[http://en.wikipedia.org/wiki/Category:Philosophy_articles_needing
   format="[[http://en.wikipedia.org/wiki/$item][$item]]"
   header="$anchors"
 }%
----+++ MAKEINDEX example 2
+
+---+++ MAKEINDEX example 2: creating an index for a search result
 %MAKEINDEX{
    "%SEARCH{".*" 
       web="%USERSWEB%"
@@ -193,7 +253,6 @@ compare with [[http://en.wikipedia.org/wiki/Category:Philosophy_articles_needing
 ---++ Plugin Installation Instructions
 %$INSTALL_INSTRUCTIONS%
 
-
 ---++ Plugin Info
 <!-- 
    * Set SHORTDESCRIPTION = Substitute and extract information from content by using regular expressions
@@ -204,6 +263,7 @@ compare with [[http://en.wikipedia.org/wiki/Category:Philosophy_articles_needing
 |  Release: | %$RELEASE% |
 |  Version: | %$VERSION% |
 |  Change History: | <!-- versions below in reverse order -->&nbsp; |
+|  07 Jun 2010: | fixed expanding standard escapes ($n, $percent, ...); improved examples in docu |
 |  12 Feb 2010: | ease =tokenize=; forward compatibility for newer foswikis |
 |  17 Nov 2009: | added =tokenize= pattern for FORMATLIST; \
                   fixed potential deep recursion in SUBST/EXTRACT |

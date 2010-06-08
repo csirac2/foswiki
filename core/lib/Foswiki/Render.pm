@@ -821,8 +821,7 @@ sub _handleSquareBracketedLink {
 
             # [[][]] style - protect text:
             # Prevent automatic WikiWord or CAPWORD linking in explicit links
-            $text =~
-              s((?<=[\s\(])
+            $text =~ s((?<=[\s\(])
                 ($Foswiki::regex{wikiWordRegex}
                 | [$Foswiki::regex{upperAlpha}]))
                (<nop>$1)gox;
@@ -837,8 +836,7 @@ sub _handleSquareBracketedLink {
                 # '[[URL#anchor display text]]' link:
                 $link = $1;
                 $text = $2;
-                $text =~
-                  s((?<=[\s\(])
+                $text =~ s((?<=[\s\(])
                     ($Foswiki::regex{wikiWordRegex}
                     | [$Foswiki::regex{upperAlpha}]))
                    (<nop>$1)gox;
@@ -1342,16 +1340,14 @@ s/$STARTWW((mailto\:)?$Foswiki::regex{emailAddrRegex})$ENDWW/_mailLink( $this, $
 
     # Spaced-out Wiki words with alternative link text
     # i.e. [[$1][$3]]
-    $text =~
-      s(\[\[([^\]\[\n]+)\](\[([^\]\n]+)\])?\])
+    $text =~ s(\[\[([^\]\[\n]+)\](\[([^\]\n]+)\])?\])
         (_handleSquareBracketedLink( $this,$topicObject,$1,$3))ge;
 
     unless ( Foswiki::isTrue( $prefs->getPreference('NOAUTOLINK') ) ) {
 
         # Handle WikiWords
         $text = Foswiki::takeOutBlocks( $text, 'noautolink', $removed );
-        $text =~
-          s($STARTWW
+        $text =~ s($STARTWW
             (?:($Foswiki::regex{webNameRegex})\.)?
             ($Foswiki::regex{wikiWordRegex}|
                 $Foswiki::regex{abbrevRegex})
@@ -1499,12 +1495,10 @@ s/$STARTWW((mailto\:)?[a-zA-Z0-9-_.+]+@[a-zA-Z0-9-_.]+\.[a-zA-Z0-9-_]+)$ENDWW/_m
     #keep only test portion of [[][]] links
     $text =~ s/\[\[([^\]]*\]\[)(.*?)\]\]/$2/g;
 
-    # remove "Web." prefix from "Web.TopicName" link
-    $text =~
-s/$STARTWW(($Foswiki::regex{webNameRegex})\.($Foswiki::regex{wikiWordRegex}|$Foswiki::regex{abbrevRegex}))/$3/g;
+    # SMELL: can't do this, it removes these characters even when they're
+    # not for formatting
+    #$text =~ s/[\[\]\*\|=_\&\<\>]/ /g;
 
-#SMELL: can't do this, it removes these characters even when they're not for formatting
-#$text =~ s/[\[\]\*\|=_\&\<\>]/ /g;    # remove Wiki formatting chars
     $text =~ s/${STARTWW}==(\S+?|\S[^\n]*?\S)==$ENDWW/$1/gem;
     $text =~ s/${STARTWW}__(\S+?|\S[^\n]*?\S)__$ENDWW/$1/gm;
     $text =~ s/${STARTWW}\*(\S+?|\S[^\n]*?\S)\*$ENDWW/$1/gm;
@@ -1521,6 +1515,13 @@ s/$STARTWW(($Foswiki::regex{webNameRegex})\.($Foswiki::regex{wikiWordRegex}|$Fos
     $text =~ s/!(\w+)/$1/gs;    # remove all nop exclamation marks before words
     $text =~ s/[\r\n]+/\n/s;
     $text =~ s/[ \t]+/ /s;
+
+    # defuse "Web." prefix in "Web.TopicName" link
+    $text =~ s{$STARTWW
+               (($Foswiki::regex{webNameRegex})\.
+                   ($Foswiki::regex{wikiWordRegex}
+                   | $Foswiki::regex{abbrevRegex}))}
+              {$2.<nop>$3}gx;
 
     return $text;
 }

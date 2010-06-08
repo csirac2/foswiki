@@ -1,4 +1,6 @@
+# See bottom of file for license and copyright information
 use strict;
+use warnings;
 
 # tests for basic formatting
 
@@ -254,9 +256,9 @@ sub test_twistyInSubWeb {
     $this->{session}->finish();
     $this->{session} = new Foswiki();
 
-	my $testWebSubWebPath = $this->{test_web} . '/SubWeb';
-	my $testTopic = 'TwistyTestTopic';
-    my $source = <<SOURCE;
+    my $testWebSubWebPath = $this->{test_web} . '/SubWeb';
+    my $testTopic         = 'TwistyTestTopic';
+    my $source            = <<SOURCE;
 %TWISTY{
 showlink="Show..."
 hidelink="Hide"
@@ -269,9 +271,9 @@ SOURCE
     my $topicObject =
       Foswiki::Meta->new( $this->{session}, $testWebSubWebPath, $testTopic,
         $source );
-        
+
     $topicObject->save();
-    
+
     my $expected = <<EXPECTED;
 <span class="twistyPlugin foswikiMakeVisibleInline"><span id="twistyIdTemporaryTwistyFormattingTestWebTwistyFormattingsubwebSubWebTwistyTestTopic1show" class="twistyRememberSetting twistyTrigger foswikiUnvisited twistyHidden twistyInited"><a href="#"><span class="foswikiLinkLabel foswikiUnvisited">Show...</span></a></span><span id="twistyIdTemporaryTwistyFormattingTestWebTwistyFormattingsubwebSubWebTwistyTestTopic1hide" class="twistyRememberSetting twistyTrigger foswikiUnvisited twistyHidden twistyInited"><a href="#"><span class="foswikiLinkLabel foswikiUnvisited">Hide</span></a></span></span><!--/twistyPlugin foswikiMakeVisibleInline--><span class="twistyPlugin"><span id="twistyIdTemporaryTwistyFormattingTestWebTwistyFormattingsubwebSubWebTwistyTestTopic1toggle" class="twistyRememberSetting twistyContent foswikiMakeHidden twistyInited">
 my twisty content
@@ -282,3 +284,21 @@ EXPECTED
 }
 
 1;
+__END__
+Foswiki - The Free and Open Source Wiki, http://foswiki.org/
+
+Copyright (C) 2008-2010 Foswiki Contributors. Foswiki Contributors
+are listed in the AUTHORS file in the root of this distribution.
+NOTE: Please extend that file, not this notice.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version. For
+more details read LICENSE in the root of this distribution.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+As per the GPL, removal of this notice is prohibited.

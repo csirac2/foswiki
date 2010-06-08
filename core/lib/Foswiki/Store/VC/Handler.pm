@@ -85,8 +85,8 @@ sub new {
         if ($attachment) {
             ASSERT( UNTAINTED($attachment) ) if DEBUG;
             $this->{file} =
-                $Foswiki::cfg{PubDir} . '/'
-              . $web . '/'
+                $Foswiki::cfg{PubDir} . '/' 
+              . $web . '/' 
               . $topic . '/'
               . $attachment;
             $this->{rcsFile} =
@@ -261,7 +261,7 @@ down to 1.
 
 sub getRevisionHistory {
     my $this = shift;
-    ASSERT($this->{file}) if DEBUG;
+    ASSERT( $this->{file} ) if DEBUG;
     unless ( -e $this->{rcsFile} ) {
         if ( -e $this->{file} ) {
             return new Foswiki::ListIterator( [1] );
@@ -459,8 +459,8 @@ Returns 0 if no file, otherwise epoch seconds
 
 sub getTimestamp {
     my ($this) = @_;
-    ASSERT($this->{file}) if DEBUG;
-    
+    ASSERT( $this->{file} ) if DEBUG;
+
     my $date = 0;
     if ( -e $this->{file} ) {
 

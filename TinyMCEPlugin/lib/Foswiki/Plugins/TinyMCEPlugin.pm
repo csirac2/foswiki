@@ -1,19 +1,9 @@
-# Plugin for Foswiki - The Free and Open Source Wiki, http://foswiki.org/
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details, published at
-# http://www.gnu.org/copyleft/gpl.html
+# See bottom of file for license and copyright information
 
 package Foswiki::Plugins::TinyMCEPlugin;
 
 use strict;
+use warnings;
 
 use Assert;
 
@@ -81,7 +71,7 @@ our %defaultINIT_BROWSER = (
     OPERA  => '',
     GECKO  => 'gecko_spellcheck : true',
     SAFARI => '',
-    CHROME=> '',
+    CHROME => '',
 );
 
 use Foswiki::Func ();
@@ -119,7 +109,7 @@ sub initPlugin {
         $browserInfo{isGecko}  = $ua =~ /Gecko/;   # Will also be true on Safari
         $browserInfo{isSafari} = $ua =~ /Safari/;  # Will also be true on Chrome
         $browserInfo{isOpera}  = $ua =~ /Opera/;
-        $browserInfo{isChrome}  = $ua =~ /Chrome/;
+        $browserInfo{isChrome} = $ua =~ /Chrome/;
         $browserInfo{isMac}    = $ua =~ /Mac/;
         $browserInfo{isNS7}  = $ua =~ /Netscape\/7/;
         $browserInfo{isNS71} = $ua =~ /Netscape\/7.1/;
@@ -130,9 +120,9 @@ sub initPlugin {
 
 sub _notAvailable {
     for my $c qw(TINYMCEPLUGIN_DISABLE NOWYSIWYG) {
-        return
-          "Disabled by * Set $c = " . Foswiki::Func::getPreferencesValue($c)
-            if Foswiki::Func::getPreferencesFlag($c);
+        return "Disabled by * Set $c = "
+          . Foswiki::Func::getPreferencesValue($c)
+          if Foswiki::Func::getPreferencesFlag($c);
     }
 
     # Disable TinyMCE if we are on a specialised edit skin
@@ -179,7 +169,7 @@ sub beforeEditHandler {
     # spoof eachother
     if ( $browserInfo{isChrome} ) {
         $extras = 'CHROME';
-    } 
+    }
     elsif ( $browserInfo{isSafari} ) {
         $extras = 'SAFARI';
     }
@@ -223,28 +213,17 @@ sub beforeEditHandler {
     my $pluginURL = '%PUBURLPATH%/%SYSTEMWEB%/TinyMCEPlugin';
     my $tmceURL   = $pluginURL . '/tinymce/jscripts/tiny_mce';
 
-    # expand and URL-encode the init string
+    # expand the init string
     my $metainit = Foswiki::Func::expandCommonVariables($init);
+
+    # URL-encode the init string
     $metainit =~ s/([^0-9a-zA-Z-_.:~!*'\/%])/'%'.sprintf('%02x',ord($1))/ge;
 
-    my $exportedPrefs = Foswiki::Func::getPreferencesValue('EXPORTEDPREFERENCES')||'';
-    if ($exportedPrefs) {
-        # Send the encoded JSON to foswiki_tiny.js via an exported preference
-        Foswiki::Func::setPreferencesValue( 'TINYMCEPLUGIN_INIT_ENCODED', $metainit);
-        my @list = split(/[,\s]+/, $exportedPrefs);
-        unless (grep { /^TINYMCEPLUGIN_INIT_ENCODED$/ } @list) {
-            push(@list, 'TINYMCEPLUGIN_INIT_ENCODED');
-        }
-        Foswiki::Func::setPreferencesValue(
-            'EXPORTEDPREFERENCES', join(',', @list));
-    }
-    else {
-        # There is no EXPORTEDPREFERENCES preference, so assume that preferences
-        # are not exported automatically and export it here explicitly
-    Foswiki::Func::addToZone('body', 'tinyMCE_init', <<"SCRIPT");
-<script language="javascript" type="text/javascript">foswiki.preferences['TINYMCEPLUGIN_INIT_ENCODED']="$metainit"</script>
+    # SMELL: meta tag now in a separate addToHEAD for Item8566, due to
+    # addToZONE shenanigans. <meta> tags really do have to be in the head!
+    Foswiki::Func::addToZone( 'head', 'tinyMCE::Meta', <<"SCRIPT");
+<meta name="foswiki.TINYMCEPLUGIN_INIT_ENCODED" content="$metainit" />
 SCRIPT
-    }
 
     my $behaving;
     eval {
@@ -259,15 +238,18 @@ SCRIPT
 '<script type="text/javascript" src="%PUBURLPATH%/%SYSTEMWEB%/BehaviourContrib/behaviour.js"></script>'
         );
     }
-    # URL-encode the version number to include in the .js URLs, so that the browser re-fetches the .js
-    # when this plugin is upgraded.
+
+# URL-encode the version number to include in the .js URLs, so that the browser re-fetches the .js
+# when this plugin is upgraded.
     my $encodedVersion = $VERSION;
-    # SMELL: This regex (and the one applied to $metainit, above) duplicates Foswiki::urlEncode(),
-    #        but Foswiki::Func.pm does not expose that function, so plugins may not use it
-    $encodedVersion =~ s/([^0-9a-zA-Z-_.:~!*'\/%])/'%'.sprintf('%02x',ord($1))/ge;
 
+# SMELL: This regex (and the one applied to $metainit, above) duplicates Foswiki::urlEncode(),
+#        but Foswiki::Func.pm does not expose that function, so plugins may not use it
+    $encodedVersion =~
+      s/([^0-9a-zA-Z-_.:~!*'\/%])/'%'.sprintf('%02x',ord($1))/ge;
 
-    Foswiki::Func::addToZone('body', 'tinyMCE', <<"SCRIPT", 'tinyMCE::Meta, JQUERYPLUGIN::FOSWIKI');
+    Foswiki::Func::addToZone( 'body', 'tinyMCE',
+        <<"SCRIPT", 'tinyMCE::Meta, JQUERYPLUGIN::FOSWIKI' );
 <script language="javascript" type="text/javascript" src="$tmceURL/tiny_mce_jquery$USE_SRC.js?v=$encodedVersion"></script>
 <script language="javascript" type="text/javascript" src="$pluginURL/foswiki_tiny$USE_SRC.js?v=$encodedVersion"></script>
 <script language="javascript" type="text/javascript" src="$pluginURL/foswiki$USE_SRC.js?v=$encodedVersion"></script>
@@ -279,3 +261,21 @@ SCRIPT
 
 1;
 
+__END__
+Foswiki - The Free and Open Source Wiki, http://foswiki.org/
+
+Copyright (C) 2008-2010 Foswiki Contributors. Foswiki Contributors
+are listed in the AUTHORS file in the root of this distribution.
+NOTE: Please extend that file, not this notice.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version. For
+more details read LICENSE in the root of this distribution.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+As per the GPL, removal of this notice is prohibited.

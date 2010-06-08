@@ -10,9 +10,10 @@ Object that represents a change to a topic.
 package Foswiki::Contrib::MailerContrib::Change;
 
 use strict;
+use warnings;
 use Assert;
 
-use Foswiki ();
+use Foswiki          ();
 use Foswiki::Plugins ();
 
 =begin TML
@@ -32,8 +33,8 @@ sub new {
 
     my $this = bless( {}, $class );
 
-    $this->{WEB}     = $web;
-    $this->{TOPIC}   = $topic;
+    $this->{WEB}   = $web;
+    $this->{TOPIC} = $topic;
     my $user;
 
     $this->{AUTHOR} = Foswiki::Func::getWikiName($author);

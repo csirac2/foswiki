@@ -28,7 +28,7 @@ use CGI qw(-nosticky :all);
 use Data::Dumper;    # for debugging
 
 our $VERSION = '$Rev$';
-our $RELEASE = '1.6';
+our $RELEASE = '1.6.2';
 
 # Name of this Plugin, only used in this module
 our $pluginName = 'FormPlugin';
@@ -39,7 +39,6 @@ my $currentTopic;
 my $currentWeb;
 my $debug;
 my $currentForm;
-my $elementcssclass;
 my $doneHeader;
 my $defaultTitleFormat;
 my $defaultElementFormat;
@@ -148,7 +147,6 @@ sub _initTopicVariables {
     $debug        = $Foswiki::cfg{Plugins}{FormPlugin}{Debug};
 
     $currentForm     = {};
-    $elementcssclass = '';
     $doneHeader      = 0;
     $defaultTitleFormat =
       Foswiki::Func::expandTemplate('formplugin:format:element:title');
@@ -194,15 +192,14 @@ Called at _startForm
 
 sub _initFormVariables {
 
-    $elementcssclass = '';
-
     # form attributes we want to retrieve while parsing FORMELEMENT tags:
     undef $currentForm;
     $currentForm = {
         'name'          => 'untitled',
         'elementformat' => $defaultElementFormat,
+        'elementcssclass' => '',
         'noFormHtml'    => '',
-        'showErrors'    => 'above'
+        'showErrors'    => 'above',
     };
 }
 
@@ -316,7 +313,8 @@ sub _handleSubmittedForm {
 
     _debug("_handleSubmittedForm - this is the form that has been submitted");
 
-    my $query = Foswiki::Func::getRequestObject();
+    my $query = Foswiki::Func::getCgiQuery();
+    _debug( "\t params=" . Dumper($params) );
     _debug( "\t query=" . Dumper($query) );
 
     my $actionUrl;
@@ -382,6 +380,7 @@ sub _handleSubmittedForm {
             # this is needed for save actions
             my $webParam   = $params->{'web'}   || $web   || $currentWeb;
             my $topicParam = $params->{'topic'} || $topic || $currentTopic;
+            my $textParam   = $query->param('text');
             ( $web, $topic ) =
               Foswiki::Func::normalizeWebTopicName( $webParam, $topicParam );
 
@@ -389,7 +388,10 @@ sub _handleSubmittedForm {
             $query->param( -name => 'web',   -value => $web );
 
             Foswiki::Func::redirectCgiQuery( undef, $actionUrl, 1 );
-            print "Status: 307\nLocation: $actionUrl\n\n";
+            if ($params->{'action'} ne 'save') {
+            	# somehow a save action does not save the updated query when redirecting
+	            print "Status: 307\nLocation: $actionUrl\n\n";
+	        }
 
             return '';
         }
@@ -397,7 +399,7 @@ sub _handleSubmittedForm {
             return _renderHtmlStartForm(@_);
         }
         else {
-            my $title = _wrapHtmlTitleContainer(
+            my $title = _wrapHtmlErrorTitleContainer(
                 Foswiki::Func::expandTemplate(
                     'formplugin:message:no_redirect:title')
             );
@@ -456,7 +458,7 @@ sub _renderHtmlStartForm {
     my $id = $params->{'id'} || $name;
 
     my $method = _method( $params->{'method'} || '' );
-    $elementcssclass = $params->{'elementcssclass'} || '';
+    $currentForm->{'elementcssclass'} = $params->{'elementcssclass'} || '';
     my $formcssclass = $params->{'formcssclass'} || '';
     my $webParam     = $params->{'web'}          || $web || $currentWeb;
     my $topicParam   = $params->{'topic'}        || $topic || $currentTopic;
@@ -622,7 +624,7 @@ by the value of the field with name 'about'.
 
 sub _substituteFieldTokens {
 
-    my $query = Foswiki::Func::getRequestObject();
+    my $query = Foswiki::Func::getCgiQuery();
     _debug("_substituteFieldTokens");
     _debug( "query=" . Dumper($query) );
 
@@ -703,7 +705,7 @@ sub _meetsCondition {
         my $referencedFieldName = $1;
         my $type = $2 || '';
 
-        my $query                = Foswiki::Func::getRequestObject();
+        my $query                = Foswiki::Func::getCgiQuery();
         my $referencedFieldValue = $query->param($referencedFieldName);
 
         if ( defined $referencedFieldValue ) {
@@ -924,7 +926,7 @@ sub _validateFormFields {
     $Foswiki::Plugins::FormPlugin::Validate::Complete = 1;
 
     # test fields
-    my $query = Foswiki::Func::getRequestObject();
+    my $query = Foswiki::Func::getCgiQuery();
     Foswiki::Plugins::FormPlugin::Validate::GetFormData( $query, %{$fields} );
 
     if ($Foswiki::Plugins::FormPlugin::Validate::Error) {
@@ -944,7 +946,7 @@ sub _displayErrors {
 
     if (@Foswiki::Plugins::FormPlugin::Validate::ErrorFields) {
 
-        my $note = _wrapHtmlTitleContainer(
+        my $note = _wrapHtmlErrorTitleContainer(
             Foswiki::Func::expandTemplate(
                 'formplugin:message:not_filled_in_correctly')
         );
@@ -1057,12 +1059,8 @@ sub _formElement {
 
     _addHeader();
 
-    my $element = _getFormElementHtml(@_);
-
-    $element =
-        '<noautolink>' 
-      . $element
-      . '</noautolink>';    # prevent wiki words inside form fields
+    my $element = '<noautolink>' . _getFormElementHtml(@_) . '</noautolink>';    # prevent wiki words inside form fields
+      
     my $type = $params->{'type'};
     my $name = $params->{'name'};
 
@@ -1075,33 +1073,18 @@ sub _formElement {
     my $javascriptCalls = '';
     my $focus           = $params->{'focus'};
     if ($focus) {
-        my $focusCall =
-            '<script type="text/javascript">foswiki.Form.setFocus("'
-          . ( $currentForm->{'name'} || '' ) . '", "'
-          . $name
-          . '");</script>';
+        my $focusCall = Foswiki::Func::expandTemplate('formplugin:javascript:focus:inline');
+        $focusCall =~ s/\$formName/$currentForm->{'name'}/ if $currentForm->{'name'};
+        $focusCall =~ s/\$fieldName/$name/;
         $javascriptCalls .= $focusCall;
     }
     my $beforeclick = $params->{'beforeclick'};
     if ($beforeclick) {
         my $formName        = $currentForm->{'name'};
-        my $beforeclickCall = '';
-        $beforeclickCall .= '<script type="text/javascript">';
-        if ( $formName eq '' ) {
-            $beforeclickCall .=
-                'var field=document.getElementsByName("' 
-              . $name
-              . '")[0]; var formName=field.form.name;';
-        }
-        else {
-            $beforeclickCall .= 'var formName="' . $formName . '";';
-        }
-        $beforeclickCall .=
-            'var el=foswiki.Form.getFormElement(formName, "' 
-          . $name
-          . '"); foswiki.Form.initBeforeFocusText(el,"'
-          . $beforeclick . '");';
-        $beforeclickCall .= '</script>';
+        my $beforeclickCall = Foswiki::Func::expandTemplate('formplugin:javascript:beforeclick:inline');
+        $beforeclickCall =~ s/\$formName/$currentForm->{'name'}/;
+        $beforeclickCall =~ s/\$fieldName/$name/;
+        $beforeclickCall =~ s/\$beforeclick/$beforeclick/;
         $javascriptCalls .= $beforeclickCall;
     }
 
@@ -1178,11 +1161,11 @@ sub _formElement {
 
     $format = _renderFormattingTokens($format);
 
-    if ($elementcssclass) {
+    if ($currentForm->{'elementcssclass'}) {
 
         # not for hidden classes, but these are returned earlier in sub
-        my $classAttr = ' class="' . $elementcssclass . '"';
-        $format = CGI::div( { class => $elementcssclass }, $format );
+        my $classAttr = ' class="' . $currentForm->{'elementcssclass'} . '"';
+        $format = CGI::div( { class => $currentForm->{'elementcssclass'} }, $format );
     }
 
     # error?
@@ -1921,7 +1904,7 @@ sub _wrapHtmlErrorItem {
       ? "<a href=\"$currentUrl$anchor\">$fieldName</a> "
       : '';
     return
-      "<span class=\"$ERROR_ITEM_CSS_CLASS\">$fieldLink$errorString</span>";
+      "   * $fieldLink$errorString\n";
 }
 
 sub _wrapHtmlAuthorMessage {
@@ -1962,6 +1945,16 @@ sub _wrapHtmlTitleContainer {
     my ($text) = @_;
 
     return CGI::span( { class => $TITLE_CSS_CLASS }, $text );
+}
+
+=pod
+
+=cut
+
+sub _wrapHtmlErrorTitleContainer {
+    my ($text) = @_;
+
+    return "\n   * <strong>$text</strong>\n";
 }
 
 =pod
@@ -2080,7 +2073,7 @@ sub _allowRedirects {
     return 1 if ( $Foswiki::cfg{AllowRedirectUrl} );
     return 1 if $redirect =~ m#^/#;    # relative URL - OK
 
-    my $query = Foswiki::Func::getRequestObject();
+    my $query = Foswiki::Func::getCgiQuery();
     return 0 if ( Foswiki::Func::isTrue( $query->param($NO_REDIRECTS_TAG) ) );
 
     #TODO: this should really use URI

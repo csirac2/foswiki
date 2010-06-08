@@ -44,7 +44,7 @@ sub new {
     my ( $class, $session ) = @_;
 
     writeDebug("new PageCache using $Foswiki::cfg{CacheManager}")
-        if (TRACE);
+      if (TRACE);
 
     # try to get a shared instance of this class
     eval "require $Foswiki::cfg{CacheManager}";
@@ -59,8 +59,7 @@ sub new {
     if ( $Foswiki::cfg{MetaCacheManager} ne $Foswiki::cfg{CacheManager} ) {
         eval "use $Foswiki::cfg{MetaCacheManager}";
         die $@ if $@;
-        $this->{metaHandler} =
-          $Foswiki::cfg{MetaCacheManager}->new($session);
+        $this->{metaHandler} = $Foswiki::cfg{MetaCacheManager}->new($session);
     }
     else {
         $this->{metaHandler} = $this->{handler};
@@ -109,8 +108,10 @@ sub genVariationKey {
     $variationKey = '::' . $serverName . '::' . $serverPort;
 
     # add language tag
-    my $language = $this->{session}->i18n->language();
-    $variationKey .= "::language=$language" if $language;
+    if ( $Foswiki::cfg{UserInterfaceInternationalisation} ) {
+        my $language = $this->{session}->i18n->language();
+        $variationKey .= "::language=$language" if $language;
+    }
 
     # get information from the session object
     my $sessionValues = $session->getLoginManager()->getSessionValues();
@@ -198,7 +199,8 @@ sub cachePage {
 
     unless ($isDirty) {
         $text =~ s/([\t ]?)[ \t]*<\/?(nop|noautolink)\/?>/$1/gis;
-        if ( $Foswiki::cfg{Cache}{Compress} ) {
+
+        if ( $Foswiki::cfg{HttpCompress} ) {
             require Compress::Zlib;
             $text = Compress::Zlib::memGzip($text);
         }
@@ -274,7 +276,7 @@ sub getPage {
 }
 
 # check if the current page is cacheable
-# 
+#
 # 1. check refresh url param
 # 2. check CACHEABLE pref value
 # 3. ask plugins what they think (e.g. the blacklist plugin may want
@@ -451,9 +453,11 @@ sub _setDependencies {
 
     @topicDeps = keys %{ $this->{deps} } unless @topicDeps;
 
-    writeDebug(
-        "setting ".scalar(@topicDeps)." dependencies $webTopic\n"
-          .join("\n", @topicDeps)) if (TRACE);
+    writeDebug( "setting "
+          . scalar(@topicDeps)
+          . " dependencies $webTopic\n"
+          . join( "\n", @topicDeps ) )
+      if (TRACE);
 
     $this->{metaHandler}->set(
         PAGECACHE_DEPS_KEY . $webTopic . $variationKey,
@@ -481,7 +485,7 @@ sub _setDependencies {
     }
 }
 
-# remove all dependencies of a web.topic/variation 
+# remove all dependencies of a web.topic/variation
 sub _deleteDependency {
     my ( $this, $webTopic, $variationKey ) = @_;
 
@@ -551,8 +555,7 @@ sub _deletePageVariation {
 
     writeDebug("deleting $webTopic variation '$variationKey'") if (TRACE);
 
-    $this->{handler}->delete(
-        PAGECACHE_PAGE_KEY . $webTopic . $variationKey );
+    $this->{handler}->delete( PAGECACHE_PAGE_KEY . $webTopic . $variationKey );
     $this->_deleteDependency( $webTopic, $variationKey );
 }
 
@@ -646,8 +649,7 @@ s/<dirtyarea([^>]*?)>(?!.*<dirtyarea)(.*?)<\/dirtyarea>/$this->_handleDirtyArea(
 sub _handleDirtyArea {
     my ( $this, $args, $text, $topicObj ) = @_;
 
-    writeDebug(
-        "_handleDirtyArea($args) called in text='$text'")
+    writeDebug("_handleDirtyArea($args) called in text='$text'")
       if (TRACE);
 
     # add dirtyarea params
@@ -698,7 +700,7 @@ Copyright (C) 2008-2010 Foswiki Contributors. Foswiki Contributors
 are listed in the AUTHORS file in the root of this distribution.
 NOTE: Please extend that file, not this notice.
 
-Copyright (C) 2006-2008 Michael Daum http://michaeldaumconsulting.com
+Copyright (C) 2006-2010 Michael Daum http://michaeldaumconsulting.com
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License

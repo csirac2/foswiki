@@ -18,7 +18,7 @@
 package Foswiki::Plugins::FilterPlugin::Core;
 use strict;
 
-use vars qw($currentTopic $currentWeb $mixedAlphaNum %seenAnchorNames $makeIndexCounter %filteredTopic);
+use vars qw($currentTopic $currentWeb %seenAnchorNames $makeIndexCounter %filteredTopic);
 use POSIX qw(ceil);
 
 use constant DEBUG => 0; # toggle me
@@ -27,7 +27,6 @@ use constant DEBUG => 0; # toggle me
 sub init {
   ($currentWeb, $currentTopic) = @_;
 
-  $mixedAlphaNum = $Foswiki::regex{'mixedAlphaNum'};
   %seenAnchorNames = ();
   %filteredTopic = ();
   $makeIndexCounter = 0;
@@ -305,7 +304,7 @@ sub handleMakeIndex {
     if ($theSort eq 'nocase') {
       $crit = uc($crit);
     }
-    $crit =~ s/[^$mixedAlphaNum]//go;
+    $crit =~ s/[^$Foswiki::regex{'mixedAlphaNum'}]//go;
 
     my $group = $crit;
     $group = substr($crit, 0, 1) unless $theSort eq 'num';
@@ -668,9 +667,9 @@ sub expandVariables {
     $found = 1 if $text =~ s/\$$key\b/$params{$key}/g;
   }
 
-  $found = 1 if $text =~ s/\$percnt/\%/go;
+  $found = 1 if $text =~ s/\$perce?nt/\%/go;
   $found = 1 if $text =~ s/\$nop//go;
-  $found = 1 if $text =~ s/\$n([^$mixedAlphaNum]|$)/\n$1/go;
+  $found = 1 if $text =~ s/\$n/\n/go;
   $found = 1 if $text =~ s/\$dollar/\$/go;
 
   $_[0] = $text if $found;

@@ -16,6 +16,8 @@ you can always create a new web based on that web.
 
 =cut
 
+use strict;
+use warnings;
 use Unit::TestCase;
 our @ISA = qw( Unit::TestCase );
 
@@ -24,7 +26,6 @@ use Data::Dumper;
 use Foswiki;
 use Unit::Request;
 use Unit::Response;
-use strict;
 use Error qw( :try );
 
 BEGIN {
@@ -112,7 +113,7 @@ sub set_up {
     $this->SUPER::set_up();
 
     $this->{__EnvSafe} = {};
-    foreach my $sym (%ENV) {
+    foreach my $sym (keys %ENV) {
         next unless defined($sym);
         $this->{__EnvSafe}->{$sym} = $ENV{$sym};
     }

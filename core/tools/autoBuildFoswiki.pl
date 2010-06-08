@@ -46,12 +46,12 @@ chomp($foswikihome);
 #TODO: add a trivial and correct LocalSite.cfg
 `chmod -R 777 data pub`;
 
-`perl pseudo-install.pl -A developer`;
+`perl -wT pseudo-install.pl -A developer`;
 
 #run unit tests
 #TODO: testrunner should exit == 0 if no errors?
 chdir('test/unit');
-my $unitTests = "export FOSWIKI_LIBS=$foswikihome/lib; export FOSWIKI_HOME=$foswikihome; perl ../bin/TestRunner.pl -clean FoswikiSuite.pm 2>&1 > $foswikihome/Foswiki-UnitTests.log";
+my $unitTests = "export FOSWIKI_LIBS=$foswikihome/lib; export FOSWIKI_HOME=$foswikihome; perl ../bin/TestRunner.pl -tap -clean FoswikiSuite.pm 2>&1 > $foswikihome/Foswiki-UnitTests.log";
 my $return = `$unitTests`;
 my $errorcode = $? >> 8;
 unless ($errorcode == 0) {
@@ -59,6 +59,9 @@ unless ($errorcode == 0) {
     local $/ = undef;
     my $unittestErrors = <UNIT>;
     close(UNIT);
+    
+    #only output the summary
+    $unittestErrors =~ s/^(.*)Unit test run Summary://m;
     
     chdir($foswikihome);
     if ($SvensAutomatedBuilds) {

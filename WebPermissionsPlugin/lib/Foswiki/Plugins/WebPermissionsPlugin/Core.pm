@@ -25,6 +25,9 @@
 # This plugin helps with permissions management by displaying the web
 # permissions in a big table that can easily be edited. It updates
 # WebPreferences in each affected web.
+#
+# =========================
+
 package Foswiki::Plugins::WebPermissionsPlugin::Core;
 
 use strict;
@@ -32,9 +35,12 @@ use strict;
 use CGI (':all');
 use Foswiki::Meta ();
 
+# =========================
 our $antiBeforeSaveRecursion;
 
-sub TRACE_ACLS { 1 };
+my $debug = $Foswiki::Plugins::WebPermissionsPlugin::debug;
+
+# =========================
 
 # Handle %WEBPERMISSIONS% for Display and Edit
 sub WEBPERMISSIONS {
@@ -394,12 +400,14 @@ sub beforeSaveHandler {
     my $action = $query->param('topic_permissions_action');
     return unless ( defined($action) );    #nothing to do with this plugin
 
+    &Foswiki::Func::writeDebug( "WebPermissionsPlugin::Core::beforeSaveHandler: action=" . $action ) if ( $debug );
+
     if ( $action ne 'Save' ) {
 
         # SMELL: canceling out from, or just stopping a save seems
         # to be quite difficult
         Foswiki::Func::redirectCgiQuery( $query,
-            &Foswiki::Func::getScriptUrl( $web, $topic . 'view' ) );
+            &Foswiki::Func::getScriptUrl( $web, $topic , 'view' ) );
         throw Error::Simple('cancel permissions action');
     }
 
@@ -411,8 +419,6 @@ sub beforeSaveHandler {
     my @topicEditors    = $query->param('topiceditors');
     my @topicViewers    = $query->param('topicviewers');
     my @disallowedUsers = $query->param('disallowedusers');
-
-    $antiBeforeSaveRecursion = 0;
 
     if ( ( @topicEditors || @topicViewers || @disallowedUsers ) ) {
 
@@ -572,7 +578,7 @@ sub _getACLs {
         $context = 'WEB';
         $topic   = $Foswiki::cfg{WebPrefsTopicName};
     }
-    print STDERR "ACL: GET $context $web.$topic\n" if TRACE_ACLS;
+    &Foswiki::Func::writeDebug( "WebPermissionsPlugin::Core::_getACLs: GET $context $web.$topic" ) if ( $debug );
     my @knownusers = _getListOfUsers();
     push( @knownusers, _getListOfGroups() );
 
@@ -595,9 +601,9 @@ sub _getACLs {
                 "$perm$context$mode" );
 
             if (defined $users) {
-                print STDERR "ACL: $perm$context$mode=$users\n" if TRACE_ACLS;
+                &Foswiki::Func::writeDebug( "WebPermissionsPlugin::Core::_getACLs: $perm$context$mode=$users" ) if ( $debug );
             } else {
-                print STDERR "ACL: no $perm$context$mode defined\n";
+                &Foswiki::Func::writeWarning( "WebPermissionsPlugin::Core::_getACLs: no $perm$context$mode defined" ); 
             }
 
             next unless $users;
@@ -637,19 +643,19 @@ sub _getACLs {
                 # so change the default for all other users to 0.
                 foreach my $user (@knownusers) {
 
-                    print STDERR "ACL: Disallow $mode $user\n" if TRACE_ACLS;
+                    &Foswiki::Func::writeDebug( "WebPermissionsPlugin::Core::_getACLs: Disallow $mode $user" ) if ( $debug );
                     $acls{$user}->{$mode} = 0;
                 }
                 foreach my $user (@users) {
 
-                    print STDERR "ACL: Allow $mode $user\n" if TRACE_ACLS;
+                    &Foswiki::Func::writeDebug( "WebPermissionsPlugin::Core::_getACLs: Allow $mode $user" ) if ( $debug );
                     $acls{$user}->{$mode} = 1;
                 }
             }
             else {
                 foreach my $user (@users) {
 
-                    print STDERR "ACL: Deny $mode $user\n" if TRACE_ACLS;
+                    &Foswiki::Func::writeDebug( "WebPermissionsPlugin::Core::_getACLs: Deny $mode $user " ) if ( $debug );
                     $acls{$user}->{$mode} = 0;
                 }
             }
@@ -691,7 +697,7 @@ sub _setACLs {
         $topic   = $Foswiki::cfg{WebPrefsTopicName};
     }
 
-    print STDERR "ACL: SET $context $web.$topic\n" if TRACE_ACLS;
+    &Foswiki::Func::writeDebug( "WebPermissionsPlugin::Core::_setACLs: SET $context $web.$topic " ) if ( $debug );
     my ( $meta, $text ) = Foswiki::Func::readTopic( $web, $topic );
 
     my @knownusers = _getListOfUsers();
@@ -733,9 +739,7 @@ sub _setACLs {
                     }
                 );
             }
-            if (TRACE_ACLS) {
-                print STDERR "ACL: $name = ".join( ' ', @$set ) . "\n";
-            }
+            &Foswiki::Func::writeDebug( "WebPermissionsPlugin::Core::_setACLs: $name = " . join( ' ', @$set ) ) if ( $debug );
         }
     }
 

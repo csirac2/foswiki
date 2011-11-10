@@ -1,9 +1,12 @@
 # Copyright (C) 2004 Florian Weimer
 package RobustnessTests;
 
-use utf8;    # For test_sanitizeAttachmentNama_unicode
 use strict;
 use warnings;
+use Scalar::Util ();
+use Error qw( :try );
+
+use Assert; # for TAINT
 
 use FoswikiTestCase;
 our @ISA = qw( FoswikiTestCase );
@@ -12,16 +15,38 @@ require 5.008;
 use Foswiki;
 use Foswiki::Sandbox;
 use Foswiki::Time;
-use Error qw( :try );
 
 my $slash;
+
+# Unicode strings
+use utf8;
+# The second word in the $unicode[0] consists only of two _graphemes_
+# (logical characters as humans know them) both built from single _base
+# characters_ but then decorated w/additional _modifier_ characters to add
+# vowel marks and other signs.
+#
+# vim, scite, and probably other monospace/grid-based editors have problems
+# with this and may show all five unicode characters separately.
+# It's the word "hindi" in devanagari script. http://translate.google.com/#auto|hi|hindi
+#
+# - "use utf8;" needs to be at the top of this .pm.
+# - Your editor/terminal needs to be editing in utf8.
+# - You might also want ttf-devanagari-fonts or ttf-indic-fonts-core
+# - First word german 'übermaß' to make the failure mode more easy to follow
+my @unicode = (
+    'übermaß_हिंदी', # "excess" in german and 'Hindi' in hindi
+    'मानक', # 'standard' in hindi
+    '奶酪', # 'cheese' in Chinese
+    'חזיר', # 'pork' in Hebrew
+    );
 
 sub new {
     my ( $class, @args ) = @_;
     my $this = $class->SUPER::new(@args);
 
-    $this->{test_web}   = 'Temporary' . $class . 'TestWeb';
-    $this->{test_topic} = 'TestTopic' . $class;
+    $this->{test_web}   = 'Temporary' . $class . 'Test$unicode[2]Web';
+    $this->{test_topic} = 'Test$unicode[3]Topic' . $class;
+    die "Robustness tests must be run with -T" unless Scalar::Util::tainted($Assert::DIRTY);
 
     return $this;
 }
@@ -50,11 +75,15 @@ sub tear_down {
 
 sub test_untaintUnchecked {
     my $this = shift;
-    $this->assert_str_equals( '', Foswiki::Sandbox::untaintUnchecked('') );
-    $this->assert_not_null( 'abc', Foswiki::Sandbox::untaintUnchecked('abc') );
-    $this->assert_null( Foswiki::Sandbox::untaintUnchecked(undef) );
 
-    return;
+    foreach my $f ('', 'abc', @unicode) {
+	my $h = TAINT($f);
+	$this->assert(!UNTAINTED($h));
+	$this->assert(defined $h);
+	my $g = Foswiki::Sandbox::untaintUnchecked($h);
+	$this->assert_str_equals( $f, $g );
+	$this->assert(UNTAINTED($g));
+    }
 }
 
 sub test_validateAttachmentName {
@@ -84,12 +113,10 @@ sub test_validateAttachmentName {
     $this->assert_str_equals( "a/..b",
         Foswiki::Sandbox::validateAttachmentName("a/..b") );
 
-    return;
-}
-
-sub _shittify {
-    my ( $a, $b ) = Foswiki::Sandbox::sanitizeAttachmentName(shift);
-    return $a;
+    foreach my $f (@unicode) {
+	$this->assert_str_equals( $f,
+				  Foswiki::Sandbox::validateAttachmentName($f) );
+    }
 }
 
 =begin TML
@@ -101,71 +128,23 @@ $regex{filenameInvalidCharRegex} = qr/[^$regex{mixedAlphaNum}\. _-]/o;
 
 $regex{filenameInvalidCharRegex} = qr/[-%'";!\+=<>&{\(\)}\x00-\x1f\x7f-\x9f]/o;
 
- UNICODE: "What's a character?" ... strip control characters. Probably
-          don't need to strip layout chars. No attempt w/confusing chars.
-          Let's all pretend to be experts:
-    * http://www.unicode.org/faq/security.html
-    * http://unicode.org/uni2book/ch13.pdf - C0 & C1 control codes
-    * http://unicode.org/reports/tr36/ - Unicode Security Considerations
-    * http://unicode.org/reports/tr39/ - Unicode Security Mechanismsa
-       http://www.unicode.org/reports/tr39/#idmod is an impressive black &
-       white-list of character ranges recommended to be restricted from use
-       in "identifiers" (in a w3c sense?)
-    * http://tools.ietf.org/html/draft-ietf-syslog-protocol-23#section-8.1
+Now for full unicodification, attachment name filtering has gone, so we have to make
+sure a valid unicode name survives the cut intact.
 
- XSS: Filter characters that might be useful for XSS.
-    * http://ha.ckers.org/xss.html
-    * http://support.microsoft.com/kb/252985
-    * http://tldp.org/HOWTO/Secure-Programs-HOWTO/cross-site-malicious-content.html
-
- SMELL: Commented out parts of tests that assume we're filtering C1 control
- codes 0x7f-0x9f. I'm not sure if this range is used for legit printable chars
- in some weird charset out there
 =cut
 
 sub test_sanitizeAttachmentName {
     my $this = shift;
 
     # Check that leading paths are stripped
-    $this->assert_str_equals( "abc", _shittify("abc") );
-    $this->assert_str_equals( "abc", _shittify("./abc") );
-    $this->assert_str_equals( "abc", _shittify("\\abc") );
-    $this->assert_str_equals( "abc", _shittify("//abc") );
-    $this->assert_str_equals( "abc", _shittify("\\\\abc") );
-
-    # Check that "certain characters" are munched
-    my $crap = '';
-    for ( 0 .. 255 ) {
-        my $c = chr($_);
-        $crap .= $c if $c =~ /$Foswiki::cfg{NameFilter}/;
-    }
-
-    #$this->assert_num_equals(80, length($crap));
-    $this->assert_num_equals( 51, length($crap) );
-    my $x = $crap =~ / / ? '_' : '';
-    $this->assert_str_equals( "pick_me${x}pick_me",
-        _shittify("pick me${crap}pick me") );
-    my %junkset = (
-        '<script>'       => 'script',
-        '%3cscript%3e'   => '3cscript3e',
-        '&lt;script&gt;' => 'ltscriptgt',
-        '"foo"'          => 'foo',
-        "'foo'"          => 'foo',
-        "foo\x00foo"     => 'foofoo',          # C0 Control
-        "foo\x10foo"     => 'foofoo',          # C0 Control
-        "foo\x1ffoo"     => 'foofoo',          # C0 Control
-        "\xe2cret\xe9"   => "\xe2cret\xe9",    # cf. acrete - 'âcreté'
-        '片仮名'      => '片仮名',
-        'var a = { b : !(1 - 2 + 3) };' => 'var_a_=_{_b_:_!(1_-_2_+_3)_}',
-
-        #'var a = { b : !(1 - 2 + 3) };' => 'var_a___b_:_1__2__3_',
-        #"foo\x7ffoo" => 'foofoo', # C1 Control
-        #"foo\x8ffoo" => 'foofoo', # C1 Control
-        #"foo\x9ffoo" => 'foofoo', # C1 Control
-    );
-    while ( my ( $junk, $filtered ) = each %junkset ) {
-        $this->assert_str_equals( $filtered, _shittify($junk) );
-    }
+    $this->assert_str_equals( "abc", (Foswiki::Sandbox::sanitizeAttachmentName("abc"))[0] );
+    $this->assert_str_equals( "abc", (Foswiki::Sandbox::sanitizeAttachmentName("./abc"))[0] );
+    $this->assert_str_equals( "abc", (Foswiki::Sandbox::sanitizeAttachmentName("\\abc"))[0] );
+    $this->assert_str_equals( "abc", (Foswiki::Sandbox::sanitizeAttachmentName("//abc"))[0] );
+    $this->assert_str_equals( "abc", (Foswiki::Sandbox::sanitizeAttachmentName("\\\\abc"))[0] );
+    $this->assert_str_equals( $unicode[0], (Foswiki::Sandbox::sanitizeAttachmentName($unicode[0]))[0] );
+    $this->assert_str_equals( $unicode[0], (Foswiki::Sandbox::sanitizeAttachmentName("./$unicode[0]"))[0] );
+    $this->assert_str_equals( $unicode[0], (Foswiki::Sandbox::sanitizeAttachmentName("./".$unicode[0]))[0] );
 
     # Check that the upload filter is applied.
     $Foswiki::cfg{UploadFilter} = qr(^(
@@ -175,60 +154,27 @@ sub test_sanitizeAttachmentName {
          | pl
          | py
          | cgi ))$)x;
-    $this->assert_str_equals( ".htaccess.txt", _shittify(".htaccess") );
+    $this->assert_str_equals( ".htaccess.txt", (Foswiki::Sandbox::sanitizeAttachmentName(".htaccess"))[0] );
     for my $i (qw(php shtm phtml pl py cgi PHP SHTM PHTML PL PY CGI)) {
         my $j = "bog.$i";
         my $y = "$j.txt";
-        $this->assert_str_equals( $y, _shittify($j) );
+        $this->assert_str_equals( $y, (Foswiki::Sandbox::sanitizeAttachmentName($j))[0] );
     }
     for my $i (qw(php phtm shtml PHP PHTM SHTML)) {
         my $j = "bog.$i.s";
         my $y = "$j.txt";
-        $this->assert_str_equals( $y, _shittify($j) );
+        $this->assert_str_equals( $y, (Foswiki::Sandbox::sanitizeAttachmentName($j))[0] );
     }
 
-    return;
-}
+    foreach my $f (@unicode) {
+	$this->assert( utf8::is_utf8($f),
+		       'Our attachment name string doesn\'t have utf8 flag set' );
 
-# Item11185 - see also: FuncTests::test_unicode_attachment
-sub test_sanitizeAttachmentNama_unicode {
-    my ($this) = shift;
+	my ($sanitized, $orig) = Foswiki::Func::sanitizeAttachmentName($f);
 
-# The second word in the string below consists only of two _graphemes_
-# (logical characters as humans know them) both built from single _base
-# characters_ but then decorated w/additional _modifier_ characters to add
-# vowel marks and other signs.
-#
-# vim, scite, and probably other monospace/grid-based editors have problems
-# with this and may show all five unicode characters separately.
-# It's the word "hindi" in devanagari script. http://translate.google.com/#auto|hi|hindi
-#
-# - "use utf8;" needs to be at the top of this .pm.
-# - Your editor/terminal needs to be editing in utf8.
-# - You might also want ttf-devanagari-fonts or ttf-indic-fonts-core
-# - First word german 'übermaß' to make the failure mode more easy to follow
-    my $uniname = 'übermaß_हिंदी';
-
-    # http://translate.google.com/#auto|hi|standard
-    my $unicomment = 'मानक';
-    $this->assert( utf8::is_utf8($uniname),
-        'Our attachment name string doesn\'t have utf8 flag set' );
-    my $query;
-
-    $Foswiki::cfg{Site}{CharSet} = 'utf-8';
-    require Unit::Request;
-    $query = Unit::Request->new("");
-    $query->path_info("/$this->{test_web}/$this->{test_topic}");
-    $this->{session}  = Foswiki->new( undef, $query );
-    $this->{request}  = $query;
-    $this->{response} = Unit::Response->new();
-    ( $this->{test_topicObject} ) =
-      Foswiki::Func::readTopic( $this->{test_web}, $this->{test_topic} );
-    $this->{test_topicObject}->text("BLEEGLE\n");
-    my ($sanitized) = Foswiki::Func::sanitizeAttachmentName($uniname);
-
-    # Fails without Foswikirev:12780
-    $this->assert_str_equals( $uniname, $sanitized );
+	$this->assert_str_equals( $f, $orig );
+	$this->assert_str_equals( $f, $sanitized );
+    }
 
     return;
 }

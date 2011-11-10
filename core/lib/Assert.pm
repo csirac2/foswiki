@@ -26,7 +26,7 @@ our %EXPORT_TAGS = (
 );
 
 our $VERSION = '$Rev$';
-our $DIRTY   = lc('x');          # Used in TAINT
+our $DIRTY   = lc( 'x' );          # Used in TAINT
 
 Exporter::export_tags(qw(NDEBUG DEBUG));
 
@@ -85,9 +85,7 @@ sub ASSERT ($;$) {
 
 # Test if a value is untainted
 sub UNTAINTED($) {
-    local ( @_, $@, $^W ) = @_;
-    my $x;
-    return eval { $x = $_[0], kill 0; 1 };
+    return !Scalar::Util::tainted($_[0]);
 }
 
 # Taint the datum passed and return the tainted value

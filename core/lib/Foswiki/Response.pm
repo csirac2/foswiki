@@ -6,6 +6,8 @@
 
 Class to encapsulate response data.
 
+Note that a response is stored as octets representing UTF8-encoded data and *not* as a unicode string
+
 Fields:
     * =status=  - response status
     * =headers= - hashref to response headers
@@ -21,6 +23,7 @@ use warnings;
 use Assert;
 
 use CGI::Util ();
+use Encode ();
 
 =begin TML
 
@@ -39,7 +42,7 @@ sub new {
         status           => undef,
         headers          => {},
         body             => undef,
-        charset          => $Foswiki::cfg{Site}{CharSet},
+        charset          => 'utf-8',
         cookies          => [],
         outputHasStarted => 0,
     };
@@ -360,19 +363,9 @@ Gets/Sets response body. Note: do not use this method for output, use
 sub body {
     my ( $this, $body ) = @_;
     if ( defined $body ) {
-
-        # There *is* a risk that a unicode string could reach this far - for
-        # example, if it comes from a plugin. We need to force such strings
-        # into the "Foswiki canonical" representation of a string of bytes.
-        # The output may be crap, but at least it won't trigger a
-        # "Wide character in print" error.
-        if ( utf8::is_utf8($body) and ($Foswiki::cfg{Site}{CharSet} ne 'utf-8') ) {
-            require Encode;
-            #used to encode to 'iso-8859-1', but that seems wrong in light of the cfg settings
-            $body = Encode::encode( $Foswiki::cfg{Site}{CharSet}, $body, 0 );
-        }
-        $this->{headers}->{'Content-Length'} = length($body);
-        $this->{body} = $body;
+	# The body is stored as an octet string, *not* a unicode string
+        $this->{body} = Encode::encode_utf8($body);
+        $this->{headers}->{'Content-Length'} = length($this->{body});
     }
     return $this->{body};
 }
@@ -418,7 +411,8 @@ Add content to the end of the body.
 sub print {
     my $this = shift;
     $this->{body} = '' unless defined $this->{body};
-    $this->body( $this->{body} . join( '', @_ ) );
+    $this->{body} .= Encode::encode_utf8(join( '', @_ ));
+    $this->{headers}->{'Content-Length'} = length($this->{body});
 }
 
 =begin TML

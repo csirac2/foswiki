@@ -22,10 +22,30 @@ use Foswiki::Store::VC::RcsWrapHandler;
 use File::Path;
 use FoswikiStoreTestCase ();
 
-my $testWeb = "TestRcsWebTests";
-my $user    = "TestUser1";
+# Strings in Perl's internal unicode format
+my @unicode;
+my @string;
+{
+    use utf8;
+    push (@unicode, "übermaß_हिंदी");
+    push (@unicode, "मानक");
+    push (@string, $unicode[0]);
+    push (@string, $unicode[1]);
+    push (@string, "Jingang dao dui");
+    push (@string, "Lan Zai Yi");
+    push (@string, "Dan Bian");
+}
 
-my $rTopic = "TestTopic";
+# Strings as utf8 octets
+my @octets = map { Encode::encode_utf8($_) } @unicode;
+# Add utf8 IO layer to STDOUT and STDERR
+binmode(STDOUT, ":encoding(UTF-8)");
+binmode(STDERR, ":encoding(UTF-8)");
+
+my $testWeb = "TestRcsWeb$unicode[0]Tests";
+my $user    = "Test$unicode[1]User1";
+
+my $rTopic = "Test$unicode[1]Topic";
 my $class;
 
 my $time           = time();
@@ -100,7 +120,7 @@ sub set_up {
     $Foswiki::Sandbox::REAL_SAFE_PIPE_OPEN     = 0;
     $Foswiki::Sandbox::EMULATED_SAFE_PIPE_OPEN = 0;
 
-    $Foswiki::cfg{WarningFileName} = "$Foswiki::cfg{TempfileDir}/junk";
+    $Foswiki::cfg{WarningFileName} = "$Foswiki::cfg{TempfileDir}/$unicode[0]";
     File::Path::mkpath("$Foswiki::cfg{DataDir}/$testWeb");
     File::Path::mkpath("$Foswiki::cfg{PubDir}/$testWeb");
     $this->assert( open( F, ">$Foswiki::cfg{TempfileDir}/itme3122" ), $! );
@@ -204,7 +224,7 @@ sub verify_RcsWrapOnly_ciLocked {
     # create the fixture
     my $rcs = Foswiki::Store::VC::RcsWrapHandler->new( new StoreStub,
         $testWeb, $topic, "" );
-    $rcs->addRevisionFromText( "Shooby Dooby", "original", "BungditDin" );
+    $rcs->addRevisionFromText( $string[3], "original", $string[1] );
 
     # hack the lock
     my $vfile = $rcs->{file} . ",v";
@@ -212,14 +232,14 @@ sub verify_RcsWrapOnly_ciLocked {
     unlink("$topic.txt");
 
     # file is now locked by blocker_socker, save some new text
-    $rcs->ci(0, "Shimmy Dimmy", 'Gotcha', 'SheikAlot', time() );
+    $rcs->ci(0, $string[2], $string[0], $string[4], time() );
 
     my $txt = $rcs->readFile($vfile);
-    $this->assert_matches( qr/Gotcha/s,      $txt );
-    $this->assert_matches( qr/BungditDin/s,  $txt );
-    $this->assert_matches( qr/Shimmy Dimmy/, $txt );
-    $this->assert_matches( qr/Shooby Dooby/, $txt );
-    $this->assert_matches( qr/SheikAlot/s,   $txt );
+    $this->assert_matches( qr/$string[0]/s,      $txt );
+    $this->assert_matches( qr/$string[1]/s,  $txt );
+    $this->assert_matches( qr/$string[2]/, $txt );
+    $this->assert_matches( qr/$string[3]/, $txt );
+    $this->assert_matches( qr/$string[4]/s,   $txt );
 }
 
 sub verify_simple1 {

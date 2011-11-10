@@ -1603,17 +1603,6 @@ sub protectPlainText {
 
     $text =~ s/([@%])/<nop>$1<nop>/g;    # email address, macro
 
-    # Encode special chars into XML &#nnn; entities for use in RSS feeds
-    # - no encoding for HTML pages, to avoid breaking international
-    # characters. Only works for ISO-8859-1 sites, since the Unicode
-    # encoding (&#nnn;) is identical for first 256 characters.
-    # I18N TODO: Convert to Unicode from any site character set.
-    if (   $this->{session}->inContext('rss')
-        && $Foswiki::cfg{Site}{CharSet} =~ /^iso-?8859-?1$/i )
-    {
-        $text =~ s/([\x7f-\xff])/"\&\#" . unpack( 'C', $1 ) .';'/ge;
-    }
-
     return $text;
 }
 

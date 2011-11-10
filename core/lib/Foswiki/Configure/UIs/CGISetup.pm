@@ -108,7 +108,7 @@ HERE
             # Recommend CGI.pm upgrade if using mod_perl 2.0, which
             # is reported as version 1.99 and implies Apache 2.0
             $contents .= $this->setting( '', $this->WARN( <<HERE ) );
-Perl CGI version 3.11 or higher is recommended to avoid problems with
+Perl CGI version 3.43 or higher is recommended to avoid problems with
 mod_perl.
 HERE
             $erk++;

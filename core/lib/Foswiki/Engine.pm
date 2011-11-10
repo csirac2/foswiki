@@ -473,6 +473,8 @@ Abstract method, must be defined by inherited classes.
 
 Should send $buffer to client.
 
+Note that $buffer contains octets, and not unicode characters.
+
 =cut
 
 sub write {

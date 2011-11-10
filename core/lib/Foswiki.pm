@@ -50,7 +50,7 @@ use CGI                      ();  # Always required to get html generation tags;
 use Digest::MD5              ();  # For passthru and validation
 use Foswiki::Configure::Load ();
 
-require 5.005;                    # For regex objects and internationalisation
+require 5.005;
 
 # Site configuration constants
 our %cfg;
@@ -146,7 +146,7 @@ BEGIN {
             # FOSWIKI_ASSERTS. If ASSERTs are off, this is assumed to be a
             # production environment, and no stack traces or paths are
             # output to the browser.
-            $SIG{'__WARN__'} = sub { die @_ };
+            $SIG{'__WARN__'} = sub { my $x = join( ' ', @_ ); utf8::downgrade( $x, 1 ); die $x };
             $Error::Debug = 1;    # verbose stack traces, please
         }
         else {
@@ -181,9 +181,9 @@ BEGIN {
         ADDTOZONE    => undef,
         ALLVARIABLES => sub { $_[0]->{prefs}->stringify() },
         ATTACHURL =>
-          sub { return $_[0]->getPubUrl( 1, $_[2]->web, $_[2]->topic ); },
+          sub { return $_[0]->getPubUrl( 1, $_[2]->web, $_[2]->topic, $_[1]->{_DEFAULT} ); },
         ATTACHURLPATH =>
-          sub { return $_[0]->getPubUrl( 0, $_[2]->web, $_[2]->topic ); },
+          sub { return $_[0]->getPubUrl( 0, $_[2]->web, $_[2]->topic, $_[1]->{_DEFAULT} ); },
         DATE => sub {
             Foswiki::Time::formatTime(
                 time(),
@@ -397,7 +397,7 @@ BEGIN {
     }
 
     $macros{CHARSET} = sub {
-        $Foswiki::cfg{Site}{CharSet};
+        'utf-8'
     };
 
     $macros{LANG} = sub {
@@ -612,108 +612,6 @@ use Foswiki::Plugins  ();
 use Foswiki::Store    ();
 use Foswiki::Users    ();
 
-sub UTF82SiteCharSet {
-    my ( $this, $text ) = @_;
-
-    # Detect character encoding of the full topic name from URL
-    return if ( $text =~ $regex{validAsciiStringRegex} );
-
-    # SMELL: all this regex stuff should go away.
-    # If not UTF-8 - assume in site character set, no conversion required
-    if ( $^O eq 'darwin' ) {
-
-        #this is a gross over-generalisation - as not all darwins are apple's
-        # and not all darwins use apple's perl
-        my $trial = $text;
-        $trial =~ s/$regex{validUtf8CharRegex}//g;
-        return unless ( length($trial) == 0 );
-    }
-    else {
-
-        #SMELL: this seg faults on OSX leopard. (and possibly others)
-        return unless ( $text =~ $regex{validUtf8StringRegex} );
-    }
-
-    # If site charset is already UTF-8, there is no need to convert anything:
-    if ( $Foswiki::cfg{Site}{CharSet} =~ /^utf-?8$/i ) {
-
-        # warn if using Perl older than 5.8
-        if ( $] < 5.008 ) {
-            $this->logger->log( 'warning',
-                    'UTF-8 not remotely supported on Perl ' 
-                  . $]
-                  . ' - use Perl 5.8 or higher..' );
-        }
-
-        return $text;
-    }
-
-    # Convert into ISO-8859-1 if it is the site charset.  This conversion
-    # is *not valid for ISO-8859-15*.
-    if ( $Foswiki::cfg{Site}{CharSet} =~ /^iso-?8859-?1$/i ) {
-
-        # ISO-8859-1 maps onto first 256 codepoints of Unicode
-        # (conversion from 'perldoc perluniintro')
-        $text =~ s/ ([\xC2\xC3]) ([\x80-\xBF]) /
-          chr( ord($1) << 6 & 0xC0 | ord($2) & 0x3F )
-            /egx;
-    }
-    else {
-
-        # Convert from UTF-8 into some other site charset
-        if ( $] >= 5.008 ) {
-            require Encode;
-            import Encode qw(:fallbacks);
-
-            # Map $Foswiki::cfg{Site}{CharSet} into real encoding name
-            my $charEncoding =
-              Encode::resolve_alias( $Foswiki::cfg{Site}{CharSet} );
-            if ( not $charEncoding ) {
-                $this->logger->log( 'warning',
-                        'Conversion to "'
-                      . $Foswiki::cfg{Site}{CharSet}
-                      . '" not supported, or name not recognised - check '
-                      . '"perldoc Encode::Supported"' );
-            }
-            else {
-
-                # Convert text using Encode:
-                # - first, convert from UTF8 bytes into internal
-                # (UTF-8) characters
-                $text = Encode::decode( 'utf8', $text );
-
-                # - then convert into site charset from internal UTF-8,
-                # inserting \x{NNNN} for characters that can't be converted
-                $text = Encode::encode( $charEncoding, $text, &FB_PERLQQ() );
-            }
-        }
-        else {
-            require Unicode::MapUTF8;    # Pre-5.8 Perl versions
-            my $charEncoding = $Foswiki::cfg{Site}{CharSet};
-            if ( not Unicode::MapUTF8::utf8_supported_charset($charEncoding) ) {
-                $this->logger->log( 'warning',
-                        'Conversion to "'
-                      . $Foswiki::cfg{Site}{CharSet}
-                      . '" not supported, or name not recognised - check '
-                      . '"perldoc Unicode::MapUTF8"' );
-            }
-            else {
-
-                # Convert text
-                $text = Unicode::MapUTF8::from_utf8(
-                    {
-                        -string  => $text,
-                        -charset => $charEncoding
-                    }
-                );
-
-                # FIXME: Check for failed conversion?
-            }
-        }
-    }
-    return $text;
-}
-
 =begin TML
 
 ---++ ObjectMethod writeCompletePage( $text, $pageType, $contentType )
@@ -901,11 +799,10 @@ sub generateHTTPHeaders {
     }
 
     $contentType = 'text/html' unless $contentType;
-    $contentType .= '; charset=' . $Foswiki::cfg{Site}{CharSet}
+    $contentType .= '; charset=utf-8'
       if $contentType ne ''
           && $contentType =~ m!^text/!
-          && $contentType !~ /\bcharset\b/
-          && $Foswiki::cfg{Site}{CharSet};
+          && $contentType !~ /\bcharset\b/;
 
     # use our version of the content type
     $hopts->{'Content-Type'} = $contentType;
@@ -1513,14 +1410,8 @@ sub getPubUrl {
         my $path = '/' . $web . '/' . $topic;
         if ($attachment) {
             $path .= '/' . $attachment;
-
-            # Attachments are served directly by web server, need to handle
-            # URL encoding specially
-            $url .= urlEncodeAttachment($path);
         }
-        else {
-            $url .= urlEncode($path);
-        }
+	$url .= urlEncode($path);
     }
 
     return $url;
@@ -1664,9 +1555,6 @@ sub new {
     $query ||= new Foswiki::Request();
     my $this = bless( { sandbox => 'Foswiki::Sandbox' }, $class );
 
-    # Tell Foswiki::Response which charset we are using if not default
-    $Foswiki::cfg{Site}{CharSet} ||= 'iso-8859-1';
-
     $this->{request}  = $query;
     $this->{cgiQuery} = $query;    # for backwards compatibility in contribs
     $this->{response} = new Foswiki::Response();
@@ -1805,10 +1693,6 @@ sub new {
         # implicit untaint OK - validated later
         $web = $1 unless $web;
     }
-    my $topicNameTemp = $this->UTF82SiteCharSet($topic);
-    if ($topicNameTemp) {
-        $topic = $topicNameTemp;
-    }
 
     # Item3270 - here's the appropriate place to enforce spec
     # http://develop.twiki.org/~twiki4/cgi-bin/view/Bugs/Item3270
@@ -1838,16 +1722,6 @@ sub new {
 
     $this->{topicName} = $Foswiki::cfg{HomeTopicName}
       unless ( defined $this->{topicName} );
-
-    # Convert UTF-8 web and topic name from URL into site charset if
-    # necessary
-    # SMELL: merge these two cases, browsers just don't mix two encodings
-    # in one URL - can also simplify into 2 lines by making function
-    # return unprocessed text if no conversion
-    my $webNameTemp = $this->UTF82SiteCharSet( $this->{webName} );
-    if ($webNameTemp) {
-        $this->{webName} = $webNameTemp;
-    }
 
     $this->{scriptUrlPath} = $Foswiki::cfg{ScriptUrlPath};
 
@@ -2547,47 +2421,6 @@ sub entityDecode {
 
 =begin TML
 
----++ StaticMethod urlEncodeAttachment ( $text )
-
-For attachments, URL-encode specially to 'freeze' any characters >127 in the
-site charset (e.g. ISO-8859-1 or KOI8-R), by doing URL encoding into native
-charset ($siteCharset) - used when generating attachment URLs, to enable the
-web server to serve attachments, including images, directly.
-
-This encoding is required to handle the cases of:
-
-    - browsers that generate UTF-8 URLs automatically from site charset URLs - now quite common
-    - web servers that directly serve attachments, using the site charset for
-      filenames, and cannot convert UTF-8 URLs into site charset filenames
-
-The aim is to prevent the browser from converting a site charset URL in the web
-page to a UTF-8 URL, which is the default.  Hence we 'freeze' the URL into the
-site character set through URL encoding.
-
-In two cases, no URL encoding is needed:  For EBCDIC mainframes, we assume that
-site charset URLs will be translated (outbound and inbound) by the web server to/from an
-EBCDIC character set. For sites running in UTF-8, there's no need for Foswiki to
-do anything since all URLs and attachment filenames are already in UTF-8.
-
-=cut
-
-sub urlEncodeAttachment {
-    my ($text) = @_;
-
-    my $usingEBCDIC = ( 'A' eq chr(193) );    # Only true on EBCDIC mainframes
-
-    if ( $Foswiki::cfg{Site}{CharSet} =~ /^utf-?8$/i or $usingEBCDIC ) {
-
-        # Just let browser do UTF-8 URL encoding
-        return $text;
-    }
-
-    # Freeze into site charset through URL encoding
-    return urlEncode($text);
-}
-
-=begin TML
-
 ---++ StaticMethod urlEncode( $string ) -> encoded string
 
 Encode by converting characters that are illegal in URLs to
@@ -2635,6 +2468,9 @@ sub urlDecode {
     my $text = shift;
 
     $text =~ s/%([\da-f]{2})/chr(hex($1))/gei;
+
+    # Turn off the UTF8 flag, if it's on. UTF8 is used as the site charset, but unicode
+    # is *not* used internally.
 
     return $text;
 }

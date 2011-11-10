@@ -407,6 +407,8 @@ HERE
       _formatString( $this->{desc} . "\n" ) . "\n\n";
 
     for ( my $i = $this->{head} ; $i > 0 ; $i-- ) {
+ASSERT(!utf8::is_utf8($this->{revs}[$i]->{log}));
+ASSERT(!utf8::is_utf8($this->{revs}[$i]->{text}));
         print $file "\n", '1.', $i, "\n",
           'log', "\n", _formatString( $this->{revs}[$i]->{log} ),
           "\n", 'text', "\n", _formatString( $this->{revs}[$i]->{text} ),
@@ -471,14 +473,13 @@ sub ci {
     $this->{revs}[$head]->{log}    = $log;
     $this->{revs}[$head]->{author} = $author;
     $this->{revs}[$head]->{date}   = ( defined $date ? $date : time() );
-
     _writeMe($this);
+
 }
 
 sub _writeMe {
     my ($this) = @_;
     my $out;
-
     chmod( $Foswiki::cfg{RCS}{filePermission}, $this->{rcsFile} );
     unless ( open( $out, '>', $this->{rcsFile} ) ) {
         throw Error::Simple(

@@ -42,7 +42,7 @@ use Foswiki ();
 
 # Set to 1 to trace commands to STDERR, and redirect STDERR from
 # the command subprocesses to /tmp/foswiki_sandbox.log
-use constant TRACE => 0;
+use constant TRACE => 1;
 
 our $REAL_SAFE_PIPE_OPEN;
 our $EMULATED_SAFE_PIPE_OPEN;
@@ -307,13 +307,6 @@ sub sanitizeAttachmentName {
 
     my $origName = $fileName;
 
-    # Change spaces to underscore
-    $fileName =~ s/ /_/go;
-
-    # See Foswiki.pm filenameInvalidCharRegex definition and/or Item11185
-    #$fileName =~ s/$Foswiki::regex{filenameInvalidCharRegex}//go;
-    $fileName =~ s/$Foswiki::cfg{NameFilter}//go;
-
     # Append .txt to some files
     $fileName =~ s/$Foswiki::cfg{UploadFilter}/$1\.txt/goi;
 
@@ -551,7 +544,7 @@ sub sysCommand {
 
             # Child - run the command
             untie(*STDERR);
-            open( STDERR, '>', $stderrCache )
+            open( STDERR, '>:encoding(UTF-8)', $stderrCache )
               || die "Can't redirect STDERR: '$!'";
 
             unless ( exec( $path, @args ) ) {
@@ -611,7 +604,7 @@ sub sysCommand {
 
             open( STDOUT, ">&=", fileno($writeHandle) ) or die;
 
-            open( STDERR, '>', $stderrCache )
+            open( STDERR, '>:encoding(UTF-8)', $stderrCache )
               || die "Can't kill STDERR: $!";
 
             unless ( exec( $path, @args ) ) {
@@ -659,21 +652,26 @@ sub sysCommand {
 
         open( my $oldStderr, '>&STDERR' ) || die "Can't steal STDERR: $!";
 
-        open( STDERR, '>', $stderrCache )
+        open( STDERR, '>:encoding(UTF-8)', $stderrCache )
           || die "Can't redirect STDERR: $!";
 
         $data = `$cmd`;
 
         # restore STDERR
         close(STDERR);
-        open( STDERR, '>&', $oldStderr ) || die "Can't restore STDERR: $!";
+        open( STDERR, '>&:encoding(UTF-8)', $oldStderr )
+	    || die "Can't restore STDERR: $!";
         close($oldStderr);
 
         $exit = ( $? >> 8 );
 
         # Do *not* return the error message; it contains sensitive path info.
-        print STDERR "\n$cmd failed: $exit\n" if ( TRACE && $exit );
+         print STDERR "\n$cmd failed: $exit\n" if ( TRACE && $exit );
     }
+
+    # re-opening a glob borks the IO layers, so have to restore UTF8
+    binmode(STDERR, ':encoding(UTF-8)');
+    binmode(STDOUT, ':encoding(UTF-8)');
 
     if (TRACE) {
         $cmd ||=
@@ -682,7 +680,7 @@ sub sysCommand {
           . join( $CMDQUOTE . ' ' . $CMDQUOTE, @args )
           . $CMDQUOTE;
         $data ||= '';
-        print STDERR $cmd, ' -> ', $data, "\n";
+	print STDERR "$cmd -> $data\n";
     }
 
     my $stderr;

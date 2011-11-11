@@ -13,11 +13,18 @@ An object of this class is created for each file stored under RCS.
 For readers who are familiar with Foswiki version 1.0, this class
 is analagous to the old =Foswiki::Store::RcsWrap=.
 
+WARNING: RCS has known limitations on usernames; specifically, they
+must contain at least one non-digit, and must be comprised of iso-8859-characters as dictated
+by the _validateRCSUsername function herein.
+
+See also http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=247494
+
 =cut
 
 package Foswiki::Store::VC::RcsWrapHandler;
 use strict;
 use warnings;
+use Assert;
 
 use Foswiki::Store::VC::Handler ();
 our @ISA = ('Foswiki::Store::VC::Handler');
@@ -26,6 +33,15 @@ use Foswiki::Sandbox ();
 
 sub new {
     return shift->SUPER::new(@_);
+}
+
+sub _validateRCSUsername {
+    use bytes;
+    # Regex reverse-engineered from RCS 5.7 sources
+    my $blah = $_[0]; utf8::encode($blah);
+    ASSERT($blah =~ /^[-!"#%&'\(\)\*\+\/0-9<=>\?A-Z\[\\\]^_`a-z{|}~\xA0-\xFF]+$/,
+	   "'$blah' is not a valid RCS username");
+    no bytes;
 }
 
 =begin TML
@@ -117,6 +133,7 @@ sub ci {
     $comment = 'none' unless $comment;
 
     my ( $cmd, $rcsOutput, $exit );
+    _validateRCSUsername($user) if DEBUG;
     if ( defined($date) ) {
         require Foswiki::Time;
         $date = Foswiki::Time::formatTime( $date, '$rcs', 'gmtime' );
@@ -174,6 +191,7 @@ sub repRev {
     $date = Foswiki::Time::formatTime( $date, '$rcs', 'gmtime' );
 
     _lock($this);
+    _validateRCSUsername($user) if DEBUG;
     my ( $rcsOut, $exit ) = Foswiki::Sandbox->sysCommand(
         $Foswiki::cfg{RCS}{ciDateCmd},
         DATE     => $date,

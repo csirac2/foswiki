@@ -42,7 +42,9 @@ use Foswiki ();
 
 # Set to 1 to trace commands to STDERR, and redirect STDERR from
 # the command subprocesses to /tmp/foswiki_sandbox.log
-use constant TRACE => 1;
+use constant TRACE => 0;
+# Set to 1 to trace _failed_ commands to STDERR
+use constant REPORT => 0;
 
 our $REAL_SAFE_PIPE_OPEN;
 our $EMULATED_SAFE_PIPE_OPEN;
@@ -643,7 +645,7 @@ sub sysCommand {
             && ( length($cmd) > 8191 ) )
         {
 
-      #heck, on pre WinXP its only 2048 - http://support.microsoft.com/kb/830473
+	    # heck, on pre WinXP its only 2048 - http://support.microsoft.com/kb/830473
             print STDERR
               "WARNING: Sandbox::sysCommand commandline probably too long ("
               . length($cmd) . ")\n";
@@ -666,21 +668,21 @@ sub sysCommand {
         $exit = ( $? >> 8 );
 
         # Do *not* return the error message; it contains sensitive path info.
-         print STDERR "\n$cmd failed: $exit\n" if ( TRACE && $exit );
+	print STDERR "\n$cmd failed: $exit\n" if ( TRACE && $exit );
     }
 
     # re-opening a glob borks the IO layers, so have to restore UTF8
     binmode(STDERR, ':encoding(UTF-8)');
     binmode(STDOUT, ':encoding(UTF-8)');
 
-    if (TRACE) {
+    if (TRACE || REPORT && $exit) {
         $cmd ||=
             $path . ' '
           . $CMDQUOTE
           . join( $CMDQUOTE . ' ' . $CMDQUOTE, @args )
           . $CMDQUOTE;
         $data ||= '';
-	print STDERR "$cmd -> $data\n";
+	print STDERR "$cmd -".($exit || '')."> $data\n";
     }
 
     my $stderr;

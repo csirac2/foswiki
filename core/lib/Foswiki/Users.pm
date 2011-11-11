@@ -377,6 +377,10 @@ for the given login name.
 This static function is designed to be called from custom user mappers that
 support 1:1 login-to-cUID mappings.
 
+Note: custom mappers *must* ensure they call this function or otherwise ensure
+that cUIDs are not (1) entirely composed of digits and (2) do not include any characters
+that ouside the range qr/[-!"#%&'\(\)\*\+\/0-9<=>\?A-Z\[\\\]^_`a-z{|}~]/
+
 =cut
 
 sub mapLogin2cUID {
@@ -387,6 +391,7 @@ sub mapLogin2cUID {
     # use bytes to ignore character encoding
     use bytes;
     $cUID =~ s/([^a-zA-Z0-9])/'_'.sprintf('%02x', ord($1))/ge;
+    $cUID = 'n'.$cUID if $cUID =~ /^\d+$/; # digits only not allowed!
     no bytes;
     return $cUID;
 }

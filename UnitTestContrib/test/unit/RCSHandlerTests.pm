@@ -224,22 +224,23 @@ sub verify_RcsWrapOnly_ciLocked {
     # create the fixture
     my $rcs = Foswiki::Store::VC::RcsWrapHandler->new( new StoreStub,
         $testWeb, $topic, "" );
-    $rcs->addRevisionFromText( $string[3], "original", $string[1] );
+    $rcs->addRevisionFromText( $string[3], "original", "BungditDin" );
 
     # hack the lock
     my $vfile = $rcs->{file} . ",v";
     `co -f -q -l $vfile`;    # Only if we have co
     unlink("$topic.txt");
 
-    # file is now locked by blocker_socker, save some new text
-    $rcs->ci(0, $string[2], $string[0], $string[4], time() );
+    # file is now locked, save some new text
+    $rcs->ci(0, $string[2], $string[0], "SheikALot", time() );
 
     my $txt = $rcs->readFile($vfile);
-    $this->assert_matches( qr/$string[0]/s,      $txt );
-    $this->assert_matches( qr/$string[1]/s,  $txt );
-    $this->assert_matches( qr/$string[2]/, $txt );
-    $this->assert_matches( qr/$string[3]/, $txt );
-    $this->assert_matches( qr/$string[4]/s,   $txt );
+    utf8::decode($txt); # so we can regex it
+    $this->assert_matches( qr/$string[0]/s, $txt );
+    $this->assert_matches( qr/BungditDin/s, $txt );
+    $this->assert_matches( qr/$string[2]/,  $txt );
+    $this->assert_matches( qr/$string[3]/,  $txt );
+    $this->assert_matches( qr/SheikALot/s, $txt );
 }
 
 sub verify_simple1 {

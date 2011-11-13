@@ -14,12 +14,16 @@ This is a preference backend used to get preferences defined in a topic.
 package Foswiki::Prefs::TopicRAM;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Prefs::BaseBackend ();
 our @ISA = qw(Foswiki::Prefs::BaseBackend);
 
 use Foswiki::Prefs::Parser ();
+
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my ( $proto, $topicObject ) = @_;

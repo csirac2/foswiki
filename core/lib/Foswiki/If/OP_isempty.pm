@@ -9,10 +9,14 @@
 package Foswiki::If::OP_isempty;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Query::UnaryOP ();
 our @ISA = ('Foswiki::Query::UnaryOP');
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $class = shift;

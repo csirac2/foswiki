@@ -1,13 +1,17 @@
 # See bottom of file for license and copyright information
 package Foswiki::Users::ApacheHtpasswdUser;
 use strict;
+use utf8;
 use warnings;
-
-use Foswiki::Users::Password ();
-our @ISA = ('Foswiki::Users::Password');
-
+use warnings qw( FATAL utf8 );
 use Assert;
 use Error qw( :try );
+
+use strict;
+use utf8;
+use Foswiki::Users::Password ();
+our @ISA = ('Foswiki::Users::Password');
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 

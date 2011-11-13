@@ -6,6 +6,7 @@ our @ISA = qw( FoswikiTestCase );
 
 use Foswiki;
 use Error qw( :try );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # Make sure it's a wikiname so we can check squab handling
 my $testWeb           = 'TemporaryHierarchicalWebsTestsTestWeb';

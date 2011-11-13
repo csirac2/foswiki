@@ -2,8 +2,11 @@
 package Foswiki::Serialise;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Foswiki ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 
@@ -41,6 +44,8 @@ sub serialise {
 }
 
 
+use strict;
+use utf8;use utf8;
 =begin TML
 
 ---++ StaticMethod deserialise( $session, $cereal, $style ) -> $data

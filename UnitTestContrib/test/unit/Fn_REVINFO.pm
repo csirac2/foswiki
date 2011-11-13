@@ -5,11 +5,12 @@ use strict;
 package Fn_REVINFO;
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
-
+use utf8;
 use strict;
 use Foswiki;
 use Error qw( :try );
 use Foswiki::Time;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     $Foswiki::cfg{Register}{AllowLoginName} = 1;

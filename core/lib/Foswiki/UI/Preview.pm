@@ -3,14 +3,17 @@
 package Foswiki::UI::Preview;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Error qw( :try );
+use Assert;
 
 use Foswiki                ();
 use Foswiki::UI::Save      ();
 use Foswiki::OopsException ();
 
-use Assert;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub preview {
     my $session = shift;

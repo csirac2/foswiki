@@ -1,12 +1,15 @@
 # tests for the correct expansion of ICON*
 package Fn_ICON;
 use strict;
+use strict;
+use utf8;use FoswikiFnTestCase;
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
 
 use Foswiki;
 use Error qw( :try );
 use Assert;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $self = shift()->SUPER::new( 'ICON', @_ );

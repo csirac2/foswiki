@@ -1,6 +1,7 @@
 use strict;
 
 # tests for the correct expansion of VAR
+use utf8;
 
 package Fn_VAR;
 
@@ -9,6 +10,7 @@ our @ISA = qw( FoswikiFnTestCase );
 
 use Foswiki;
 use Error qw( :try );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $self = shift()->SUPER::new( 'VAR', @_ );

@@ -2,7 +2,9 @@
 package Foswiki::Store::Interfaces::SearchAlgorithm;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 
 use Foswiki            ();
@@ -10,9 +12,11 @@ use Foswiki::Plugins   ();
 use Foswiki::Sandbox   ();
 use Foswiki::WebFilter ();
 use Foswiki::Meta      ();
+use utf8;
 
 use Foswiki::Store::Interfaces::QueryAlgorithm ();
 our @ISA = ('Foswiki::Store::Interfaces::QueryAlgorithm');
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 

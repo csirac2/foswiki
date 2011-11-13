@@ -9,12 +9,16 @@
 package Foswiki::Query::OP_ref;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
+use Error qw( :try );
+use Assert;
+
 use Foswiki::Query::OP ();
 our @ISA = ('Foswiki::Query::OP');
 
-use Error qw( :try );
-use Assert;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $class = shift;

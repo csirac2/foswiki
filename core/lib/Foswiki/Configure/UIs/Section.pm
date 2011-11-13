@@ -14,7 +14,11 @@ sections) and level > 1 (subsection).
 package Foswiki::Configure::UIs::Section;
 
 use strict;
+use utf8;
+use locale;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Foswiki::Configure::UIs::Value ();
 use Foswiki::Configure::UI         ();
 our @ISA = ('Foswiki::Configure::UIs::Item');

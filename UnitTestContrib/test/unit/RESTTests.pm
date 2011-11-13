@@ -12,6 +12,7 @@ use Foswiki::Func;
 use Foswiki::EngineException;
 use Carp;
 use Error ':try';
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 our $UI_FN;
 

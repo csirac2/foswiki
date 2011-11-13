@@ -11,12 +11,17 @@ Interface to the caching infrastructure.
 package Foswiki::PageCache;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
+use Error qw( :try );
+use CGI::Util ();
+
 use Foswiki::Cache;
 use Foswiki::Time;
 use Foswiki::Attrs;
-use Error qw( :try );
-use CGI::Util ();
+
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 use constant PAGECACHE_PAGE_KEY    => 'Foswiki::PageCache::';
 use constant PAGECACHE_VARS_KEY    => 'Foswiki::PageCache::Vars::';
@@ -24,7 +29,8 @@ use constant PAGECACHE_DEPS_KEY    => 'Foswiki::PageCache::Deps::';
 use constant PAGECACHE_REVDEPS_KEY => 'Foswiki::PageCache::RevDeps::';
 use constant PAGECACHE_KEYSEP      => "\0";
 
-# Enable output of messages to the foswiki debug log. All writeDebug()
+# Enable output of messages to thBEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+e foswiki debug log. All writeDebug()
 # calls are written as writeDebug(...) if (TRACE)
 use constant TRACE => 0;
 
@@ -44,7 +50,8 @@ Construct a new page cache and a delegator.
 sub new {
     my ( $class, $session ) = @_;
 
-    writeDebug("new PageCache using $Foswiki::cfg{CacheManager}")
+    writeDebug("new PageCache using $FoswikiBEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+::cfg{CacheManager}")
       if (TRACE);
 
     # try to get a shared instance of this class
@@ -332,7 +339,7 @@ sub addDependency {
     my ( $this, $depWeb, $depTopic ) = @_;
 
     # exclude invalid topic names
-    return unless $depTopic =~ /^[$Foswiki::regex{upperAlpha}]/o;
+    return unless $depTopic =~ /^[[:upper:]]/o;
 
 
     # omit dependencies triggered from inside a dirtyarea

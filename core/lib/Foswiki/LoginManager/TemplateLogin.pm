@@ -17,11 +17,14 @@ methods of this class.
 package Foswiki::LoginManager::TemplateLogin;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 
 use Foswiki::LoginManager ();
 our @ISA = ('Foswiki::LoginManager');
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 

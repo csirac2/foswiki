@@ -29,12 +29,13 @@ use FoswikiTestCase;
 our @ISA = qw( FoswikiTestCase );
 
 use strict;
-
+use utf8;
 use Foswiki;
 use Unit::Request;
 use Unit::Response;
 use Foswiki::UI::Register;
 use Error qw( :try );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 our @mails;
 

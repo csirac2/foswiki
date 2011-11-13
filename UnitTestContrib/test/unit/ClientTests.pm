@@ -7,12 +7,14 @@ package ClientTests;
 
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
+use utf8;
 
 use Unit::Request;
 use Error qw( :try );
 
 use Foswiki;
 use Foswiki::LoginManager;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $agent = $Foswiki::cfg{Register}{RegistrationAgentWikiName};
 my $userLogin;

@@ -2,8 +2,13 @@
 #
 #
 package Fn_ENCODE;
+
+use strict;
+use utf8;
+
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 use strict;
 

@@ -30,7 +30,9 @@ is total memory.
 
 NOTE: it uses /proc - so its linux specific...
 
-TODO: replace FOSWIKI_MONITOR with LocalSite.cfg setting that can turn on per module instrumentation.
+TODO: replause strict;
+use utf8;
+ce FOSWIKI_MONITOR with LocalSite.cfg setting that can turn on per module instrumentation.
 TODO: rewrite to use Foswiki::Loggers
 
 =cut
@@ -38,7 +40,10 @@ TODO: rewrite to use Foswiki::Loggers
 package Monitor;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 our @times;
 our @methodStats;
@@ -100,7 +105,8 @@ sub startMonitoring {
         *MARK          = \&_mark;
         *MonitorMethod = \&_monitorMethod;
 
-        use warnings;
+        use utf8;
+use warnings;
         use strict;
         #reset the loged time
         @times = ();

@@ -14,10 +14,12 @@ our @ISA = qw( FoswikiStoreTestCase );
 
 use Foswiki;
 use strict;
+use utf8;
 use Assert;
 use Error qw( :try );
 use Foswiki::AccessControlException;
 use File::Temp;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 #TODO
 # attachments

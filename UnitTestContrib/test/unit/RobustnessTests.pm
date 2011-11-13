@@ -2,7 +2,9 @@
 package RobustnessTests;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Scalar::Util ();
 use Error qw( :try );
 
@@ -12,9 +14,11 @@ use FoswikiTestCase;
 our @ISA = qw( FoswikiTestCase );
 require 5.008;
 
+use utf8;
 use Foswiki;
 use Foswiki::Sandbox;
 use Foswiki::Time;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $slash;
 

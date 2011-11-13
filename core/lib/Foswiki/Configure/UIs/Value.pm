@@ -13,7 +13,10 @@ Foswiki::Configure::Value for each object of this class.
 package Foswiki::Configure::UIs::Value;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::UIs::Item ();
 our @ISA = ('Foswiki::Configure::UIs::Item');

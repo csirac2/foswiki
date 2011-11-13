@@ -10,10 +10,14 @@ UI functions for searching.
 
 package Foswiki::UI::Search;
 
+use utf8;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 

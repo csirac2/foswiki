@@ -17,7 +17,9 @@ supposed to be run in a persistent environment anyway.
 package Foswiki::Configure::Item;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Carp;
 
 sub new {

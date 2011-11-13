@@ -11,12 +11,17 @@ UI functions for diffing.
 package Foswiki::UI::RDiff;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
+use strict;
+use utf8;use Foswiki ();
 use Assert;
 use Error qw( :try );
 
 use Foswiki     ();
 use Foswiki::UI ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 #TODO: this needs to be exposed to plugins and whoever might want to over-ride the rendering of diffs
 #Hash, indexed by diffType (+,-,c,u,l.....)

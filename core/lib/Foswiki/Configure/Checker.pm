@@ -13,14 +13,16 @@ to be protected i.e. only available to subclasses.
 package Foswiki::Configure::Checker;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
-
-use Foswiki::Configure::UI ();
-our @ISA = ('Foswiki::Configure::UI');
-
+use warnings qw( FATAL utf8 );
 use File::Spec               ();
 use CGI                      ();
+
+use Foswiki::Configure::UI ();
 use Foswiki::Configure::Load ();
+our @ISA = ('Foswiki::Configure::UI');
 
 =begin TML
 

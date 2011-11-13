@@ -32,11 +32,15 @@ the function or parameter.
 
 package Foswiki::Time;
 
+use utf8;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Assert;
 use Foswiki ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 our $VERSION = '$Rev$';    # Subversion rev number
 

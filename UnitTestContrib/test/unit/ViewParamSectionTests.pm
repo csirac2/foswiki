@@ -6,11 +6,12 @@ use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
 
 use strict;
-
+use utf8;
 use Foswiki;
 use Foswiki::UI::View;
 use Unit::Request;
 use Unit::Response;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 my $UI_FN;
 
 my $fatwilly;

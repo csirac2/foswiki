@@ -13,7 +13,9 @@ Refer to Foswiki::Engine documentation for explanation about methods below.
 package Foswiki::Engine::CGI;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Engine ();
 our @ISA = ('Foswiki::Engine');
@@ -22,6 +24,7 @@ use Assert;
 use Foswiki::Request         ();
 use Foswiki::Request::Upload ();
 use Foswiki::Response        ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub run {
     my $this = shift;

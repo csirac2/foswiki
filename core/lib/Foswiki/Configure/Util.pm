@@ -3,7 +3,9 @@
 package Foswiki::Configure::Util;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 sub getScriptName {
     my @script = File::Spec->splitdir( $ENV{SCRIPT_NAME} || 'THISSCRIPT' );

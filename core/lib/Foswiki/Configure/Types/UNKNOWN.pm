@@ -6,7 +6,10 @@
 package Foswiki::Configure::Types::UNKNOWN;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::Type ();
 our @ISA = ('Foswiki::Configure::Type');

@@ -17,7 +17,12 @@ is visited, the UI for that node is loaded.
 =cut
 
 use strict;
+use utf8;
+use locale;
+use locale;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::UI ();
 

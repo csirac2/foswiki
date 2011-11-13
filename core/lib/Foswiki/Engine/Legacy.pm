@@ -16,7 +16,9 @@ phase invoked from the END block happens.
 package Foswiki::Engine::Legacy;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 our @ISA;
 my ( $request, $response );

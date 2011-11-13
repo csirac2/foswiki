@@ -2,7 +2,9 @@
 package TWiki::Plugins;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Plugins;
 

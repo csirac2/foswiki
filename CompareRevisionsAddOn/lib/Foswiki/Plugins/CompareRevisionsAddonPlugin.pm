@@ -13,9 +13,12 @@ package Foswiki::Plugins::CompareRevisionsAddonPlugin;
 
 # Always use strict to enforce variable scoping
 use strict;
+use utf8;use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
-use Foswiki;
+use Foswiki ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # This should always be $Rev$ so that Foswiki can determine the checked-in
 # status of the plugin. It is used by the build automation tools, so

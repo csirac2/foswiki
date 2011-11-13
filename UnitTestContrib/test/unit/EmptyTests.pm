@@ -2,6 +2,7 @@ use strict;
 
 # Example test case; use this as a basis to build your own
 
+use utf8;
 package EmptyTests;
 
 use FoswikiTestCase;
@@ -9,6 +10,7 @@ our @ISA = qw( FoswikiTestCase );
 
 use Foswiki;
 use Error qw( :try );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $topicquery;
 

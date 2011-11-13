@@ -4,7 +4,11 @@ use Foswiki::Configure::Checker ();
 our @ISA = ('Foswiki::Configure::Checker');
 
 use strict;
+use utf8;
+use locale;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 sub check {
     my $this = shift;

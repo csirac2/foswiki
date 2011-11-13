@@ -5,11 +5,14 @@ use strict;
 
 package VariableTests;
 
+use strict;
+use utf8;
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
 
 use Foswiki;
 use Error qw( :try );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub set_up {
     my $this = shift;

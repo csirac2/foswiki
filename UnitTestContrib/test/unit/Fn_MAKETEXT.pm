@@ -6,9 +6,11 @@ package Fn_MAKETEXT;
 
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
+use utf8;
 
 use Foswiki;
 use Error qw( :try );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $topicObject;
 

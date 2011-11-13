@@ -14,7 +14,12 @@ in custom tabular form.
 package Foswiki::Configure::UIs::EXTENSIONS;
 
 use strict;
+use utf8;
+use locale;
+use locale;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::UI ();
 our @ISA = ('Foswiki::Configure::UI');

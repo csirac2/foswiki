@@ -1,7 +1,10 @@
 package ConfigureTests;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use FoswikiTestCase;
 our @ISA = qw( FoswikiTestCase );

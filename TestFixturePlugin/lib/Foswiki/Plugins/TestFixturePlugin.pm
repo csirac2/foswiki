@@ -16,10 +16,14 @@
 package Foswiki::Plugins::TestFixturePlugin;
 
 use strict;
+use utf8;
+use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Func                                   ();    # The plugins API
 use Foswiki::Attrs                                  ();
 use Foswiki::Plugins::TestFixturePlugin::HTMLDiffer ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # This is a test plugin designed to interact with Foswiki testcases.
 # It should NOT be shipped with a release.

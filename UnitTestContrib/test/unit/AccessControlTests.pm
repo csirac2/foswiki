@@ -1,6 +1,8 @@
 package AccessControlTests;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
@@ -12,6 +14,7 @@ use Foswiki::Configure::Dependency ();
 
 # For Anchor test
 use Foswiki::UI ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $post11 = 0;
 

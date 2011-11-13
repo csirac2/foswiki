@@ -39,12 +39,15 @@
 
 package VCStoreTests;
 
+use strict;
+use utf8;
 use FoswikiStoreTestCase;
 our @ISA = qw( FoswikiStoreTestCase );
 use strict;
 
 use Foswiki;
 use Foswiki::Meta;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $TEXT1 = <<'DONE';
 He had bought a large map representing the sea,

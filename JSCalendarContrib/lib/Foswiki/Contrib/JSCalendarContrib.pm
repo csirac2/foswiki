@@ -14,9 +14,12 @@ easier from Foswiki plugins. This module includes the functions:
 package Foswiki::Contrib::JSCalendarContrib;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw(FATAL utf8);
 
 use Foswiki::Func ();    # The plugins API
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 our $VERSION = '$Rev$';
 our $RELEASE = '1.4.1';

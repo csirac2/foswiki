@@ -2,7 +2,9 @@
 package Foswiki;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 require Foswiki::Macros::USERINFO;
 
 # DEPRECATED, now implemented using %USERINFO%

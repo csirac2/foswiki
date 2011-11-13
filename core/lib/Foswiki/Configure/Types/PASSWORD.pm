@@ -3,7 +3,10 @@
 package Foswiki::Configure::Types::PASSWORD;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::Types::STRING ();
 our @ISA = ('Foswiki::Configure::Types::STRING');

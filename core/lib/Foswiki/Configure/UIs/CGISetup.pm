@@ -14,7 +14,11 @@ data is read only, it was easier this way (if somewhat less elegant).
 package Foswiki::Configure::UIs::CGISetup;
 
 use strict;
+use utf8;
+use locale;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::Util         ();
 use Foswiki::Configure::UIs::Section ();

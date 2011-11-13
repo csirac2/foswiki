@@ -11,7 +11,9 @@ Support for the conditions in %IF{} statements.
 package Foswiki::If::Parser;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Query::Parser ();
 our @ISA = ('Foswiki::Query::Parser');
@@ -27,6 +29,7 @@ use Foswiki::If::OP_ingroup ();
 use Foswiki::If::OP_isempty ();
 use Foswiki::If::OP_istopic ();
 use Foswiki::If::OP_isweb ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # Additional operators specific to IF statements (not available in other
 # query types)

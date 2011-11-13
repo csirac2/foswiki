@@ -7,11 +7,13 @@ use strict;
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
 
+use utf8;use FoswikiFnTestCase;
 use Foswiki;
 use Error qw( :try );
 use Assert;
 use Foswiki::Query::Node ();
 use Foswiki::Configure::Dependency ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $post11;
 

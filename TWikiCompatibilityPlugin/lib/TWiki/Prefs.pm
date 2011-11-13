@@ -4,7 +4,9 @@ package TWiki::Prefs;
 # Bridge between TWiki::Prefs and Foswiki::Prefs
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Prefs;
 

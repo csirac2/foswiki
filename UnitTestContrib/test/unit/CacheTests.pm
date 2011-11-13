@@ -7,9 +7,11 @@ use strict;
 use Foswiki;
 use Foswiki::Meta;
 use Error qw( :try );
+use utf8;
 use Foswiki::OopsException;
 use Foswiki::PageCache;
 use Benchmark qw(:hireswallclock);
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $UI_FN;
 

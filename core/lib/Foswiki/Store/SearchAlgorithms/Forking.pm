@@ -11,7 +11,9 @@ Forking implementation of RCS store search. Uses grep.
 =cut
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 
 use Foswiki::Store::Interfaces::QueryAlgorithm ();
@@ -30,6 +32,7 @@ use Foswiki::Query::HoistREs ();
 use Foswiki::ListIterator();
 use Foswiki::Iterator::FilterIterator();
 use Foswiki::Iterator::ProcessIterator();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 use constant MONITOR => 0;
 

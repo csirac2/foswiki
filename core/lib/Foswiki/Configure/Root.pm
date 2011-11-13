@@ -10,7 +10,10 @@ The root of the configuration item tree.
 package Foswiki::Configure::Root;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::Section ();
 our @ISA = ('Foswiki::Configure::Section');

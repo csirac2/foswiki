@@ -11,7 +11,9 @@ Handle conversion of plural topic names to singular form.
 package Foswiki::Plurals;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 
 =begin TML

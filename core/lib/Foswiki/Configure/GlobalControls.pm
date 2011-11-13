@@ -4,7 +4,9 @@
 package Foswiki::Configure::GlobalControls;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 sub new {
     my ( $class, $groupid ) = @_;

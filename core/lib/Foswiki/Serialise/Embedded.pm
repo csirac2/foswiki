@@ -13,10 +13,14 @@ __WARNING__ this is only for Foswiki::Meta objects.
 package Foswiki::Serialise::Embedded;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
+use Assert;
+
 use Foswiki       ();
 use Foswiki::Meta ();
-use Assert;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 
@@ -159,6 +163,7 @@ sub _writeTypes {
 =begin TML
 
 ---++ StaticMethod dataEncode( $uncoded ) -> $coded
+use utf8;use utf8;
 
 Encode meta-data field values, escaping out selected characters.
 The encoding is chosen to avoid problems with parsing the attribute

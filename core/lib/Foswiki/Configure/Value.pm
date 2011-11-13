@@ -21,7 +21,11 @@ the *model* only.
 package Foswiki::Configure::Value;
 
 use strict;
+use utf8;
+use locale;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::Item ();
 our @ISA = ('Foswiki::Configure::Item');

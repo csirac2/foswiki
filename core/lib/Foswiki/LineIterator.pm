@@ -12,10 +12,13 @@ Iterator over the lines read from a file handle.
 package Foswiki::LineIterator;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Iterator ();
 our @ISA = ('Foswiki::Iterator');
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 

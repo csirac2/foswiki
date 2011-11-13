@@ -56,6 +56,7 @@ use Foswiki;
 use Error qw( :try );
 use Foswiki::Plugin;
 use Symbol qw(delete_package);
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $systemWeb = "TemporaryPluginHandlersSystemWeb";
 

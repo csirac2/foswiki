@@ -14,10 +14,13 @@ SMELL: hasNext should not 'return 1 if defined($this->{next}), but rather use a 
 
 package Foswiki::ListIterator;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Iterator ();
 our @ISA = ('Foswiki::Iterator');
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 use Assert;
 

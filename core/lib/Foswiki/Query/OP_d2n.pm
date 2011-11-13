@@ -9,16 +9,21 @@
 package Foswiki::Query::OP_d2n;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Query::UnaryOP ();
 our @ISA = ('Foswiki::Query::UnaryOP');
+
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $class = shift;
     return $class->SUPER::new( name => 'd2n', prec => 1000 );
 }
 
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 sub evaluate {
     my $this = shift;
     my $node = shift;

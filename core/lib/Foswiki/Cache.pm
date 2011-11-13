@@ -13,7 +13,9 @@ about the cached pages).
 package Foswiki::Cache;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 =begin TML 
 

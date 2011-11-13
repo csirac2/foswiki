@@ -18,6 +18,7 @@ package Foswiki::Contrib::Build;
 use Foswiki::Contrib::BuildContrib::BaseBuild;
 use Error qw(:try);
 use CGI qw(:any);
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 
@@ -39,9 +40,12 @@ use File::Path   ();
 use File::Temp   ();
 use POSIX        ();
 use Data::Dumper ();
+use utf8;
 use warnings;
+use warnings qw(FATAL utf8);
 use Foswiki::Time;
 use Foswiki::Contrib::BuildContrib;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 our $basedir;
 our $buildpldir;

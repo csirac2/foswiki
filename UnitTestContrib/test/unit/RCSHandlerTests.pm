@@ -6,9 +6,11 @@
 package RCSHandlerTests;
 
 use strict;
+use utf8;
 
 use FoswikiTestCase;
 our @ISA = qw( FoswikiTestCase );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $self = shift()->SUPER::new(@_);
@@ -23,18 +25,17 @@ use File::Path;
 use FoswikiStoreTestCase ();
 
 # Strings in Perl's internal unicode format
-my @unicode;
-my @string;
-{
-    use utf8;
-    push (@unicode, "übermaß_हिंदी");
-    push (@unicode, "मानक");
-    push (@string, $unicode[0]);
-    push (@string, $unicode[1]);
-    push (@string, "Jingang dao dui");
-    push (@string, "Lan Zai Yi");
-    push (@string, "Dan Bian");
-}
+my @unicode = (
+    "übermaß_हिंदी",
+    "मानक"
+    );
+my @string = (
+    $unicode[0],
+    $unicode[1],
+    "Jingang dao dui",
+    "Lan Zai Yi",
+    "Dan Bian"
+    );
 
 # Strings as utf8 octets
 my @octets = map { Encode::encode_utf8($_) } @unicode;

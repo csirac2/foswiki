@@ -7,11 +7,12 @@ package Iterator;
 use FoswikiTestCase;
 our @ISA = qw( FoswikiTestCase );
 
-use Foswiki::ListIterator;
+use utf8;use Foswiki::ListIterator;
 use Foswiki::AggregateIterator;
 use Foswiki::Iterator::NumberRangeIterator;
 
 use Error qw( :try );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $class = shift;

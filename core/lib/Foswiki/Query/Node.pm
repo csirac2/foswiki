@@ -1,13 +1,16 @@
 # See bottom of file for license and copyright information
 
 =begin TML
+ents a query over the Foswiki database.
+
+Fields are given by name
+
 
 ---+ package Foswiki::Query::Node
 
 A Node object is a single node in a query (either a tree node or a leaf node).
-A tree of node objects represents a query over the Foswiki database.
-
-Fields are given by name, and values by strings or numbers.
+A tree of node objects represBEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+, and values by strings or numbers.
 
 A query object implements the =evaluate= method as its general
 contract with the rest of the world. This method is a "reference implementation" -
@@ -27,14 +30,17 @@ query algorithms.
 
 package Foswiki::Query::Node;
 use strict;
+use utf8;
 use warnings;
-use Foswiki::Infix::Node ();
-our @ISA = ('Foswiki::Infix::Node');
-
+use warnings qw( FATAL utf8 );
 use Assert;
 use Error qw( :try );
 
 use Foswiki::Meta ();
+use Foswiki::Infix::Node ();
+our @ISA = ('Foswiki::Infix::Node');
+
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # <DEBUG SUPPORT>
 

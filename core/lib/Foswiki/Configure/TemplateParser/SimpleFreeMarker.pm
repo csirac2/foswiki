@@ -3,7 +3,10 @@
 package Foswiki::Configure::TemplateParser::SimpleFreeMarker;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::TemplateParser ();
 our @ISA = ('Foswiki::Configure::TemplateParser');

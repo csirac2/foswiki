@@ -56,12 +56,16 @@ to a user.
 
 package Foswiki::Users;
 
+use utf8;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 
 use Foswiki::AggregateIterator ();
 use Foswiki::LoginManager      ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 #use Monitor;
 #Monitor::MonitorMethod('Foswiki::Users');

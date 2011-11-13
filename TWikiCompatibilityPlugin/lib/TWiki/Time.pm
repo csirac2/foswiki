@@ -4,7 +4,9 @@ package TWiki::Time;
 # Bridge between TWiki::Time and Foswiki::Time
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Time;
 

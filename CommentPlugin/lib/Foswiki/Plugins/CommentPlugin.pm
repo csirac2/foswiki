@@ -5,12 +5,16 @@
 package Foswiki::Plugins::CommentPlugin;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 use Error ':try';
+use utf8;
 
 use Foswiki::Func    ();
 use Foswiki::Plugins ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 our $VERSION = '$Rev$';
 our $RELEASE = '26 Oct 2011';

@@ -9,6 +9,7 @@ our @ISA = qw( FoswikiFnTestCase );
 
 use Foswiki;
 use Error qw( :try );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     $Foswiki::cfg{Register}{AllowLoginName} = 1;

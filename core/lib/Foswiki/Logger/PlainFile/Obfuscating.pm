@@ -2,13 +2,17 @@
 package Foswiki::Logger::PlainFile::Obfuscating;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
+use Digest::MD5 qw( md5_hex );
+
 use Assert;
 
 use Foswiki::Logger            ();
 use Foswiki::Logger::PlainFile ();
 use Foswiki::Configure::Load;
-use Digest::MD5 qw( md5_hex );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 our @ISA = ('Foswiki::Logger::PlainFile');
 

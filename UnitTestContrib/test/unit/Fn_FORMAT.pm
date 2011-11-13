@@ -12,6 +12,7 @@ use Error qw( :try );
 use Assert;
 use Foswiki::Search;
 use Foswiki::Configure::Dependency ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $post11;
 

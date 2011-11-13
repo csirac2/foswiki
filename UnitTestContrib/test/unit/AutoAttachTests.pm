@@ -1,6 +1,6 @@
 use strict;
 
-# Test cases:
+use utf8;# Test cases:
 # 1) Autoattach = off. Save a topic referring to an attachmentMissing that does not exist.
 # 2) Add attachmentAdded into the attachment area for that topic, circumventing Foswiki
 # 3) Turn autoattach = on. Ask for the list of attachments. attachmentAdded should appear. attachmentMissing should not.
@@ -16,6 +16,7 @@ use Error qw( :try );
 use Foswiki::UI::Save;
 use Foswiki::OopsException;
 use Devel::Symdump;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $this = shift()->SUPER::new( 'AutoAttach', @_ );

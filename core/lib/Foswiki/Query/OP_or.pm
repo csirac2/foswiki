@@ -11,10 +11,14 @@ will build a single node that has 3 parameters, a, b, and c.
 package Foswiki::Query::OP_or;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Query::OP ();
 our @ISA = ('Foswiki::Query::OP');
+
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $class = shift;

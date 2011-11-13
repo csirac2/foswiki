@@ -10,12 +10,17 @@ Parse SEARCH token strings into Foswiki::Search::Node objects.
 =cut
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Assert;
 use Error qw( :try );
+use strict;
+use utf8;
 
 use Foswiki::Search::Node ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 our $MARKER = "\0";
 

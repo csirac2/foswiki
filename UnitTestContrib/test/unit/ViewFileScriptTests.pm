@@ -4,12 +4,14 @@ use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
 
 use strict;
+use utf8;
 use Foswiki;
 use Foswiki::UI;
 use Foswiki::UI::Viewfile;
 use Unit::Request;
 use Error qw( :try );
 use File::Path qw(mkpath);
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $fatwilly;
 my $UI_FN;

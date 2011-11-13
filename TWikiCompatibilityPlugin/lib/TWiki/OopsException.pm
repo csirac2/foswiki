@@ -1,7 +1,9 @@
 # See bottom of file for license and copyright information
 package TWiki::OopsException;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::OopsException;
 our @ISA = 'Foswiki::OopsException';

@@ -2,10 +2,13 @@ use strict;
 
 package SeleniumConfigTests;
 
+use strict;
+use utf8;
 use FoswikiSeleniumTestCase;
 our @ISA = qw( FoswikiSeleniumTestCase );
 
 use Foswiki::Func;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $self = shift()->SUPER::new( 'SeleniumConfig', @_ );

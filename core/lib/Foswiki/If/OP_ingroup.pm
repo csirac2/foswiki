@@ -10,10 +10,14 @@ Test if the user named on the LHS is in the user group named on the RHS.
 package Foswiki::If::OP_ingroup;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Query::OP ();
 our @ISA = ('Foswiki::Query::OP');
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $class = shift;

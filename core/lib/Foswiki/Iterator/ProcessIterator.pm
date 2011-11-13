@@ -12,11 +12,14 @@ element in the iteration.
 package Foswiki::Iterator::ProcessIterator;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 
 use Foswiki::Iterator ();
 our @ISA = ('Foswiki::Iterator');
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 

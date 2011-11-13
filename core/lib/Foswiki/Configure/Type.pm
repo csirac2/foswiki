@@ -16,7 +16,10 @@ specialised class for a type cannot be found.
 package Foswiki::Configure::Type;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use CGI qw( :any );
 

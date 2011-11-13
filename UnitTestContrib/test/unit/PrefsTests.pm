@@ -3,6 +3,8 @@ require 5.006;
 
 package PrefsTests;
 
+use strict;
+use utf8;
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
 
@@ -11,6 +13,7 @@ use Foswiki::Prefs;
 use strict;
 use Assert;
 use Error qw( :try );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $self = shift()->SUPER::new( "Prefs", @_ );

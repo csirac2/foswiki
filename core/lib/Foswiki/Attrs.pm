@@ -47,7 +47,9 @@ the function or parameter.
 package Foswiki::Attrs;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 
 our $VERSION = '$Rev$';

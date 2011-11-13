@@ -5,7 +5,9 @@ package TWiki::LineIterator;
 # Bridge between TWiki::LineIterator and Foswiki::LineIterator
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::LineIterator;
 

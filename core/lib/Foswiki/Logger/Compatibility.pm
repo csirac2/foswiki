@@ -2,12 +2,14 @@
 package Foswiki::Logger::Compatibility;
 
 use strict;
-use warnings;
 use utf8;
+use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 
 use Foswiki::Logger ();
 our @ISA = ('Foswiki::Logger');
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 

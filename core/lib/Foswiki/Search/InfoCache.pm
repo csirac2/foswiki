@@ -1,10 +1,13 @@
 # See bottom of file for license and copyright information
 package Foswiki::Search::InfoCache;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::ListIterator ();
 our @ISA = ('Foswiki::ListIterator');
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 
@@ -16,7 +19,7 @@ about the same topic more than once.
 
 =cut
 
-# TODO: this is going to transform from an ugly duckling into the
+use utf8;# TODO: this is going to transform from an ugly duckling into the
 # ResultSet Iterator
 # Sven has the feeling that we should make result sets immutable
 
@@ -24,6 +27,7 @@ use Assert;
 use Foswiki::Func                     ();
 use Foswiki::Meta                     ();
 use Foswiki::Iterator::FilterIterator ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 #use Monitor ();
 #Monitor::MonitorMethod('Foswiki::Search::InfoCache', 'getTopicListIterator');
@@ -438,7 +442,7 @@ sub getTopicListIterator {
     my $it;
     if ( $casesensitive && $options->{includeTopics}
            && $options->{includeTopics} =~
-             /^([$Foswiki::regex{mixedAlphaNum}]+(,\s*|\|))+$/ ) {
+             /^([[:alpha:][:digit:]]+(,\s*|\|))+$/ ) {
 
         # topic list without wildcards
         # convert pattern into a topic list
@@ -463,7 +467,7 @@ sub convertTopicPatternToRegex {
 
     # 'Web*, FooBar' ==> ( 'Web*', 'FooBar' ) ==> ( 'Web.*', "FooBar" )
     my @arr =
-      map { s/[^\*\_\-\+$Foswiki::regex{mixedAlphaNum}]//go; s/\*/\.\*/go; $_ }
+      map { s/[^\*\_\-\+[:alpha:][:digit:]]//go; s/\*/\.\*/go; $_ }
       split( /(?:,\s*|\|)/, $topic );
     return '' unless (@arr);
 

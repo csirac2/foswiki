@@ -11,9 +11,14 @@ UI delegate for REST interface
 package Foswiki::UI::Rest;
 
 use strict;
+use utf8;
 use warnings;
-use Foswiki ();
+use warnings qw( FATAL utf8 );
+use utf8;use Foswiki ();
 use Error qw( :try );
+
+use Foswiki ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 our %restDispatch;
 

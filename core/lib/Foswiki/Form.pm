@@ -30,7 +30,9 @@ of possible values.
 
 package Foswiki::Form;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Meta ();
 our @ISA = ('Foswiki::Meta');
@@ -43,6 +45,7 @@ use Foswiki::Form::FieldDefinition     ();
 use Foswiki::Form::ListFieldDefinition ();
 use Foswiki::AccessControlException    ();
 use Foswiki::OopsException             ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # The following are reserved as URL parameters to scripts and may not be
 # used as field names in forms.

@@ -24,7 +24,9 @@ This class deals with this stuff and must be used only by =Foswiki::Prefs=
 
 package Foswiki::Prefs::Stack;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use bytes;
 
 =begin TML

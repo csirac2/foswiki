@@ -4,7 +4,9 @@ package TWiki::UI;
 # Bridge between TWiki::UI and Foswiki::UI
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::UI;
 

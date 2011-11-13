@@ -1,6 +1,8 @@
 package UploadScriptTests;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
@@ -10,6 +12,7 @@ use Unit::Request();
 use Foswiki::UI::Upload();
 use CGI();
 use Error qw( :try );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $UI_FN;
 my $FORM = { name => 'BogusForm' };

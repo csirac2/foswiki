@@ -13,10 +13,13 @@ Foswiki::IncludeHandlers::http for implementation.
 package Foswiki::IncludeHandlers::https;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::IncludeHandlers::http ();
 our @ISA = qw( Foswiki::IncludeHandlers::http );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 1;
 

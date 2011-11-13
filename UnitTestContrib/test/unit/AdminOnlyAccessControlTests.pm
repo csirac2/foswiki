@@ -1,16 +1,21 @@
 package AdminOnlyAccessControlTests;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 #Sven wishes he could use ISA AccessControlTest, but the unit test system doesn't do inherited test subs
 
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
+use strict;
+use utf8;# Test cases:
 
 use Foswiki          ();
 use Foswiki::Address ();
 use Foswiki::Meta    ();
 use Foswiki::Plugins ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # For Anchor test
 use Foswiki::UI ();

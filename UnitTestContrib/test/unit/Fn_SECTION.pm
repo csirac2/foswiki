@@ -6,10 +6,12 @@ package Fn_SECTION;
 
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
-
+use strict;
+use utf8;
 use Foswiki;
 use Error qw( :try );
 use Benchmark qw(:hireswallclock);    # test_manysections
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $self = shift()->SUPER::new( 'SECTION', @_ );

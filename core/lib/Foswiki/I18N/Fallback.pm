@@ -5,10 +5,14 @@
 package Foswiki::I18N::Fallback;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::I18N ();
 our @ISA = ('Foswiki::I18N');
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $class = shift;

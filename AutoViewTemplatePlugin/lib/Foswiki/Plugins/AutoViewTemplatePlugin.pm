@@ -12,7 +12,9 @@
 package Foswiki::Plugins::AutoViewTemplatePlugin;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use vars qw( $VERSION $RELEASE $SHORTDESCRIPTION
   $debug $mode $override $isEditAction
   $pluginName $NO_PREFS_IN_TOPIC );

@@ -10,14 +10,17 @@ UI delegate for viewfile function
 =cut
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use integer;
-use CGI::Carp qw( fatalsToBrowser );
+use utf8;use CGI::Carp qw( fatalsToBrowser );
 
 use Foswiki                ();
 use Foswiki::UI            ();
 use Foswiki::Sandbox       ();
 use Foswiki::OopsException ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 

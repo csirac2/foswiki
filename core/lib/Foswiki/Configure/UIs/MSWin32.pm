@@ -11,6 +11,12 @@ that generates the bespoke screen for this section.
 
 package Foswiki::Configure::UIs::MSWin32;
 
+use strict;
+use utf8;
+use locale;
+use warnings;
+use warnings qw( FATAL utf8 );
+
 use Foswiki::Configure::UIs::Section ();
 our @ISA = ('Foswiki::Configure::UIs::Section');
 

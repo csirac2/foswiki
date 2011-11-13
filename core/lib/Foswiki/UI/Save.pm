@@ -11,14 +11,18 @@ UI delegate for save function
 package Foswiki::UI::Save;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Error qw( :try );
 use Assert;
 
 use Foswiki                ();
+use utf8;
 use Foswiki::UI            ();
 use Foswiki::Meta          ();
 use Foswiki::OopsException ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # Used by save and preview
 sub buildNewTopic {

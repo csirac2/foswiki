@@ -11,7 +11,10 @@ items and subsections.
 =cut
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::Item ();
 our @ISA = ('Foswiki::Configure::Item');

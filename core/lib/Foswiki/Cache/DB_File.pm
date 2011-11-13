@@ -12,12 +12,16 @@ for details of the methods implemented by this class.
 package Foswiki::Cache::DB_File;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use DB_File;
 use Storable       ();
-use Foswiki::Cache ();
 use Fcntl qw( :flock O_RDONLY O_RDWR O_CREAT );
 use Assert;
+
+use Foswiki::Cache ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 use constant F_STORABLE => 1;
 

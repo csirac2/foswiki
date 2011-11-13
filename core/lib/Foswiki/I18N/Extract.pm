@@ -12,7 +12,9 @@ Depends on Locale::Maketext::Extract (part of CPAN::Locale::Maketext::Lexicon).
 package Foswiki::I18N::Extract;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 our $initError;
 

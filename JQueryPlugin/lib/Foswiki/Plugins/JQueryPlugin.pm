@@ -1,7 +1,9 @@
 # See bottom of file for license and copyright information
 package Foswiki::Plugins::JQueryPlugin;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 =begin TML
 
@@ -9,10 +11,12 @@ use warnings;
 
 Container for jQuery and plugins
 
+use utf8;
 =cut
 
 use Foswiki::Plugins                        ();
 use Foswiki::Plugins::JQueryPlugin::Plugins ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 use vars qw(
   $VERSION $RELEASE $SHORTDESCRIPTION

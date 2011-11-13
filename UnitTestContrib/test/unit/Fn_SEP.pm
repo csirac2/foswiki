@@ -5,10 +5,12 @@ use strict;
 package Fn_SEP;
 
 use FoswikiFnTestCase;
+use utf8;
 our @ISA = qw( FoswikiFnTestCase );
 
 use Foswiki;
 use Error qw( :try );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $self = shift()->SUPER::new( 'SEP', @_ );

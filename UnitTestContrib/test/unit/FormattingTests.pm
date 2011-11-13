@@ -4,11 +4,15 @@ use strict;
 
 package FormattingTests;
 
+use strict;
+use utf8;
+use Error qw( :try );
+
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
 
 use Foswiki;
-use Error qw( :try );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $self = shift()->SUPER::new( 'Formatting', @_ );

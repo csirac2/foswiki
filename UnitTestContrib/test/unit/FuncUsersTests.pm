@@ -1,7 +1,9 @@
 package FuncUsersTests;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 # These tests should pass for all usermappers written.
 # Some basic tests for adding/removing users in the Foswiki users topic,
@@ -16,6 +18,7 @@ use Foswiki::UI::Register;
 use Error qw( :try );
 use Data::Dumper;
 use Foswiki::Configure::Dependency ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my %loginname;
 my $post11;

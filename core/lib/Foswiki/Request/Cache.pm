@@ -19,16 +19,20 @@ request and restores them on reload.
 =cut
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 
 use File::Copy   ();
 use Data::Dumper ();
+use utf8;
 use Digest::MD5  ();
 use Fcntl;    # File control constants e.g. O_EXCL
 
 use Foswiki::Request::Upload ();
 use Foswiki::Sandbox         ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 use constant TRACE_CACHE => 0;
 

@@ -11,7 +11,10 @@ Pluggable for finding and downloading extensions. Implements
 package Foswiki::Configure::Pluggables::FINDEXTENSIONS;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::Pluggable ();
 our @ISA = ('Foswiki::Configure::Pluggable');

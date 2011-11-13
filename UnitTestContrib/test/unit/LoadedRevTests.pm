@@ -15,9 +15,11 @@ use strict;
 
 use FoswikiFnTestCase;
 our @ISA = ('FoswikiFnTestCase');
+use utf8;
 
 use Foswiki;
 use Foswiki::Meta;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $self = shift()->SUPER::new(@_);

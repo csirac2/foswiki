@@ -19,7 +19,9 @@ See Foswiki::ListIterator for an example implementation.
 package Foswiki::Iterator;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 
 #debug Iterators

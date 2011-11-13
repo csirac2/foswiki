@@ -13,14 +13,18 @@ See documentation of that class for descriptions of the methods of this class.
 
 package Foswiki::Users::HtPasswdUser;
 use strict;
+use utf8;
+use strict;
+use utf8;
 use warnings;
-
-use Foswiki::Users::Password ();
-our @ISA = ('Foswiki::Users::Password');
-
+use warnings qw( FATAL utf8 );
 use Assert;
 use Error qw( :try );
 use Fcntl qw( :DEFAULT :flock );
+
+use Foswiki::Users::Password ();
+our @ISA = ('Foswiki::Users::Password');
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # 'Use locale' for internationalisation of Perl sorting in getTopicNames
 # and other routines - main locale settings are done in Foswiki::setupLocale

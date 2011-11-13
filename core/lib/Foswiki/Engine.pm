@@ -15,7 +15,9 @@ to achieve correct behavior.
 package Foswiki::Engine;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Error qw( :try );
 use Assert;
 use Scalar::Util ();

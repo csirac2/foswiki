@@ -11,7 +11,12 @@ Pluggable for finding and handling plugins. Implements
 package Foswiki::Configure::Pluggables::PLUGINS;
 
 use strict;
+use utf8;
+use locale;
+use locale;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::Pluggable ();
 our @ISA = ('Foswiki::Configure::Pluggable');

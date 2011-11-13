@@ -9,15 +9,19 @@ Refactoring mid-step that contains a set of SEARCH tokens and options.
 
 =cut
 
+use utf8;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Assert;
 use Error qw( :try );
 
 # Some day this may usefully be an infix node
-#use Foswiki::Infix::Node ();
+use Foswiki::Infix::Node ();
 #our @ISA = ('Foswiki::Infix::Node');
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 

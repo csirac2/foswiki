@@ -31,7 +31,9 @@ These methods are documented in the Foswiki:Store abstract base class
 
 package Foswiki::Store::VC::Store;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Store ();
 our @ISA = ('Foswiki::Store');
@@ -39,9 +41,11 @@ our @ISA = ('Foswiki::Store');
 use Assert;
 use Error qw( :try );
 
+use utf8;
 use Foswiki          ();
 use Foswiki::Meta    ();
 use Foswiki::Sandbox ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 BEGIN {
 

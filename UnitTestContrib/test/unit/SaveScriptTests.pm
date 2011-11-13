@@ -3,12 +3,14 @@ use strict;
 package SaveScriptTests;
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
+use utf8;
 
 use strict;
 use Foswiki;
 use Foswiki::UI::Save;
 use Error qw( :try );
 use Unit::Request;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 our $UI_FN;
 

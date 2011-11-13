@@ -16,7 +16,9 @@ and should not be used for anything else.
 
 package Foswiki::Prefs::Web;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 =begin TML
 

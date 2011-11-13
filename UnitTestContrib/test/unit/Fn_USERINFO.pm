@@ -1,11 +1,12 @@
 use strict;
 
-# tests for the correct expansion of USERINFO
+use utf8;# tests for the correct expansion of USERINFO
 
 package Fn_USERINFO;
 
 use FoswikiFnTestCase();
 our @ISA = qw( FoswikiFnTestCase );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 use Foswiki();
 use Foswiki::Func();

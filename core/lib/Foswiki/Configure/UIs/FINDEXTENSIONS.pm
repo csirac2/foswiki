@@ -13,7 +13,10 @@ rendering with the 'findextensionsinfo' template.
 package Foswiki::Configure::UIs::FINDEXTENSIONS;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::UIs::Section ();
 our @ISA = ('Foswiki::Configure::UIs::Section');

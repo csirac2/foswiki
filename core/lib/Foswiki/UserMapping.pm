@@ -33,7 +33,9 @@ __Note:__ in all the following documentation, =$cUID= refers to a
 package Foswiki::UserMapping;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 use Error ();
 

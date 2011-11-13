@@ -11,7 +11,9 @@ package Foswiki::Plugins::TWikiCompatibilityPlugin;
 
 # Always use strict to enforce variable scoping
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 require Foswiki::Func;       # The plugins API
 require Foswiki::Plugins;    # For the API version

@@ -2,9 +2,12 @@
 package Foswiki;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Macros::ICONURL ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # Uses:
 # _ICONSPACE to reference the meta object of the %ICONTOPIC%,
@@ -80,7 +83,7 @@ sub _lookupIcon {
                             my $tok = shift;
                             die "Bad filetype $tok"
                               unless $tok =~
-                                  /^[$Foswiki::regex{mixedAlphaNum}]+$/o;
+                                  /^[[:alpha:][:digit:]]+$/o;
                             return $tok;
                         }
                     );

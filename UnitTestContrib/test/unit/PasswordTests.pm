@@ -1,5 +1,6 @@
 use strict;
 
+use utf8;
 package PasswordTests;
 
 use FoswikiTestCase;
@@ -8,6 +9,7 @@ our @ISA = qw( FoswikiTestCase );
 use Foswiki;
 use Foswiki::Users;
 use Foswiki::Users::HtPasswdUser;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $SALTED = 1;
 

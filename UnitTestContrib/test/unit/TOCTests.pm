@@ -14,6 +14,7 @@ use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
 
 use strict;
+use utf8;
 use Foswiki;
 use Foswiki::UI::Edit;
 use Foswiki::Form;
@@ -21,6 +22,7 @@ use Foswiki::Macros::TOC;
 use Unit::Request;
 use Unit::Response;
 use Error qw( :try );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $setup_failure = '';
 

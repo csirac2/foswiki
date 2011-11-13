@@ -11,10 +11,14 @@ Node class for the result of an If statement parse
 package Foswiki::If::Node;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Query::Node ();
 our @ISA = ('Foswiki::Query::Node');
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # Used wherever a plain string is expected, this method
 # suppresses automatic lookup of names in meta-data

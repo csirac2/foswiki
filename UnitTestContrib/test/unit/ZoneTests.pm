@@ -1,10 +1,13 @@
 package ZoneTests;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use FoswikiTestCase;
 our @ISA = qw( FoswikiTestCase );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $class = shift;

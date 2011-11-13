@@ -14,7 +14,9 @@ for each topic, to ensure that anchor names are not re-used.
 package Foswiki::Render::Anchors;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
     
 =begin TML

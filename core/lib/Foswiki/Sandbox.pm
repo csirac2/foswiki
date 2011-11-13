@@ -31,14 +31,18 @@ the function or parameter.
 package Foswiki::Sandbox;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 use Error qw( :try );
 
+use utf8;
 use File::Spec ();
 use File::Temp qw( tempfile );
 
 use Foswiki ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # Set to 1 to trace commands to STDERR, and redirect STDERR from
 # the command subprocesses to /tmp/foswiki_sandbox.log

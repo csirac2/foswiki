@@ -3,7 +3,9 @@
 package Foswiki::Contrib::TopicUserMappingContrib;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw(FATAL utf8);
 
 our $VERSION          = '$Rev$';
 our $RELEASE          = '4.3.2';

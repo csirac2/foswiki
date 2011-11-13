@@ -1,18 +1,23 @@
 package HTMLValidationTests;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 #this has been quickly copied from the UICompilation tests
 #TODO: need to pick a list of topics, actions, opps's and add detection of installed skins
 
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
+use strict;
+use utf8;use Foswiki::ListIterator;
 
 use strict;
 use Foswiki;
 use Foswiki::UI::View;
 use Error qw( :try );
 use HTML::Tidy;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 our $UI_FN;
 our $SCRIPT_NAME;

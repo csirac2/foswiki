@@ -25,15 +25,19 @@ Subclasses should be named 'XxxxUserMapping' so that configure can find them.
 =cut
 
 package Foswiki::Users::TopicUserMapping;
-use Foswiki::UserMapping ();
-our @ISA = ('Foswiki::UserMapping');
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 use Error qw( :try );
+
 use Foswiki::ListIterator ();
 use Foswiki::Func         ();
+use Foswiki::UserMapping ();
+our @ISA = ('Foswiki::UserMapping');
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 #use Monitor;
 #Monitor::MonitorMethod('Foswiki::Users::TopicUserMapping');

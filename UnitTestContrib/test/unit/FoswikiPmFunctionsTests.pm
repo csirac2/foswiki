@@ -1,16 +1,20 @@
 # NOTE: this is a VERY limited subset of subroutines in Foswiki.pm (um, ok, one - moved from ManageDotPmTests..)
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use diagnostics;
 
 package FoswikiPmFunctionsTests;
 
 use FoswikiFnTestCase;
+use utf8;
 our @ISA = qw( FoswikiFnTestCase );
 use Foswiki;
 use Foswiki::UI::Manage;
 use Foswiki::UI::Save;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $debug = 0;
 my $fatwilly;

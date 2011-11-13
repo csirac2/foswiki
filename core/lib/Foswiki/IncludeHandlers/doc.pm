@@ -13,9 +13,12 @@ method INCLUDE which generates perl documentation for a Foswiki class.
 package Foswiki::IncludeHandlers::doc;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # Include embedded doc in a core module
 sub INCLUDE {

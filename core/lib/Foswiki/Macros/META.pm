@@ -2,7 +2,9 @@
 package Foswiki;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 # See System.VarMETA
 # Before calling, ensure the topicObject is loaded with the version of the

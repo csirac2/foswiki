@@ -13,7 +13,10 @@ section with standard Value types in the model.
 package Foswiki::Configure::UIs::PLUGINS;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::UIs::Section ();
 our @ISA = ('Foswiki::Configure::UIs::Section');

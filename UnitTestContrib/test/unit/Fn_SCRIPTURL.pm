@@ -6,9 +6,11 @@ package Fn_SCRIPTURL;
 
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
+use utf8;
 
 use Foswiki;
 use Error qw( :try );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $self = shift()->SUPER::new( 'SCRIPTURL', @_ );

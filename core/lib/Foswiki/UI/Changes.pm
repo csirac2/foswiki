@@ -3,7 +3,9 @@
 package Foswiki::UI::Changes;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Assert;
 use Error qw( :try );
@@ -11,6 +13,7 @@ use Error qw( :try );
 use Foswiki       ();
 use Foswiki::UI   ();
 use Foswiki::Time ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # Command handler for changes command
 sub changes {

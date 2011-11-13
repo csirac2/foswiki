@@ -1,11 +1,13 @@
 use strict;
 
 package AttrsTests;
+use utf8;# Test cases:
 
 use FoswikiTestCase;
 our @ISA = qw( FoswikiTestCase );
 
 use Foswiki::Attrs;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $self = shift()->SUPER::new(@_);

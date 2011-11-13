@@ -1,7 +1,9 @@
 # See bottom of file for license and copyright information
 package Foswiki::Contrib::PatternSkin;
 use strict;
+use utf8;
 use warnings;
+use warnings qw(FATAL utf8);
 
 our $VERSION = '$Rev$';
 our $RELEASE = '5.4.17';

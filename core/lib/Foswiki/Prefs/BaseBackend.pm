@@ -12,7 +12,9 @@ document the interface and provide facilities methods.
 package Foswiki::Prefs::BaseBackend;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 
 =begin TML

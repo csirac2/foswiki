@@ -6,7 +6,9 @@
 package Foswiki::Plugin;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 use Error qw(:try);
 
@@ -15,8 +17,11 @@ use Foswiki::AccessControlException ();
 use Foswiki::OopsException          ();
 use Foswiki::ValidationException    ();
 
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+
 our @registrableHandlers = (    # Foswiki::Plugins::VERSION:
-    'afterAttachmentSaveHandler',       # 1.022 DEPRECATED
+    'afterAttachmBEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+entSaveHandler',       # 1.022 DEPRECATED
     'afterUploadHandler',               # 2.1
     'afterCommonTagsHandler',           # 1.024
     'afterEditHandler',                 # 1.010

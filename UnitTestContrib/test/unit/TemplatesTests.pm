@@ -6,6 +6,8 @@ use strict;
 
 package TemplatesTests;
 
+use strict;
+use utf8;
 use FoswikiTestCase;
 our @ISA = qw( FoswikiTestCase );
 
@@ -14,6 +16,7 @@ use File::Path;
 use Foswiki;
 use Foswiki::Templates;
 use Foswiki::Configure::Dependency;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $self = shift()->SUPER::new(@_);

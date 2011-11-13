@@ -4,11 +4,14 @@ package HoistREsTests;
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
 
+use strict;
+use utf8;use Foswiki::ListIterator;
 use Foswiki::Query::Parser;
 use Foswiki::Query::HoistREs;
 use Foswiki::Query::Node;
 use Foswiki::Meta;
 use strict;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub set_up {
     my $this = shift;

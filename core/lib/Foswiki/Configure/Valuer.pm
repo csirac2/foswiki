@@ -13,7 +13,10 @@ the *current* value (i.e. the value after any edits have been applied).
 package Foswiki::Configure::Valuer;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::Type ();
 

@@ -1,12 +1,17 @@
 # See bottom of file for license and copyright information
 package Foswiki::Form::Color;
+
+use strict;
+use utf8;
+use warnings;
+use warnings qw(FATAL utf8);
+
 use Foswiki::Form::FieldDefinition;
 our @ISA = qw( Foswiki::Form::FieldDefinition );
 
 use Foswiki::Plugins::JQueryPlugin ();
 
-use strict;
-use warnings;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $class = shift;

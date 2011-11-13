@@ -4,6 +4,8 @@ use strict;
 
 package Fn_QUERY;
 
+use strict;
+use utf8;
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
 
@@ -11,6 +13,7 @@ use Foswiki;
 use Foswiki::Configure::Dependency ();
 use Error qw( :try );
 use Assert;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $post11;
 

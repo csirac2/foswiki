@@ -1,7 +1,9 @@
 # See bottom of file for license and copyright information
 package Foswiki::MetaCache;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 =begin TML
 
@@ -21,6 +23,7 @@ use Assert;
 use Foswiki::Func                   ();
 use Foswiki::Meta                   ();
 use Foswiki::Users::BaseUserMapping ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 #use Monitor ();
 #Monitor::MonitorMethod('Foswiki::MetaCache', 'getTopicListIterator');

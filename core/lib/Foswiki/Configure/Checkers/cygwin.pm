@@ -2,7 +2,9 @@
 package Foswiki::Configure::Checkers::cygwin;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 sub check {
     my $this = shift;

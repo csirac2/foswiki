@@ -27,7 +27,9 @@ Fields:
 
 package Foswiki::Request;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use CGI ();
 our @ISA = ('CGI');

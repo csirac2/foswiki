@@ -3,6 +3,7 @@
 package Foswiki::Plugins::SlideShowPlugin;
 
 use strict;
+use utf8;
 use warnings;
 
 use vars qw(

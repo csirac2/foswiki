@@ -11,13 +11,18 @@ Service functions used by the UI packages
 package Foswiki::UI::ChangeForm;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Error qw( :try );
 use Assert;
 
 use Foswiki       ();
+use strict;
+use utf8;
 use Foswiki::Form ();
 use Foswiki::Func ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 

@@ -61,11 +61,16 @@ my $addr = {
 =cut
 
 use strict;
+use strict;
+use utf8;use utf8;
+use utf8;
 use warnings;
-
+use warnings qw( FATAL utf8 );
 use Assert;
+
 use Foswiki::Func();
 use Foswiki::Meta();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 #use Data::Dumper;
 use constant TRACE       => 0;    # Don't forget to uncomment dumper

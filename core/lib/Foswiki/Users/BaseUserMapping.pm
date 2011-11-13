@@ -28,13 +28,15 @@ prefix 'BaseUserMapping_'.
 
 package Foswiki::Users::BaseUserMapping;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
+use Assert;
+use Error ();
 
 use Foswiki::UserMapping ();
 our @ISA = ('Foswiki::UserMapping');
-
-use Assert;
-use Error ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 our $DEFAULT_USER_CUID = 'BaseUserMapping_666';
 our $UNKNOWN_USER_CUID = 'BaseUserMapping_999';

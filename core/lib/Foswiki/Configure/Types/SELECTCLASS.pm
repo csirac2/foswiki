@@ -3,7 +3,10 @@
 package Foswiki::Configure::Types::SELECTCLASS;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::Types::SELECT ();
 our @ISA = ('Foswiki::Configure::Types::SELECT');

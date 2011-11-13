@@ -5,9 +5,14 @@
 package Foswiki::Plugins::SmiliesPlugin;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
+use strict;
+use utf8;
 
 use Foswiki::Func ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 use vars qw(
   %smiliesUrls %smiliesEmotions

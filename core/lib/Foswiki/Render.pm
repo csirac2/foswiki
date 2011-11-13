@@ -10,13 +10,16 @@ This module provides most of the actual HTML rendering code in Foswiki.
 =cut
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 use Error qw(:try);
 
 use Foswiki::Time            ();
 use Foswiki::Sandbox         ();
 use Foswiki::Render::Anchors ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # Counter used to generate unique placeholders for when we lift blocks
 # (such as <verbatim> out of the text during rendering.
@@ -576,14 +579,14 @@ sub internalLink {
     # whole link, and first of each word. TODO: Try to turn this off,
     # avoiding spaces being stripped elsewhere
     $topic = ucfirst($topic);
-    $topic =~ s/\s([$Foswiki::regex{mixedAlphaNum}])/\U$1/go;
+    $topic =~ s/\s([[:alpha:][:digit:]])/\U$1/go;
 
     # If locales are in effect, the above conversions will taint the topic
     # name (Foswiki:Tasks:Item2091)
     $topic = Foswiki::Sandbox::untaintUnchecked($topic);
 
     # Add <nop> before WikiWord inside link text to prevent double links
-    $linkText =~ s/(?<=[\s\(])([$Foswiki::regex{upperAlpha}])/<nop>$1/go;
+    $linkText =~ s/(?<=[\s\(])([[:upper:]])/<nop>$1/go;
     return _renderWikiWord( $this, $web, $topic, $linkText, $anchor,
         $linkIfAbsent, $keepWebPrefix, $params );
 }
@@ -869,7 +872,7 @@ sub _handleSquareBracketedLink {
     $link = ucfirst($link);
 
     # Collapse spaces and capitalise following letter
-    $link =~ s/\s([$Foswiki::regex{mixedAlphaNum}])/\U$1/go;
+    $link =~ s/\s([[:alpha:][:digit:]])/\U$1/go;
 
     # Get rid of remaining spaces, i.e. spaces in front of -'s and ('s
     $link =~ s/\s//go;
@@ -2021,14 +2024,14 @@ sub getReferenceRE {
                     $re =
                         $squabo
                       . $matchWeb
-                      . "(\.[$Foswiki::regex{mixedAlphaNum}]+)"
+                      . "(\.[[:alpha:][:digit:]]+)"
                       . $squabc;
                 }
                 else {
                     $re =
                         $bow
                       . $matchWeb
-                      . "(\.[$Foswiki::regex{mixedAlphaNum}]+)"
+                      . "(\.[[:alpha:][:digit:]]+)"
                       . $eow;
                 }
             }
@@ -2041,18 +2044,18 @@ sub getReferenceRE {
                     $re =
                         $squabo
                       . $matchWeb
-                      . "(([\/\.][$Foswiki::regex{upperAlpha}]"
-                      . "[$Foswiki::regex{mixedAlphaNum}_]*)+"
-                      . "\.[$Foswiki::regex{mixedAlphaNum}]*)"
+                      . "(([\/\.][[:upper:]]"
+                      . "[[:alpha:][:digit:]_]*)+"
+                      . "\.[[:alpha:][:digit:]]*)"
                       . $squabc;
                 }
                 else {
                     $re =
                         $bow
                       . $matchWeb
-                      . "(([\/\.][$Foswiki::regex{upperAlpha}]"
-                      . "[$Foswiki::regex{mixedAlphaNum}_]*)+"
-                      . "\.[$Foswiki::regex{mixedAlphaNum}]*)"
+                      . "(([\/\.][[:upper:]]"
+                      . "[[:alpha:][:digit:]_]*)+"
+                      . "\.[[:alpha:][:digit:]]*)"
                       . $eow;
                 }
             }

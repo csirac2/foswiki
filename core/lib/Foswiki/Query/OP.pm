@@ -14,11 +14,15 @@ to define operator nodes.
 =cut
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 # Does not need to subclass, but is a subclass of...
-#use Foswiki::Infix::OP ();
+use Foswiki::Infix::OP ();
 #our @ISA = ( 'Foswiki::Infix::OP' );
+
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my ( $class, %opts ) = @_;

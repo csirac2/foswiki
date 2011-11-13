@@ -4,10 +4,13 @@ use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
 
 use strict;
+use utf8;use Unit::TestCase;
+use strict;
 use Foswiki;
 use Foswiki::UI::Rename;
 use Error ':try';
 use File::Temp;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $notawwtopic1 = "random";
 my $notawwtopic2 = "Random";

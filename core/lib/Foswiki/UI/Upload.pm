@@ -11,14 +11,18 @@ UI delegate for attachment management functions
 package Foswiki::UI::Upload;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 use Error qw( :try );
 
+use utf8;
 use Foswiki                ();
 use Foswiki::UI            ();
 use Foswiki::Sandbox       ();
 use Foswiki::OopsException ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 

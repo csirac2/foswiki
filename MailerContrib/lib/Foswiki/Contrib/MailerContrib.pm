@@ -13,7 +13,9 @@ Also supported is a simple API that can be used to change the Web<nop>Notify top
 package Foswiki::Contrib::MailerContrib;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw(FATAL utf8);
 
 use URI ();
 use CGI qw(-any);
@@ -25,6 +27,7 @@ use Foswiki::Func                              ();
 use Foswiki::Contrib::MailerContrib::WebNotify ();
 use Foswiki::Contrib::MailerContrib::Change    ();
 use Foswiki::Contrib::MailerContrib::UpData    ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 our $VERSION          = '$Rev$';
 our $RELEASE          = '2.5.1';

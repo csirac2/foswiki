@@ -1,13 +1,18 @@
 package RenderFormTests;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
+use strict;
+use utf8;use Unit::TestCase;
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
 
 use Foswiki::Meta;
 use File::Temp;
 use Benchmark ':hireswallclock';
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $testtopic1 = 'TestTopic1';
 my $testtopic2 = 'TestTopic2';

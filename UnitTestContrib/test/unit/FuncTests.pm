@@ -5,13 +5,16 @@ package FuncTests;
 
 use utf8;    # For test_unicode_attachment
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
 use Foswiki;
 use Foswiki::Func;
 use Assert;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $MrWhite;
 

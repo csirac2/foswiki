@@ -15,7 +15,9 @@ It is also used to examine the installed version of a Foswiki module.
 package Foswiki::Configure::Dependency;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 my @MNAMES  = qw(jan feb mar apr may jun jul aug sep oct nov dec);
 my $mnamess = join( '|', @MNAMES );

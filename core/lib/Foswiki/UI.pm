@@ -11,7 +11,9 @@ Coordinator of execution flow and service functions used by the UI packages
 package Foswiki::UI;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 BEGIN {
 
@@ -152,12 +154,13 @@ use CGI ();
 
 use Foswiki                         ();
 use Foswiki::Request                ();
-use Foswiki::Response               ();
+use utf8;use Foswiki::Response               ();
 use Foswiki::OopsException          ();
 use Foswiki::EngineException        ();
 use Foswiki::ValidationException    ();
 use Foswiki::AccessControlException ();
 use Foswiki::Validation             ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # Used to lazily load UI handler modules
 our %isInitialized = ();

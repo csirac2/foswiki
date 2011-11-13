@@ -20,7 +20,9 @@ See the documentation of HTTP::Response for information about the methods.
 package Foswiki::Net::HTTPResponse;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 
 sub new {

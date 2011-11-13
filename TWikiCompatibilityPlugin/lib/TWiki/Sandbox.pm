@@ -4,7 +4,9 @@ package TWiki::Sandbox;
 # Bridge between TWiki::Sandbox and Foswiki::Sandbox
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Sandbox;
 

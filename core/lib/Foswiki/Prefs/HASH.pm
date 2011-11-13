@@ -15,14 +15,19 @@ hash.
 package Foswiki::Prefs::HASH;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Prefs::BaseBackend ();
 our @ISA = qw(Foswiki::Prefs::BaseBackend);
 
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+
 sub new {
     my ( $proto, $values ) = @_;
 
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
     my $this = $proto->SUPER::new();
     while ( my ( $key, $value ) = each %$values ) {
         $this->insert( 'Set', $key, $value );

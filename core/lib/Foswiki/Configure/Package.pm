@@ -37,7 +37,11 @@ Pictorially,
 package Foswiki::Configure::Package;
 
 use strict;
+use utf8;
+use locale;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Error qw(:try);
 use Assert;
 use Foswiki::Configure::Dependency;

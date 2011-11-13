@@ -50,8 +50,12 @@ sequential.
 package Foswiki::Store;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
+use strict;
+use utf8;
 use Error qw( :try );
 use Assert;
 
@@ -59,6 +63,7 @@ use Foswiki                         ();
 use Foswiki::Meta                   ();
 use Foswiki::Sandbox                ();
 use Foswiki::AccessControlException ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 our $STORE_FORMAT_VERSION = '1.1';
 

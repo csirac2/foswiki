@@ -20,15 +20,18 @@
 
 # Still do to:
 # Handle continuation lines (see Prefs::parseText). These should always
+use utf8;
 # go into a text area.
 
 package Foswiki::Plugins::PreferencesPlugin;
 
 use strict;
+use utf8;
 use warnings;
 
 use Foswiki::Func    ();    # The plugins API
 use Foswiki::Plugins ();    # For the API version
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 use vars qw( @shelter );
 

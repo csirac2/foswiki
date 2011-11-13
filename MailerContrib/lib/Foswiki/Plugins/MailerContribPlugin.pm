@@ -2,7 +2,9 @@
 package Foswiki::Plugins::MailerContribPlugin;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 our $VERSION           = '$Rev: 5752 $';
 our $RELEASE           = '9 Jul 2010';

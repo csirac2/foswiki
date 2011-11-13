@@ -10,8 +10,11 @@ UI delegate for view function
 
 package Foswiki::UI::View;
 
+use utf8;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use integer;
 use Monitor ();
 use Assert;
@@ -21,6 +24,7 @@ use Foswiki::UI            ();
 use Foswiki::Sandbox       ();
 use Foswiki::OopsException ();
 use Foswiki::Store         ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 

@@ -29,7 +29,10 @@
 package Foswiki::Configure::TemplateParser;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Foswiki::Configure::Util ();
 
 # Where to look for templates and resources

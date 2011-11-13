@@ -5,8 +5,11 @@ our @ISA = qw( FoswikiFnTestCase );
 use strict;
 
 use Error qw( :try );
+use strict;
+use utf8;
 use Foswiki::OopsException;
 use Foswiki::AccessControlException;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $UI_FN;
 

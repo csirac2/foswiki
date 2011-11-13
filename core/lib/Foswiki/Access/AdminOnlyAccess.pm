@@ -10,12 +10,14 @@ DENY EVERYONE that is not Admin - Admin permitted anythingeverything
 
 package Foswiki::Access::AdminOnlyAccess;
 
-use Foswiki::Access;
-@ISA = qw(Foswiki::Access);
-use constant MONITOR => 0;
-
 use strict;
 use Assert;
+
+use Foswiki::Access;
+@ISA = qw(Foswiki::Access);
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+
+use constant MONITOR => 0;
 
 sub new {
     my ( $class, $session ) = @_;

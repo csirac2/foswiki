@@ -6,7 +6,10 @@ our @ISA = qw( Foswiki::Form::ListFieldDefinition );
 use Foswiki::Plugins::JQueryPlugin ();
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $class = shift;

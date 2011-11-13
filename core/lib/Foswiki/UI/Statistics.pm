@@ -11,7 +11,9 @@ Statistics extraction and presentation
 package Foswiki::UI::Statistics;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 use File::Copy qw(copy);
 use IO::File ();
@@ -21,9 +23,11 @@ use Foswiki                         ();
 use Foswiki::Sandbox                ();
 use Foswiki::UI                     ();
 use Foswiki::WebFilter              ();
+use utf8;
 use Foswiki::Time                   ();
 use Foswiki::Meta                   ();
 use Foswiki::AccessControlException ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 BEGIN {
 

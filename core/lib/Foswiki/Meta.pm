@@ -18,7 +18,8 @@ which case it acts as a portal onto the actual store content of a specific
 revision of the topic.
 
 An unloaded object is constructed by the =new= constructor on this class,
-passing one to three parameters depending on whether the object represents the
+passing one to three parameters dBEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+epending on whether the object represents the
 root, a web, or a topic.
 
 A loaded object may be constructed by calling the =load= constructor, or
@@ -113,11 +114,14 @@ the function or parameter.
 package Foswiki::Meta;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Error qw(:try);
 use Assert;
 use Errno 'EINTR';
 use Foswiki::Serialise ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 #use Foswiki::Iterator::NumberRangeIterator;
 
@@ -3212,18 +3216,7 @@ sub _summariseTextSimple {
     ASSERT( $this->{_web} && $this->{_topic}, 'this is not a topic object' )
       if DEBUG;
 
-    # SMELL: need to avoid splitting within multi-byte characters
-    # by encoding bytes as Perl UTF-8 characters.
-    # This avoids splitting within a Unicode codepoint (or a UTF-16
-    # surrogate pair, which is encoded as a single Perl UTF-8 character),
-    # but we ideally need to avoid splitting closely related Unicode
-    # codepoints.
-    # Specifically, this means Unicode combining character sequences (e.g.
-    # letters and accents)
-    # Might be better to split on \b if possible.
-
-    $text =~
-      s/^(.{$limit}.*?)($Foswiki::regex{mixedAlphaNumRegex}).*$/$1$2 \.\.\./s;
+    $text =~ s/^(.{$limit}.*?)([[:alpha:][:digit:]]).*$/$1$2 \.\.\./s;
 
     return $this->_makeSummaryTextSafe($text);
 }

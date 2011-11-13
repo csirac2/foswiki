@@ -7,6 +7,7 @@ use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
 
 use strict;
+use utf8;
 
 use Foswiki;
 use Unit::Request;
@@ -15,6 +16,7 @@ use Foswiki::UI::Register;
 use Error qw( :try );
 use Encode;
 use Scalar::Util qw( weaken );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $startWait;
 my $doze;

@@ -31,10 +31,14 @@ easily be coverted into a true singleton (template manager).
 package Foswiki::Templates;
 
 use strict;
+use utf8;
 use warnings;
+use utf8;
+use warnings qw( FATAL utf8 );
 use Assert;
 
 use Foswiki::Attrs ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # Enable TRACE to get HTML comments in the output showing where templates
 # (both DEFs and files) open and close. Will probably bork the output, so

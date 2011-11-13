@@ -2,7 +2,9 @@
 package Foswiki;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 # DEPRECATED
 # This routine was introduced to URL encode Mozilla UTF-8 POST URLs in the

@@ -12,9 +12,14 @@ See Foswiki::Cache for details of the methods implemented by this class.
 package Foswiki::Cache::MemoryHash;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
+
 use Foswiki::Cache;
-use vars qw($sharedCache);
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+
+our $sharedCache;
 
 @Foswiki::Cache::MemoryHash::ISA = ('Foswiki::Cache');
 

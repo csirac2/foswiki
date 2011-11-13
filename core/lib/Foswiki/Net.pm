@@ -15,7 +15,10 @@ Object that brokers access to network resources.
 package Foswiki::Net;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 use Error qw( :try );
 

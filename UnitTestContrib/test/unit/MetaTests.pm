@@ -4,12 +4,13 @@ require 5.006;
 use strict;
 
 package MetaTests;
-
+use utf8;
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
 
 use Foswiki;
 use Foswiki::Meta;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $self = shift()->SUPER::new(@_);

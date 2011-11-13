@@ -3,6 +3,8 @@
 package DependencyTests;
 
 use strict;
+use utf8;
+use strict;
 
 use FoswikiTestCase;
 our @ISA = qw( FoswikiTestCase );
@@ -10,6 +12,7 @@ our @ISA = qw( FoswikiTestCase );
 use Error qw( :try );
 use File::Temp;
 use Foswiki::Configure::Dependency;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $class = shift;

@@ -61,7 +61,15 @@ Foswiki::Configure::Checkers::UIs)
 package Foswiki::Configure::FoswikiCfg;
 
 use strict;
+use utf8;
+use locale;
+use locale;
+use locale;
+use locale;
+use locale;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Data::Dumper ();
 
 use Foswiki::Configure::Visitor ();

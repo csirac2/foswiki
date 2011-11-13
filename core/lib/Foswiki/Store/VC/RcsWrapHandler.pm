@@ -23,13 +23,16 @@ See also http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=247494
 
 package Foswiki::Store::VC::RcsWrapHandler;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
-
+use utf8;
 use Foswiki::Store::VC::Handler ();
 our @ISA = ('Foswiki::Store::VC::Handler');
 
 use Foswiki::Sandbox ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     return shift->SUPER::new(@_);

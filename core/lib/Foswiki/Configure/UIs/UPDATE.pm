@@ -12,7 +12,11 @@ save changes screen.
 package Foswiki::Configure::UIs::UPDATE;
 
 use strict;
+use utf8;
+use locale;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::UI ();
 our @ISA = ('Foswiki::Configure::UI');

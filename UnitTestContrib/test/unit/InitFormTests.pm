@@ -35,11 +35,13 @@ our @ISA = qw( FoswikiTestCase );
 use Error qw( :try );
 
 use Foswiki;
+use utf8;use Foswiki::ListIterator;
 use Foswiki::UI::Edit;
 use Foswiki::Form;
 use Unit::Request;
 use Unit::Response;
 use Error qw( :try );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $testweb    = "TemporaryTestWeb";
 my $testtopic1 = "InitTestTopic1";

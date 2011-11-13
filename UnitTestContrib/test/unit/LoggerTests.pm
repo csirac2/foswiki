@@ -2,12 +2,14 @@
 
 package LoggerTests;
 use FoswikiTestCase;
+use utf8;
 our @ISA = qw( FoswikiTestCase );
 
 use strict;
 use File::Temp;
 use File::Path;
 use Foswiki::Logger::PlainFile;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # NOTE: Test logs are created in the test web so they get torn down when the
 # web is torn down in the superclass.

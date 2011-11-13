@@ -2,10 +2,13 @@
 package Foswiki::Configure::Checkers::PluginsOrder;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
+use File::stat;
 
 use Foswiki::Configure::Checker ();
-use File::stat;
 our @ISA = ('Foswiki::Configure::Checker');
 
 sub check {

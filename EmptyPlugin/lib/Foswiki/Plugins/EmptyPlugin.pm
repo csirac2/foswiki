@@ -61,11 +61,14 @@ versions.
 package Foswiki::Plugins::EmptyPlugin;
 
 # Always use strict to enforce variable scoping
+use utf8;
 use strict;
+use utf8;
 use warnings;
 
 use Foswiki::Func    ();    # The plugins API
 use Foswiki::Plugins ();    # For the API version
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # $VERSION is referred to by Foswiki, and is the only global variable that
 # *must* exist in this package. This should always be in the format

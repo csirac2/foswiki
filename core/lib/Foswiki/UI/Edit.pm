@@ -10,7 +10,11 @@ Edit command handler
 =cut
 
 use strict;
+use utf8;
 use warnings;
+use strict;
+use utf8;
+use warnings qw( FATAL utf8 );
 use Assert;
 use Error qw( :try );
 
@@ -18,6 +22,7 @@ use Foswiki                ();
 use Foswiki::UI            ();
 use Foswiki::OopsException ();
 use Foswiki::Form          ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 

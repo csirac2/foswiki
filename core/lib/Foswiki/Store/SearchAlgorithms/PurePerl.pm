@@ -11,7 +11,9 @@ Pure perl implementation of the RCS search.
 =cut
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 
 use Foswiki::Store::Interfaces::QueryAlgorithm ();
@@ -25,11 +27,14 @@ use Foswiki();
 use Foswiki::Func();
 use Foswiki::Meta            ();
 use Foswiki::MetaCache       ();
+use strict;
+use utf8;
 use Foswiki::Query::Node     ();
 use Foswiki::Query::HoistREs ();
 use Foswiki::ListIterator();
 use Foswiki::Iterator::FilterIterator();
 use Foswiki::Iterator::ProcessIterator();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 use constant MONITOR => 0;
 

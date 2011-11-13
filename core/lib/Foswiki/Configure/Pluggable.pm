@@ -21,7 +21,10 @@ saving configuration data.
 package Foswiki::Configure::Pluggable;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::Section ();
 our @ISA = ('Foswiki::Configure::Section');

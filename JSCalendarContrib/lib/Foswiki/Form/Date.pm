@@ -8,9 +8,12 @@ use Foswiki::Form::FieldDefinition ();
 @ISA = ('Foswiki::Form::FieldDefinition');
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw(FATAL utf8);
 
 use Foswiki::Contrib::JSCalendarContrib ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $class = shift;

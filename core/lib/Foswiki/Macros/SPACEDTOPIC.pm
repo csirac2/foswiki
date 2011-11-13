@@ -2,7 +2,9 @@
 package Foswiki;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 # DEPRECATED
 # This routine is deprecated as of TWiki 4.1,

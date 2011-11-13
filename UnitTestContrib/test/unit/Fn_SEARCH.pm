@@ -15,17 +15,21 @@
 package Fn_SEARCH;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use FoswikiFnTestCase();
 our @ISA = qw( FoswikiFnTestCase );
 
+use utf8;
 use Foswiki();
 use Error qw( :try );
 use Assert;
 use English qw( -no_match_vars );
 use Foswiki::Search();
 use Foswiki::Search::InfoCache();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 use File::Spec qw(case_tolerant)
   ; #TODO: this really should be in the Store somehow - but its not worth doing now, as we should really obliterate the issue

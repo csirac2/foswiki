@@ -12,9 +12,13 @@ for details of the methods implemented by this class.
 package Foswiki::Cache::Memcached;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Cache::Memcached;
+
 use Foswiki::Cache;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 @Foswiki::Cache::Memcached::ISA = ('Foswiki::Cache');
 

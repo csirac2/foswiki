@@ -5,8 +5,12 @@ package FoswikiStoreTestCase;
 #
 # Subclasses are expected to implement set_up_for_verify()
 #
+use strict;
+use utf8;
+
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # Determine if RCS is installed. used in tests for RCS functionality.
 our $rcs_installed;
@@ -68,7 +72,6 @@ sub fixture_groups {
 		};
 		use strict 'refs';
                 push(@groups, $algname);
-		$seen{$alg} = 1;
             }
             closedir(D);
         }

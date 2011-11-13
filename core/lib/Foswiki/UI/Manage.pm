@@ -13,7 +13,9 @@ in one place.
 package Foswiki::UI::Manage;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 use Error qw( :try );
 
@@ -21,6 +23,7 @@ use Foswiki                ();
 use Foswiki::UI            ();
 use Foswiki::OopsException ();
 use Foswiki::Sandbox       ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 

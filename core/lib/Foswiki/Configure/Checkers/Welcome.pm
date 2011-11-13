@@ -13,7 +13,10 @@ for historical reasons and needs to be moved out.
 =cut
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::Section ();
 our @ISA = ('Foswiki::Configure::Section');

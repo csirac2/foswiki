@@ -2,7 +2,10 @@
 package Foswiki::Configure::Types::LANGUAGE;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::Types::BOOLEAN ();
 our @ISA = ('Foswiki::Configure::Types::BOOLEAN');

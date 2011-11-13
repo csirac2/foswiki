@@ -11,14 +11,19 @@ User registration handling.
 package Foswiki::UI::Register;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
+use strict;
+use utf8;use Foswiki ();
 use Error qw( :try );
 
 use Foswiki                ();
 use Foswiki::OopsException ();
 use Foswiki::Sandbox       ();
 use Foswiki::UI            ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # Keys from the user data that should *not* be included in
 # the user topic.

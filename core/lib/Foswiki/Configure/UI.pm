@@ -17,7 +17,10 @@ over the structure to generate the UI.
 package Foswiki::Configure::UI;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 use File::Spec ();
 use FindBin    ();
 

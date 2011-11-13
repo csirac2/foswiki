@@ -1,3 +1,4 @@
+use utf8;
 # tests for the correct expansion of URLPARAM
 #
 # Author: Koen Martens
@@ -5,6 +6,7 @@
 package Fn_URLPARAM;
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 use strict;
 

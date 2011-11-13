@@ -1,9 +1,13 @@
 # See bottom of file for license and copyright information
 package Foswiki;
-use Foswiki::Macros::ENCODE ();
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
+
+use Foswiki::Macros::ENCODE ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 *Foswiki::URLENCODE = \&Foswiki::ENCODE;
 
@@ -16,7 +20,8 @@ are listed in the AUTHORS file in the root of this distribution.
 NOTE: Please extend that file, not this notice.
 
 Additional copyrights apply to some or all of the code in this
-file as follows:
+fileBEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+ as follows:
 
 Copyright (C) 1999-2007 Peter Thoeny, peter@thoeny.org
 and TWiki Contributors. All Rights Reserved. TWiki Contributors

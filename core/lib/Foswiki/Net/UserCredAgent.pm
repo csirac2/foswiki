@@ -6,7 +6,9 @@
 package Foswiki::Net::UserCredAgent;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use LWP::UserAgent ();
 our @ISA = ('LWP::UserAgent');

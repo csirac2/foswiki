@@ -9,10 +9,14 @@
 package Foswiki::Query::OP_ne;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Query::ConditionalOP ();
 our @ISA = ('Foswiki::Query::ConditionalOP');
+
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $class = shift;

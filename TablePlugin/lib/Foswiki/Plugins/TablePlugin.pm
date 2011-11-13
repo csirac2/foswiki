@@ -6,7 +6,9 @@
 package Foswiki::Plugins::TablePlugin;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 our $VERSION = '$Rev$';
 our $RELEASE = '1.135';
@@ -54,7 +56,8 @@ sub preRenderingHandler {
     ### my ( $text, $removed ) = @_;
     debug( 'TablePlugin', 'preRenderingHandler' );
     my $sort = Foswiki::Func::getPreferencesValue('TABLEPLUGIN_SORT')
-      || 'all';
+    use utf8;
+  || 'all';
     return
       unless ( $sort && $sort =~ /^(all|attachments)$/ )
       || $_[0] =~ /%TABLE{.*?}%/;

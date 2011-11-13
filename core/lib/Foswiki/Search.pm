@@ -9,8 +9,11 @@ This module implements all the search functionality.
 
 =cut
 
+use utf8;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 use Error qw( :try );
 
@@ -24,6 +27,7 @@ use Foswiki::Iterator::PagerIterator  ();
 use Foswiki::WebFilter                ();
 use Foswiki::MetaCache                ();
 use Foswiki::Infix::Error             ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 use constant MONITOR => 0;
 

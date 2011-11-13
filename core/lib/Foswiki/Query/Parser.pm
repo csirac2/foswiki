@@ -15,7 +15,9 @@ Foswiki::Infix::Node)
 package Foswiki::Query::Parser;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 
 use Foswiki::Infix::Parser ();
@@ -61,6 +63,8 @@ use Foswiki::Query::OP_neg    ();    # 1000
 use Foswiki::Query::OP_int    ();    # 1000
 
 use Foswiki::Query::OP_ob ();        # 1100
+
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 Query Language BNF

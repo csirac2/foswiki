@@ -1,4 +1,5 @@
 use strict;
+use utf8;
 
 # Pathologically simple test case.
 package ExampleTests;
@@ -7,6 +8,7 @@ use FoswikiTestCase;
 our @ISA = qw( FoswikiTestCase );
 
 use Foswiki;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub set_up {
 

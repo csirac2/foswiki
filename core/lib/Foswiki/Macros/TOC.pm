@@ -2,7 +2,9 @@
 package Foswiki;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 # Extract headings from $text and render them as a TOC table.
 #    * =$text= - the text to extract the TOC from.
@@ -191,7 +193,7 @@ sub TOC {
 
         # Special case: 'Site:page' Interwiki link
         $text =~ s/(^|[\s\-\*\(])
-                   ([$Foswiki::regex{mixedAlphaNum}]+\:)/$1<nop>$2/gox;
+                   ([[:alpha:][:digit:]]+\:)/$1<nop>$2/gox;
 
         # Prevent duplicating id attributes 
         $text =~ s/id=["'][^"']*?["']//gi;

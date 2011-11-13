@@ -1,9 +1,11 @@
 # tests for the correct expansion of QUERYPARAMS
+use utf8;
 #
 #
 package Fn_QUERYPARAMS;
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 use strict;
 

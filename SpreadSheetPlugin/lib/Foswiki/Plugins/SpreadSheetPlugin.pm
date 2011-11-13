@@ -5,7 +5,9 @@
 package Foswiki::Plugins::SpreadSheetPlugin;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 # =========================
 use vars qw(

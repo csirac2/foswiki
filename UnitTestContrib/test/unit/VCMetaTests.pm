@@ -9,11 +9,13 @@ use FoswikiStoreTestCase;
 our @ISA = qw( FoswikiStoreTestCase );
 
 use strict;
+use utf8;
 use Foswiki;
 use Foswiki::Meta;
 use Error qw( :try );
 use Foswiki::OopsException;
 use Devel::Symdump;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $testUser1;
 my $testUser2;

@@ -1,14 +1,20 @@
 package AddressTests;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use FoswikiTestCase;
 our @ISA = qw( FoswikiTestCase );
+use strict;
+use utf8;# Test cases:
 
 use Assert;
 use Data::Dumper;
 use Benchmark qw(:hireswallclock);
 use Foswiki::Address();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+
 use constant TRACE => 0;
 
 my $FoswikiSESSION;

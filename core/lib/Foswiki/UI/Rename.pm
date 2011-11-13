@@ -11,12 +11,16 @@ UI functions for renaming.
 package Foswiki::UI::Rename;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
+use utf8;use Foswiki ();
 use Assert;
 use Error qw(:try);
 
 use Foswiki::UI     ();
 use Foswiki::Render ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 our $MARKER = "\02\03";
 

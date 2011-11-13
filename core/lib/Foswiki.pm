@@ -42,7 +42,9 @@ with CGI accelerators such as mod_perl.
 =cut
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 use Error qw( :try );
 use Monitor                  ();
@@ -339,8 +341,7 @@ BEGIN {
     }
 
     if ( $Foswiki::cfg{UseLocale} ) {
-        require locale;
-        import locale();
+        require locale; import locale();
     }
 
     # If not set, default to strikeone validation
@@ -375,10 +376,9 @@ BEGIN {
 
     # locale setup
     #
-    #
-    # Note that 'use locale' must be done in BEGIN block for regexes and
-    # sorting to work properly, although regexes can still work without
-    # this in 'non-locale regexes' mode.
+    # Note that 'use locale' must be done in the BEGIN block of individual
+    # modules for regexes, lc/uc, and sorting to work properly. 'use locale'
+    # dictates the behaviour of built-ins and must be done at compile time.
 
     if ( $Foswiki::cfg{UseLocale} ) {
 
@@ -397,10 +397,11 @@ BEGIN {
     }
 
     $macros{CHARSET} = sub {
-        'utf-8'
+        'utf-8' # always
     };
 
     $macros{LANG} = sub {
+	# SMELL: what if {UseLocale} is false?
         $Foswiki::cfg{Site}{Locale} =~ m/^([a-z]+_[a-z]+)/i ? $1 : 'en_US';
     };
 
@@ -411,29 +412,38 @@ BEGIN {
     # for use as a character class, or as a sub-expression in
     # another compiled RE.
 
-    # Build up character class components for use in regexes.
-    # Depends on locale mode and Perl version, and finally on
-    # whether locale-based regexes are turned off.
-    if ( $] < 5.006 or not $Foswiki::cfg{Site}{LocaleRegexes} ) {
+    # The following POSIX character classes are always available in Perl
+    # (with backslash equivalents). Because 'use utf8' is used everywhere
+    # in Foswiki, the Unicode \p{} constructs are also equivalent:
+    # 'use utf8' should be used in *all* Foswiki modules.
+    # \		[:class:]     \p{Unicode}
+    # 		alpha	      IsAlpha
+    # 		alnum	      IsAlnum
+    # 		ascii	      IsASCII
+    # 		cntrl	      IsCntrl
+    # \d	digit	      IsDigit
+    # 		graph	      IsGraph
+    # 		lower	      IsLower
+    # 		print	      IsPrint
+    # 		punct	      IsPunct
+    # \s	space	      IsSpace (incl. \x{85}, \x{2028}, and \x{2029})
+    # 		upper	      IsUpper
+    # \w	word	      IsWord
+    # 		xdigit	      IsXDigit
+    # Note: If'use utf8' is not used but 'use locale' is, the classes
+    # correlate with the isalpha(3) interface, and \w is taken from the
+    # current locale.
 
-        # No locales needed/working, or Perl 5.005, so just use
-        # any additional national characters defined in LocalSite.cfg
-        $regex{upperAlpha} = 'A-Z' . $Foswiki::cfg{UpperNational};
-        $regex{lowerAlpha} = 'a-z' . $Foswiki::cfg{LowerNational};
-        $regex{numeric}    = '\d';
-        $regex{mixedAlpha} = $regex{upperAlpha} . $regex{lowerAlpha};
-    }
-    else {
-
-        # Perl 5.006 or higher with working locales
-        $regex{upperAlpha} = '[:upper:]';
-        $regex{lowerAlpha} = '[:lower:]';
-        $regex{numeric}    = '[:digit:]';
-        $regex{mixedAlpha} = '[:alpha:]';
-    }
-    $regex{mixedAlphaNum} = $regex{mixedAlpha} . $regex{numeric};
-    $regex{lowerAlphaNum} = $regex{lowerAlpha} . $regex{numeric};
-    $regex{upperAlphaNum} = $regex{upperAlpha} . $regex{numeric};
+    # Do *not* use these in clode, spell out the character classes in
+    # full instead. It's much more literate. These definitions are kept
+    # because they may be used in plugins.
+    $regex{upperAlpha} = '[:upper:]';
+    $regex{lowerAlpha} = '[:lower:]';
+    $regex{numeric}    = '[:digit:]';
+    $regex{mixedAlpha} = '[:alpha:]';
+    $regex{mixedAlphaNum} = '[:alpha:][:digit:]';
+    $regex{lowerAlphaNum} = '[:lower:][:digit:]';
+    $regex{upperAlphaNum} = '[:upper:][:digit:]';
 
     # Compile regexes for efficiency and ease of use
     # Note: qr// locks in regex modes (i.e. '-xism' here) - see Friedl
@@ -452,15 +462,18 @@ BEGIN {
     # '---++!! Header' or '---++ Header %NOTOC% ^top'
     $regex{headerPatternNoTOC} = '(\!\!+|%NOTOC%)';
 
-    # Foswiki concept regexes
+    # Foswiki concept regexes. Because these use character classes,
+    # the concepts should be robust over different locales, though
+    # this requires 'use locale' to be active in the source module
+    # where they are used.
     $regex{wikiWordRegex} = qr(
-            [$regex{upperAlpha}]+
-            [$regex{lowerAlphaNum}]+
-            [$regex{upperAlpha}]+
-            [$regex{mixedAlphaNum}]*
+            [[:upper:]]+
+            [[:lower:][:digit:]]+
+            [[:upper:]]+
+            [[:alpha:][:digit:]]*
        )xo;
     $regex{webNameBaseRegex} =
-      qr/[$regex{upperAlpha}]+[$regex{mixedAlphaNum}_]*/o;
+      qr/[[:upper:]]+[[:alpha:][:digit:]_]*/o;
     if ( $Foswiki::cfg{EnableHierarchicalWebs} ) {
         $regex{webNameRegex} = qr(
                 $regex{webNameBaseRegex}
@@ -470,9 +483,9 @@ BEGIN {
     else {
         $regex{webNameRegex} = $regex{webNameBaseRegex};
     }
-    $regex{defaultWebNameRegex} = qr/_[$regex{mixedAlphaNum}_]+/o;
-    $regex{anchorRegex}         = qr/\#[$regex{mixedAlphaNum}_]+/o;
-    $regex{abbrevRegex}         = qr/[$regex{upperAlpha}]{3,}s?\b/o;
+    $regex{defaultWebNameRegex} = qr/_[[:alpha:][:digit:]_]+/o;
+    $regex{anchorRegex}         = qr/\#[[:alpha:][:digit:]_]+/o;
+    $regex{abbrevRegex}         = qr/[[:upper:]]{3,}s?\b/o;
 
     $regex{topicNameRegex} =
       qr/(?:(?:$regex{wikiWordRegex})|(?:$regex{abbrevRegex}))/o;
@@ -523,11 +536,11 @@ qr(AERO|ARPA|ASIA|BIZ|CAT|COM|COOP|EDU|GOV|INFO|INT|JOBS|MIL|MOBI|MUSEUM|NAME|NE
     $regex{filenameInvalidCharRegex} = $Foswiki::cfg{NameFilter};
 
     # Multi-character alpha-based regexes
-    $regex{mixedAlphaNumRegex} = qr/[$regex{mixedAlphaNum}]*/o;
+    # SMELL: should this be + rather than * ?
+    $regex{mixedAlphaNumRegex} = qr/[[:alpha:][:digit:]]*/o;
 
     # %TAG% name
-    $regex{tagNameRegex} =
-      '[' . $regex{mixedAlpha} . '][' . $regex{mixedAlphaNum} . '_:]*';
+    $regex{tagNameRegex} = '[:alpha:][[:alpha:][:digit:]_:]*';
 
     # Set statement in a topic
     $regex{bulletRegex} = '^(?:\t|   )+\*';
@@ -1241,7 +1254,7 @@ sub getSkin {
     if ( $this->{request} ) {
         $skins = $this->{request}->param('cover');
         if ( defined $skins
-            && $skins =~ /([$regex{mixedAlphaNum}.,\s]+)/o )
+            && $skins =~ /([[:alpha:][:digit:].,[:space:]]+)/o )
         {
 
             # Implicit untaint ok - validated
@@ -1252,7 +1265,7 @@ sub getSkin {
 
     $skins = $this->{prefs}->getPreference('COVER');
     if ( defined $skins
-        && $skins =~ /([$regex{mixedAlphaNum}.,\s]+)/o )
+        && $skins =~ /([[:alpha:][:digit:].,[:space:]]+)/o )
     {
 
         # Implicit untaint ok - validated
@@ -1263,7 +1276,7 @@ sub getSkin {
     $skins = $this->{request} ? $this->{request}->param('skin') : undef;
     $skins = $this->{prefs}->getPreference('SKIN') unless $skins;
 
-    if ( defined $skins && $skins =~ /([$regex{mixedAlphaNum}.,\s]+)/o ) {
+    if ( defined $skins && $skins =~ /([[:alpha:][:digit:].,\s]+)/o ) {
 
         # Implicit untaint ok - validated
         $skins = $1;
@@ -2519,8 +2532,8 @@ sub spaceOutWikiWord {
     $word = defined($word) ? $word : '';
     $sep  = defined($sep)  ? $sep  : ' ';
     $word =~
-s/([$regex{lowerAlpha}])([$regex{upperAlpha}$regex{numeric}]+)/$1$sep$2/go;
-    $word =~ s/([$regex{numeric}])([$regex{upperAlpha}])/$1$sep$2/go;
+s/([[:lower:]])([[:upper:][:digit:]]+)/$1$sep$2/go;
+    $word =~ s/([[:digit:]])([[:upper:]])/$1$sep$2/go;
     return $word;
 }
 
@@ -3446,7 +3459,7 @@ sub expandStandardEscapes {
 
     # expand '$n()' and $n! to new line
     $text =~ s/\$n\(\)/\n/gs;
-    $text =~ s/\$n(?=[^$regex{mixedAlpha}]|$)/\n/gos;
+    $text =~ s/\$n(?=[^[:alpha:]]|$)/\n/gos;
 
     # filler, useful for nested search
     $text =~ s/\$nop(\(\))?//gs;

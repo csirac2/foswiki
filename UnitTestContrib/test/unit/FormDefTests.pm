@@ -3,7 +3,11 @@
 package FormDefTests;
 
 use strict;
+use utf8;
 use warnings;
+use strict;
+use utf8;
+use warnings qw( FATAL utf8 );
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
 
@@ -11,6 +15,7 @@ use Foswiki;
 use Foswiki::Form;
 use Assert;
 use Error qw( :try );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub test_minimalForm {
     my $this = shift;

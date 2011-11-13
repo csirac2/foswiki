@@ -1,7 +1,9 @@
 package EngineTests;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 our @ISA;
 
 BEGIN {
@@ -13,12 +15,13 @@ BEGIN {
         require Unit::CGIEngine;
         @ISA = qw(Unit::CGIEngine);
     }
-}
+use utf8;}
 
 use Foswiki;
 use Foswiki::Request;
 use Foswiki::Request::Upload;
 use Foswiki::Response;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 use File::Spec;
 use File::Temp;

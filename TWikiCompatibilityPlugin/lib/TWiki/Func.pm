@@ -4,7 +4,9 @@ package TWiki::Func;
 # Bridge between TWiki::Func and Foswiki::Func
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Func;
 use Foswiki::Plugins;

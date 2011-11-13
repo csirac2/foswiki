@@ -17,7 +17,9 @@ you can always create a new web based on that web.
 =cut
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Unit::TestCase;
 our @ISA = qw( Unit::TestCase );
 
@@ -29,6 +31,7 @@ use Foswiki::Plugins;
 use Unit::Request;
 use Unit::Response;
 use Error qw( :try );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 BEGIN {
 

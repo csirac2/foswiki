@@ -18,12 +18,15 @@ has no equivalent in Foswiki 1.0. The equivalent of the old
 package Foswiki::Store::RcsLite;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Store::VC::Store ();
 our @ISA = ('Foswiki::Store::VC::Store');
 
 use Foswiki::Store::VC::RcsLiteHandler ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub getHandler {
     my $this = shift;

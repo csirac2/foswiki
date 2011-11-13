@@ -24,18 +24,23 @@ is analagous to =Foswiki::Store::RcsFile=.
 package Foswiki::Store::VC::Handler;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 
 use IO::File   ();
 use File::Copy ();
 use File::Spec ();
+use strict;
+use utf8;
 use File::Path ();
 use Fcntl qw( :DEFAULT :flock SEEK_SET );
 
 use Foswiki::Store                         ();
 use Foswiki::Sandbox                       ();
 use Foswiki::Iterator::NumberRangeIterator ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 

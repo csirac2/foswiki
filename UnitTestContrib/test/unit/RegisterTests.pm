@@ -28,6 +28,7 @@ use File::Copy;
 use File::Path;
 use Carp;
 use Cwd;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $systemWeb = "TemporaryRegisterTestsSystemWeb";
 

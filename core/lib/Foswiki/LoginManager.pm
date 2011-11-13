@@ -49,11 +49,14 @@ The Foswiki object this login manager is attached to.
 package Foswiki::LoginManager;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 use Error qw( :try );
 
 use Foswiki::Sandbox ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # Marker chars
 our $M1 = chr(5);

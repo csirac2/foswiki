@@ -6,6 +6,7 @@ package MergeTests;
 
 use FoswikiTestCase;
 our @ISA = qw( FoswikiTestCase );
+use utf8;
 
 use Foswiki;
 use strict;
@@ -13,6 +14,7 @@ use Assert;
 use Error qw( :try );
 
 use Foswiki::Merge;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 #-----------------------------------------------------------------------------
 

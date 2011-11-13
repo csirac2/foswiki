@@ -11,9 +11,12 @@ Iterator over a range of integer values, with programmable increment.
 package Foswiki::Iterator::NumberRangeIterator;
 use Foswiki::Iterator;
 our @ISA = ('Foswiki::Iterator');
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 
 =begin TML

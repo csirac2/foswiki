@@ -2,7 +2,9 @@
 package Foswiki;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 #our $SEARCHTERMS = qr/\$(web|topic|parent|text|locked|date|isodate|rev|username|wikiname|wikiusername|createdate|createusername|createwikiname|createwikiusername|summary|changes|formname|formfield|pattern|count|ntopics|nhots|pager)\b/;
 
@@ -48,7 +50,7 @@ sub FORMAT {
             # from Search::_makeTopicPattern (plus an added . to
             # allow web.topic)
             my @topics = map {
-                s/[^\*\_\-\+\.\/$Foswiki::regex{mixedAlphaNum}]//go;
+                s/[^*_\-+.\/[:alpha:][:digit:]]//go;
                 s/\*/\.\*/go;
                 $_
             } @list;

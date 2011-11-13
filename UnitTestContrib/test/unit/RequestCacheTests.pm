@@ -2,12 +2,15 @@ use strict;
 
 package RequestCacheTests;
 
+use utf8;use Unit::TestCase;
 use FoswikiTestCase;
 our @ISA = qw( FoswikiTestCase );
 
 use Foswiki::Request;
 use Foswiki::Request::Cache;
 use File::Temp;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+
 my %tempFileOptions = (
     UNLINK => 0
 );

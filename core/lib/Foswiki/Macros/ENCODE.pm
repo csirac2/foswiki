@@ -2,7 +2,9 @@
 package Foswiki;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 my @DIG = map { chr($_) } ( 0 .. 9 );
 
 # Returns a decimal number encoded as a string where each digit is

@@ -13,9 +13,12 @@ method INCLUDE. Also handles https:
 package Foswiki::IncludeHandlers::http;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # Fetch content from a URL for inclusion by an INCLUDE
 sub INCLUDE {

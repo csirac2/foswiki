@@ -85,16 +85,20 @@ yyyyyy   is the new line 5
 
 package Foswiki::Store::VC::RcsLiteHandler;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Store::VC::Handler ();
 our @ISA = ('Foswiki::Store::VC::Handler');
 
+use utf8;
 use Assert;
 use Error qw( :try );
 
 use Foswiki::Store   ();
 use Foswiki::Sandbox ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 #
 # As well as the field inherited from VC::Handler, the object for each file

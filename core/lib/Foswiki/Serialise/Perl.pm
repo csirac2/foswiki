@@ -13,7 +13,9 @@ This is a Data::Dumper style
 package Foswiki::Serialise::Perl;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Data::Dumper;
 
 =begin TML

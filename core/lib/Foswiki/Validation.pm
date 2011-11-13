@@ -2,12 +2,14 @@
 package Foswiki::Validation;
 
 use strict;
+use utf8;
 use warnings;
-
+use warnings qw( FATAL utf8 );
+use Digest::MD5 ();
 use Assert;
 
-use Digest::MD5 ();
 use Foswiki     ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 

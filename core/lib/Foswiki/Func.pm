@@ -53,7 +53,9 @@ System.DevelopingPlugins.
 package Foswiki::Func;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Scalar::Util ();
 
 use Error qw( :try );
@@ -64,6 +66,7 @@ use Foswiki::Plugins                ();
 use Foswiki::Meta                   ();
 use Foswiki::AccessControlException ();
 use Foswiki::Sandbox                ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # Given $web, $web and $topic, or $web $topic and $attachment, validate
 # and untaint each of them and return. If any fails to validate it will

@@ -3,7 +3,9 @@
 package Foswiki::Plugins::TinyMCEPlugin;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Assert;
 
@@ -13,6 +15,7 @@ our $SHORTDESCRIPTION  = 'Integration of the Tiny MCE WYSIWYG Editor';
 our $NO_PREFS_IN_TOPIC = 1;
 
 use Foswiki::Func ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 our %defaultINIT_BROWSER = (
     MSIE   => '',

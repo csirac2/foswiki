@@ -12,7 +12,9 @@ defines the interface used to construct nodes from the parser.
 package Foswiki::Infix::Node;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 
 # 1 for debug
@@ -120,7 +122,7 @@ sub stringify {
         }
     }
     if ( $this->{op}->{arity} ) {
-        use Foswiki::Query::Node;
+        require Foswiki::Query::Node ();
         return
           $this->{op}->{name} . '{'
           . join( ',', map { 

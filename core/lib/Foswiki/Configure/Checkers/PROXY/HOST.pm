@@ -2,9 +2,10 @@
 package Foswiki::Configure::Checkers::PROXY::HOST;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
-
-use Foswiki::Configure::Checker;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::Checker;
 our @ISA = qw( Foswiki::Configure::Checker );

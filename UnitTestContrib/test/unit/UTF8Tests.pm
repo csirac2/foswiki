@@ -14,8 +14,9 @@ use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
 
 use strict;
-
+use utf8;
 use Foswiki;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub DISABLEtest_urlEncodeDecode {
     my $this = shift;

@@ -1,12 +1,15 @@
 package ResponseTests;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
-use Unit::TestCase;
+use utf8;use Unit::TestCase;
 our @ISA = qw( Unit::TestCase );
 use Assert;
 
 use Foswiki::Response;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub set_up {
     my $this = shift;

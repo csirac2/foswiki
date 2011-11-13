@@ -5,10 +5,12 @@
 ---+ package Foswiki::Query::HoistREs
 
 Static functions to extract regular expressions from queries. The REs can
-be used in caching stores that use the Foswiki standard inline meta-data
+be used in caching stores that use the Foswiki standard inlineBEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+ meta-data
 representation to pre-filter topic lists for more efficient query matching.
 
-See =Store/QueryAlgorithms/BruteForce.pm= for an example of usage.
+See =Store/BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+QueryAlgorithms/BruteForce.pm= for an example of usage.
 
 Note that this hoisting is very crude. At this point of time the
 functions don't attempt to do anything complicated, like re-ordering
@@ -50,10 +52,14 @@ implement your own superior heuristics!
 package Foswiki::Query::HoistREs;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Infix::Node ();
 use Foswiki::Query::Node ();
+
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 use constant MONITOR_HOIST => 0;
 

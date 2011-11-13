@@ -4,8 +4,11 @@ use Unit::TestCase;
 our @ISA = qw( Unit::TestCase );
 
 use strict;
+use strict;
+use utf8;
 
 use Foswiki::Net;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 our $expectedHeader;
 

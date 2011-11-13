@@ -15,14 +15,16 @@ in future it will probably become more clever.
 
 package Foswiki::Search::ResultSet;
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
+use Assert;
 
 use Foswiki::Iterator ();
 our @ISA = ('Foswiki::Iterator');
 
 use Foswiki::Search::InfoCache;
-use Assert;
-
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 

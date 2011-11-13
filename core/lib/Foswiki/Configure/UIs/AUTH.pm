@@ -13,7 +13,10 @@ passwords), and pass through all others as CGI::hidden.
 package Foswiki::Configure::UIs::AUTH;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::UI ();
 our @ISA = ('Foswiki::Configure::UI');

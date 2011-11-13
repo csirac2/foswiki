@@ -3,6 +3,7 @@
 package Fn_FORMFIELD;
 use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 use strict;
 use Error qw( :try );

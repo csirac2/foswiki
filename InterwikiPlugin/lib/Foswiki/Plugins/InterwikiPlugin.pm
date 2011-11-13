@@ -21,10 +21,14 @@ in a [[link]] or [[link][text]] expression.
 package Foswiki::Plugins::InterwikiPlugin;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
+use utf8;
 
 use Foswiki::Func    ();    # The plugins API
 use Foswiki::Plugins ();    # For the API version
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 our $VERSION           = '$Rev$';
 our $RELEASE           = '1.1.2';
@@ -51,12 +55,10 @@ sub initPlugin {
     my ( $topic, $web, $user, $installWeb ) = @_;
 
     # Regexes for the Site:page format InterWiki reference
-    my $man = $Foswiki::regex{mixedAlphaNum};
-    my $ua  = $Foswiki::regex{upperAlpha};
     %interSiteTable = ();
-    $sitePattern    = "([$ua][$man]+)";
-    $pagePattern    = "((?:'[^']*')|(?:\"[^\"]*\")|(?:[${man}\_\~\%\/][$man"
-      . '"\'\.\/\+\_\~\,\&\;\:\=\!\?\%\#\@\-\(\)]*?))';
+    $sitePattern    = "([[:upper:]][[:alpha:][:digit:]]+)";
+    $pagePattern    = "((?:'[^']*')|(?:\"[^\"]*\")|(?:[[:alpha:][:digit:]_~%\/]"
+	.'[-[:alpha:][:digit:]"\'./+_~,&;:=!?%#@()]*?))';
 
     # Get plugin preferences from InterwikiPlugin topic
     $interLinkFormat =

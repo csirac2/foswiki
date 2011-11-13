@@ -10,11 +10,6 @@ Implements the traditional, longstanding ACL in topic preference style.
 
 package Foswiki::Access::TopicACLAccess;
 
-use Foswiki::Access;
-@ISA = qw(Foswiki::Access);
-
-use constant MONITOR => 0;
-
 use strict;
 use Assert;
 
@@ -22,6 +17,11 @@ use Foswiki          ();
 use Foswiki::Address ();
 use Foswiki::Meta    ();
 use Foswiki::Users   ();
+use Foswiki::Access;
+@ISA = qw(Foswiki::Access);
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+
+use constant MONITOR => 0;
 
 sub new {
     my ( $class, $session ) = @_;

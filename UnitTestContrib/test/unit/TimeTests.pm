@@ -6,14 +6,18 @@
 # Warning! as of June2010, strawberry perl does not implement POSIX::tzset and thus crashes these tests completely
 
 package TimeTests;
-use FoswikiTestCase;
-our @ISA = qw( FoswikiTestCase );
 
 use strict;
-use Foswiki::Time;
+use utf8;
+use locale;
 require POSIX;
 use Time::Local;
 use Config;    #used to detect if this is strawberry perl
+
+use FoswikiTestCase;
+our @ISA = qw( FoswikiTestCase );
+use Foswiki::Time;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 sub new {
     my $self = shift()->SUPER::new(@_);

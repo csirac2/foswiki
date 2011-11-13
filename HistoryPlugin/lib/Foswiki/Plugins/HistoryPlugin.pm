@@ -3,10 +3,13 @@
 package Foswiki::Plugins::HistoryPlugin;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Foswiki::Func ();
 use Error qw(:try);
 use Foswiki::AccessControlException ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 # =========================
 use vars qw( $VERSION $RELEASE $NO_PREFS_IN_TOPIC $SHORTDESCRIPTION);

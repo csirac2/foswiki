@@ -5,7 +5,8 @@
 ---+ UNPUBLISHED package Foswiki::Prefs::Parser
 
 This Prefs-internal class is used to parse * Set and * Local statements
-from arbitrary text, and extract settings from meta objects.  It is used
+from arbitrary text, and extract settings from meta objectsBEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+.  It is used
 by TopicPrefs to parse preference settings from topics.
 
 This class does no validation or duplicate-checking on the settings; it
@@ -16,10 +17,13 @@ simply returns the recognized settings in the order it sees them in.
 package Foswiki::Prefs::Parser;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Assert;
 
 use Foswiki ();
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 

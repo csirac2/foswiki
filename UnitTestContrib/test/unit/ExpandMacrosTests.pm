@@ -9,6 +9,7 @@ our @ISA = qw( FoswikiFnTestCase );
 
 use Foswiki;
 use Error qw( :try );
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 my $dontCare = "It really does not matter what the actual value is, ".
                "so long as it exists. Never use this text, ".

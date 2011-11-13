@@ -17,7 +17,9 @@ It also redefines =name= method, to avoid creating CGI object.
 package Foswiki::LoginManager::Session;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use CGI::Session ();
 our @ISA = ('CGI::Session');

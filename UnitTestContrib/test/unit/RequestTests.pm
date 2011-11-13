@@ -3,7 +3,9 @@ package RequestTests;
 use FoswikiTestCase;
 our @ISA = qw( FoswikiTestCase );
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Request;
 use Foswiki::Request::Upload;

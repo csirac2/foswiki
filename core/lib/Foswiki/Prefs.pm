@@ -1,13 +1,13 @@
 # See bottom of file for license and copyright information
-use strict;
-use warnings;
 
 =begin TML
 
 ---+ package Foswiki::Prefs
 
 Preferences are set in topics, using either 'Set' lines embedded in the
-topic text, or via PREFERENCE meta-data attached to the topic. A preference
+topiBEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+c text, or BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+via PREFERENCE meta-data attached to the topic. A preference
 value has four _scopes_:
    * _Global_ scope
    * _Local_ scope
@@ -15,7 +15,8 @@ value has four _scopes_:
    * _Topic_ scope
 
 In _global_ scope, the value of a preference is determined by examining
-settings of the variable at different levels; default preferences, site level,
+settings of the variable at different levels; default preferBEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+ences, site level,
 parent web level, web level, user level, and topic level. To determine a
 preference value in global scope, you have to know what topic the topic is
 referenced in, to provide the scope for the request.
@@ -33,7 +34,8 @@ disconsidered.
 
 The final scope is _topic_ scope. In this scope, the value of the preference is
 taken directly from the contents of the topic, and is not overridden by wider
-scopes. Topic scope is used for topic access controls.
+scopes. Topic scope is used for topic access coBEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+ntrols.
 
 Because the highest cost in evaluating preferences is reading the individual
 topics, preferences read from a topic are cached.
@@ -65,11 +67,18 @@ preferences are stored.
 
 package Foswiki::Prefs;
 
+use strict;
+use utf8;
+use warnings;
+use warnings qw( FATAL utf8 );
+use Scalar::Util          ();
+
 use Assert;
 use Foswiki::Prefs::HASH  ();
 use Foswiki::Prefs::Stack ();
 use Foswiki::Prefs::Web   ();
-use Scalar::Util          ();
+
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 =begin TML
 

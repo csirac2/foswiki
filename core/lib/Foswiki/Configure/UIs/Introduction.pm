@@ -11,7 +11,11 @@ UI used by =configure= to generate the introduction from a template.
 package Foswiki::Configure::UIs::Introduction;
 
 use strict;
+use utf8;
+use locale;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::TemplateParser ();
 use Foswiki::Configure::UIs::Section   ();

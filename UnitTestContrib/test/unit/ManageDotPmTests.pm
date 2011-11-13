@@ -3,7 +3,9 @@
 #TODO: non-existant user test
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use diagnostics;
 
 package ManageDotPmTests;
@@ -12,9 +14,11 @@ use FoswikiFnTestCase;
 our @ISA = qw( FoswikiFnTestCase );
 use Error qw(:try);
 use Foswiki;
+use utf8;
 use Foswiki::UI::Manage;
 use Foswiki::UI::Save;
 use FileHandle;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 #$Error::Debug = 1;
 

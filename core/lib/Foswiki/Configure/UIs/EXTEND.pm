@@ -14,7 +14,12 @@ conventional renderHtml interface, instead implementing a special
 package Foswiki::Configure::UIs::EXTEND;
 
 use strict;
+use utf8;
+use locale;
+use locale;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::UI      ();
 use Foswiki::Configure::Package ();

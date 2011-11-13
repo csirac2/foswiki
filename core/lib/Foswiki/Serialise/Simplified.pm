@@ -11,7 +11,9 @@ This is the style=perl serialiseation used by System.VarQUERY
 package Foswiki::Serialise::Simplified;
 
 use strict;
+use utf8;
 use warnings;
+use warnings qw( FATAL utf8 );
 use Foswiki::Serialise;
 
 =begin TML

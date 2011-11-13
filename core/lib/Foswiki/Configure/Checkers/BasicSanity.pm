@@ -11,7 +11,10 @@ Checker that implements the basic sanity checks that configure performs.
 package Foswiki::Configure::Checkers::BasicSanity;
 
 use strict;
+use utf8;
+use locale;
 use warnings;
+use warnings qw( FATAL utf8 );
 
 use Foswiki::Configure::Checker ();
 use Foswiki::Configure::Util    ();

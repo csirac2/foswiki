@@ -15,7 +15,7 @@ BEGIN {
         require Unit::CGIEngine;
         @ISA = qw(Unit::CGIEngine);
     }
-use utf8;}
+}
 
 use Foswiki;
 use Foswiki::Request;

@@ -29,8 +29,7 @@ use constant PAGECACHE_DEPS_KEY    => 'Foswiki::PageCache::Deps::';
 use constant PAGECACHE_REVDEPS_KEY => 'Foswiki::PageCache::RevDeps::';
 use constant PAGECACHE_KEYSEP      => "\0";
 
-# Enable output of messages to thBEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
-e foswiki debug log. All writeDebug()
+# Enable output of messages to the foswiki debug log. All writeDebug()
 # calls are written as writeDebug(...) if (TRACE)
 use constant TRACE => 0;
 

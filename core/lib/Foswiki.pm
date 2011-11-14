@@ -540,7 +540,7 @@ qr(AERO|ARPA|ASIA|BIZ|CAT|COM|COOP|EDU|GOV|INFO|INT|JOBS|MIL|MOBI|MUSEUM|NAME|NE
     $regex{mixedAlphaNumRegex} = qr/[[:alpha:][:digit:]]*/o;
 
     # %TAG% name
-    $regex{tagNameRegex} = '[:alpha:][[:alpha:][:digit:]_:]*';
+    $regex{tagNameRegex} = '[A-Za-z][A-Za-z0-9_:]*';
 
     # Set statement in a topic
     $regex{bulletRegex} = '^(?:\t|   )+\*';
@@ -2452,9 +2452,6 @@ RFC 1738, Dec. '94:
 Reserved characters are $&+,/:;=?@ - these are _also_ encoded by
 this method.
 
-This URL-encoding handles all character encodings including ISO-8859-*,
-KOI8-R, EUC-* and UTF-8.
-
 This may not handle EBCDIC properly, as it generates an EBCDIC URL-encoded
 URL, but mainframe web servers seem to translate this outbound before it hits browser
 - see CGI::Util::escape for another approach.
@@ -3040,6 +3037,9 @@ The syntax isn't vastly different from what's there; the differences are:
 
 sub registerTagHandler {
     my ( $tag, $fnref, $syntax ) = @_;
+
+    ASSERT($tag =~ /^$regex{tagNameRegex}$/) if DEBUG;
+
     $macros{$tag} = $fnref;
     if ( $syntax && $syntax eq 'context-free' ) {
         $contextFreeSyntax{$tag} = 1;

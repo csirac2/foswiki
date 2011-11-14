@@ -8,6 +8,8 @@ A _preference setting_ lets you define a simple [[%SYSTEMWEB%.Macros][macro]] th
    <verbatim class="tml">   * Set WEBBGCOLOR = #FFFFC0</verbatim>
 Macros defined using preference settings are expanded by enclosing their name in percent signs. So when you write =%WEB<nop>BGCOLOR%=, it gets expanded to =%WEBBGCOLOR%=
 
+Preference names must start with a character in the range =A-Z=, =a-z=, followed by zero or more of the characters =A-Z=, =a-z=, =0-9=, =_=, and =:=.
+
 A preference macro is always taken from the most current topic revision, even when accessing previous revisions of a topic.
 
 Preferences can be defined in a number of places:

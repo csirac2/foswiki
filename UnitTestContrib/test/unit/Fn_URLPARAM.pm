@@ -185,7 +185,7 @@ sub test_multiple {
     $this->{request}->param(
         -name => 'multi',
         -value =>
-          [ 'f!"£$' . "\n" . '{}[]o', 'b%^&*:@;\'r', 'b()_+-=<>?,./|z' ]
+          [ 'f!"Â£$' . "\n" . '{}[]o', 'b%^&*:@;\'r', 'b()_+-=<>?,./|z' ]
     );
     $str =
       $this->{test_topicObject}->expandMacros(

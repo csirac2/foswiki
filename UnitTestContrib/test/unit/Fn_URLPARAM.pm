@@ -179,7 +179,7 @@ sub test_multiple {
     $this->assert_str_equals( "-%foo-\n-%bar-\n-%baz-", "$str" );
 
     $this->{request}
-      ->param( -name => 'multi', -value => [ 'f!"£$'."\n".'{}[]o', 'b%^&*:@;\'r', 'b()_+-=<>?,./|z' ] );
+      ->param( -name => 'multi', -value => [ 'f!"Â£$'."\n".'{}[]o', 'b%^&*:@;\'r', 'b()_+-=<>?,./|z' ] );
     $str =
       $this->{test_topicObject}
       ->expandMacros('%URLPARAM{"multi" multiple="-$item$quot-" encode="url" separator=","}%');

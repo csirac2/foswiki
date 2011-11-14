@@ -49,8 +49,7 @@ Construct a new page cache and a delegator.
 sub new {
     my ( $class, $session ) = @_;
 
-    writeDebug("new PageCache using $FoswikiBEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
-::cfg{CacheManager}")
+    writeDebug("new PageCache using $Foswiki::cfg{CacheManager}")
       if (TRACE);
 
     # try to get a shared instance of this class

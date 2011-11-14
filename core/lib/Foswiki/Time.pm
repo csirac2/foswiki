@@ -140,8 +140,9 @@ sub parseTime {
 
     # try "31 Dec 2001 - 23:59"  (Foswiki date)
     # or "31 Dec 2001"
-    #TODO: allow /.: too
-    if ( $date =~ /(\d+)[-\s]+([a-z]{3})[-\s]+(\d+)(?:[-\s]+(\d+):(\d+))?/i ) {
+    # TODO: allow /.: too
+    # I18N SMELL: no support for international month names
+    if ( $date =~ /(\d+)[-\s]+([A-Za-z]{3})[-\s]+(\d+)(?:[-\s]+(\d+):(\d+))?/ ) {
         my $year = $3;
         $year -= 1900 if ( $year > 1900 );
 
@@ -155,7 +156,7 @@ sub parseTime {
     }
 
     # ISO date 2001-12-31T23:59:59+01:00
-    # Sven is going to presume that _all_ ISO dated must have a 'T' in them.
+    # Sven is going to presume that _all_ ISO dates must have a 'T' in them.
     if (
         ( $date =~ /T/ )
         && ( $date =~

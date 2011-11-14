@@ -411,8 +411,6 @@ HERE
       _formatString( $this->{desc} . "\n" ) . "\n\n";
 
     for ( my $i = $this->{head} ; $i > 0 ; $i-- ) {
-ASSERT(!utf8::is_utf8($this->{revs}[$i]->{log}));
-ASSERT(!utf8::is_utf8($this->{revs}[$i]->{text}));
         print $file "\n", '1.', $i, "\n",
           'log', "\n", _formatString( $this->{revs}[$i]->{log} ),
           "\n", 'text', "\n", _formatString( $this->{revs}[$i]->{text} ),

@@ -11,10 +11,11 @@ DENY EVERYONE that is not Admin - Admin permitted anythingeverything
 package Foswiki::Access::AdminOnlyAccess;
 
 use strict;
+use utf8;
 use Assert;
 
 use Foswiki::Access;
-@ISA = qw(Foswiki::Access);
+our @ISA = qw(Foswiki::Access);
 BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 use constant MONITOR => 0;

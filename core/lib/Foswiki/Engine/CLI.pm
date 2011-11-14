@@ -33,10 +33,11 @@ sub run {
     while ( scalar @args ) {
         my $name;
         my $arg = shift @args;
-        if ( $arg =~ /^-?([a-z0-9_]+)=(.*)$/i ) {
+	# UNICODE SMELL: are URL param names similarly constrained?
+        if ( $arg =~ /^-?([A-Za-z0-9_]+)=(.*)$/ ) {
             ( $name, $arg ) = ( TAINT($1), TAINT($2) );
         }
-        elsif ( $arg =~ /^-([a-z0-9_]+)/ ) {
+        elsif ( $arg =~ /^-([A-Za-z0-9_]+)/ ) {
             ( $name, $arg ) = ( TAINT($1), shift(@args) );
         }
         if ( $name && $name eq 'user' ) {

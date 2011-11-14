@@ -191,6 +191,10 @@ valid "name" for storing in meta-data
 sub fieldTitle2FieldName {
     my ($text) = @_;
     return '' unless defined($text);
+    # VERY, VERY NASTY SMELL: this can wipe out a field title with only
+    # unicode chars! Possibly the crappiest encoding ever created.
+    # However I can't see a way to fix it while still maintaining
+    # compatibility :-(
     $text =~ s/!//g;
     $text =~ s/<nop>//g;             # support <nop> character in title
     $text =~ s/[^A-Za-z0-9_\.]//g;

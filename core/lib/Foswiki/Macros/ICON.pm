@@ -62,6 +62,7 @@ sub _lookupIcon {
         # Found .gif attached to ICONTOPIC
         $path = $this->{_ICONSPACE}->getPath() . "/$choice.gif";
     }
+    # Note: No unicode chars in filetypes
     elsif ( $choice =~ /\.([a-zA-Z0-9]+)$/ ) {
 
         #TODO: need to give this usage a chance at tmpl based icons too
@@ -83,7 +84,7 @@ sub _lookupIcon {
                             my $tok = shift;
                             die "Bad filetype $tok"
                               unless $tok =~
-                                  /^[[:alpha:][:digit:]]+$/o;
+                                  /^[A-Za-z0-9]+$/o;
                             return $tok;
                         }
                     );

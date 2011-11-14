@@ -21,6 +21,7 @@ use utf8;
 use warnings;
 use warnings qw( FATAL utf8 );
 use Unit::TestCase;
+use Unit::Eavesdrop;
 our @ISA = qw( Unit::TestCase );
 
 use Data::Dumper;

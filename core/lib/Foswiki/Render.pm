@@ -849,16 +849,13 @@ sub _handleSquareBracketedLink {
     $text =~ s/${STARTWW}\=(\S+?|\S[^\n]*?\S)\=$ENDWW/_fixedFontText($1,0)/gem;
 
     # Extract '#anchor'
-    # $link =~ s/(\#[a-zA-Z_0-9\-]*$)//;
     my $anchor = '';
     if ( $link =~ s/($Foswiki::regex{anchorRegex}$)// ) {
         $anchor = $1;
-
-        #$text =~ s/#$anchor//;
     }
 
     # filter out &any; entities (legacy)
-    $link =~ s/\&[a-z]+\;//gi;
+    $link =~ s/\&[A-Za-z]+\;//g;
 
     # filter out &#123; entities (legacy)
     $link =~ s/\&\#[0-9]+\;//g;
@@ -1099,7 +1096,7 @@ sub getRenderedVersion {
     $text =~ s/\r//g;
 
     # whitespace before <! tag (if it is the first thing) is illegal
-    $text =~ s/^\s+(<![a-z])/$1/i;
+    $text =~ s/^\s+(<![A-Za-z])/$1/;
 
     # clutch to enforce correct rendering at end of doc
     $text =~ s/\n?$/\n<nop>\n/s;
@@ -1533,7 +1530,7 @@ sub TML2PlainText {
               /_mailLink( $this, $1 )/gemx;
     $text =~ s/<!--.*?-->//gs;       # remove all HTML comments
     $text =~ s/<(?!nop)[^>]*>//g;    # remove all HTML tags except <nop>
-    $text =~ s/\&[a-z]+;/ /g;        # remove entities
+    $text =~ s/\&[A-Za-z]+;/ /g;     # remove entities
     if ( $opts =~ /nohead/ ) {
 
         # skip headings on top

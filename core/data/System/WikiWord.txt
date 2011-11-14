@@ -68,8 +68,8 @@ When you write the name of a topic, it becomes a link. There are more ways
    * To link to a topic in *another subweb* write: =%SANDBOXWEB%.Subweb.WebSearch=.
    * To show the web name in the link use bracket notation: =[<nop>[%SANDBOXWEB%.%HOMETOPIC%]]= - this becomes: [[%SANDBOXWEB%.%HOMETOPIC%]]
    * To link to a topic on *another Wiki site*, use: =Foswiki:Main/WebHome= - this becomes: Foswiki:Main/WebHome (sites are defined in the InterwikiPlugin)
-   * To link to a part on the *same page*, write a "#" followed by the name of an anchor. The anchor is a "#" followed by a name which must be a !WikiName. Example =#MyAnchor=. You can also link to an anchor on another page: =%SYSTEMWEB%.%HOMETOPIC%#MyAnchor=.
-   * To link to a header on the *same page*, write a "#" followed by the header text, with spaces replaced by underscores (and =!= removed): =[<nop>[#Good_examples_of_WikiWords]]= becomes: [[#Good_examples_of_WikiWords]]. You can also link to a header on another page: =%SYSTEMWEB%.%HOMETOPIC%#Disclaimer= becomes: %SYSTEMWEB%.%HOMETOPIC%#Disclaimer.
+   * To link to another part of the *same page*, create an *anchor* where you want to link to with a "#" at the beginning of a line, followed by a !WikiName. Example =#MyAnchor=. You can also link to an anchor on another page: =%SYSTEMWEB%.%HOMETOPIC%#MyAnchor=.
+   * To link to a *header* on the *same page*, write a "#" followed by the header text, with spaces replaced by underscores (and =!= removed): =[<nop>[#Good_examples_of_WikiWords]]= becomes: [[#Good_examples_of_WikiWords]]. You can also link to a header on another page: =%SYSTEMWEB%.%HOMETOPIC%#Disclaimer= becomes: %SYSTEMWEB%.%HOMETOPIC%#Disclaimer.
 
 ---++ Hints
    * Insert !WikiWords wherever you can. Rich linking helps to make a Wiki successful.

@@ -122,7 +122,7 @@ sub stringify {
         }
     }
     if ( $this->{op}->{arity} ) {
-        require Foswiki::Query::Node ();
+        require Foswiki::Query::Node;
         return
           $this->{op}->{name} . '{'
           . join( ',', map { 

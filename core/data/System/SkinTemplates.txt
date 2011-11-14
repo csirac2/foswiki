@@ -46,12 +46,15 @@ Template directives look a lot like standard [[macros]].
    * ==%<nop>{...}%== is a comment. Whitespace either side of the comment
      (newlines, spaces, tabs etc) is treated as part of the comment, and
      removed when the comment is removed.
+
 You can use a block before _or_ after declaring it. If you define the same
 block twice, only the second definition is used.
 
 <blockquote class="foswikiHelp">
 %X% Most template directives work only for templates: they do not get processed in normal topic text. The one exception is ==%TMPL:P==.
 </blockquote>
+
+Template names are restricted to alphanumerics and the characters '_', ',', '.', and '/'. 
 
 ---+++ Parameters to blocks
 ==%<nop>TMPL:DEF%== and ==%<nop>TMPL:P%== support simple parameters. For

@@ -11,7 +11,9 @@ A singleton object of this class manages the access control database.
 package Foswiki::Access;
 
 use strict;
+use utf8;
 use Assert;
+BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
 
 use constant MONITOR => 0;
 
@@ -30,7 +32,9 @@ sub new {
 
     print STDERR "using $imp Access Control\n" if MONITOR;
 
-    eval("use $imp");
+    eval("require $imp");
+    die $@ if $@;
+
     my $this = $imp->new($session);
 
     return $this;

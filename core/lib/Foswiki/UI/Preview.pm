@@ -114,7 +114,8 @@ sub preview {
     $displayText =~ s#(<a\s[^>]*>)(.*?)(</a>)#_disableLink($1, $2, $3)#gies;
     $displayText =~ s/<(input|button|textarea) /<$1 disabled="disabled" /gis;
     $displayText =~ s(</?form(|\s.*?)>)()gis;
-    $displayText =~ s/(<[^>]*\bon[A-Za-z]+=)('[^']*'|"[^"]*")/$1''/gis;
+    # SMELL: international characters in handler names?
+    $displayText =~ s/(<[^>]*\bon[a-z]+=)('[^']*'|"[^"]*")/$1''/gis;
 
     # let templates know the context so they can act on it
     $session->enterContext( 'preview', 1 );

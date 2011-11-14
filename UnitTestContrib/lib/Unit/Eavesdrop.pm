@@ -145,6 +145,18 @@ sub CLOSE {
     return 1;
 }
 
+sub BINMODE {
+    my ($this, $param) = @_;
+    if ($this->{principal}) {
+	my $fh = *{ $this->{principal} };
+	binmode($fh, $param);
+    }
+    foreach my $tee ( @{ $this->{tees} } ) {
+        my $fh = *{$tee};
+        binmode( $fh, $param );
+    }
+}
+
 1;
 
 __DATA__

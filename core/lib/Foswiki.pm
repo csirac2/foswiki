@@ -484,6 +484,8 @@ BEGIN {
         $regex{webNameRegex} = $regex{webNameBaseRegex};
     }
     $regex{defaultWebNameRegex} = qr/_[[:alpha:][:digit:]_]+/o;
+    # Anchor *as used in a URL* (must cover a wider syntax than
+    # just wikiwords)
     $regex{anchorRegex}         = qr/\#[[:alpha:][:digit:]_]+/o;
     $regex{abbrevRegex}         = qr/[[:upper:]]{3,}s?\b/o;
 

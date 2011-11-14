@@ -882,7 +882,7 @@ Space"@blahSTUFFED.com</a>',
           => '27 1111111.2222222.3333333.4444444.5555555.6666666.7777777.88888888X@blah.com',
 
         # non-ASCII characters not supported per RFC.
-        '28 Ren�.Descartes@example.com' => '28 Ren�.Descartes@example.com',
+        '28 übermaß_हिंदी@example.com' => '28 übermaß_हिंदी@example.com',
 
         # : is a special character
         '29 colon:name@blah.com' => '29 colon:name@blah.com',

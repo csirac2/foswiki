@@ -9,7 +9,10 @@ use Assert;
 
 use Foswiki::Logger ();
 our @ISA = ('Foswiki::Logger');
-BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+
+BEGIN {
+    if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale(); }
+}
 
 =begin TML
 

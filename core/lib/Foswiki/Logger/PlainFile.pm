@@ -10,7 +10,10 @@ use Assert;
 use Foswiki::Logger ();
 use Foswiki::Configure::Load;
 our @ISA = ('Foswiki::Logger');
-BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+
+BEGIN {
+    if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale(); }
+}
 
 =begin TML
 
@@ -89,8 +92,8 @@ sub log {
     }
     else {
         if ( !-w $log ) {
-            die
-"ERROR: Could not open logfile $log for write."." Your admin should 'configure' now and fix the errors!\n";
+            die "ERROR: Could not open logfile $log for write."
+              . " Your admin should 'configure' now and fix the errors!\n";
         }
 
         # die to force the admin to get permissions correct

@@ -14,7 +14,10 @@ our @ISA = qw( FoswikiFnTestCase );
 use Foswiki;
 use Foswiki::Func;
 use Assert;
-BEGIN { if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale (); } }
+
+BEGIN {
+    if ( $Foswiki::cfg{UseLocale} ) { require locale; import locale(); }
+}
 
 my $MrWhite;
 

@@ -25,7 +25,7 @@ use warnings qw( FATAL utf8 );
 use Assert;
 
 use CGI::Util ();
-use Encode ();
+use Encode    ();
 
 =begin TML
 
@@ -365,9 +365,10 @@ Gets/Sets response body. Note: do not use this method for output, use
 sub body {
     my ( $this, $body ) = @_;
     if ( defined $body ) {
-	# The body is stored as an octet string, *not* a unicode string
+
+        # The body is stored as an octet string, *not* a unicode string
         $this->{body} = Encode::encode_utf8($body);
-        $this->{headers}->{'Content-Length'} = length($this->{body});
+        $this->{headers}->{'Content-Length'} = length( $this->{body} );
     }
     return $this->{body};
 }
@@ -413,8 +414,8 @@ Add content to the end of the body.
 sub print {
     my $this = shift;
     $this->{body} = '' unless defined $this->{body};
-    $this->{body} .= Encode::encode_utf8(join( '', @_ ));
-    $this->{headers}->{'Content-Length'} = length($this->{body});
+    $this->{body} .= Encode::encode_utf8( join( '', @_ ) );
+    $this->{headers}->{'Content-Length'} = length( $this->{body} );
 }
 
 =begin TML

@@ -24,6 +24,7 @@ use Fcntl qw( :DEFAULT :flock );
 
 use Foswiki::Users::Password ();
 our @ISA = ('Foswiki::Users::Password');
+
 # Set TRACE to 1 to enable detailed trace of password activity
 use constant TRACE => 0;
 
@@ -218,7 +219,8 @@ sub _readPasswd {
                 $data->{$hID}->{realm}  = $tPass;
                 $data->{$hID}->{pass}   = shift @fields;
                 $data->{$hID}->{emails} = shift @fields || '';
-                print STDERR "Auto ENCODING-1 $data->{$hID}->{enc} \n" if (TRACE);
+                print STDERR "Auto ENCODING-1 $data->{$hID}->{enc} \n"
+                  if (TRACE);
                 next;
             }
 
@@ -250,7 +252,8 @@ sub _readPasswd {
             if ( $data->{$hID}->{enc} ) {
                 $data->{$hID}->{pass} = $tPass;
                 $data->{$hID}->{emails} = shift @fields || '';
-                print STDERR "Auto ENCODING-2 $data->{$hID}->{enc} \n" if (TRACE);
+                print STDERR "Auto ENCODING-2 $data->{$hID}->{enc} \n"
+                  if (TRACE);
                 next;
             }
 

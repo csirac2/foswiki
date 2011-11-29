@@ -1,4 +1,6 @@
-jQuery(document).ready(function() {
+var COOKIE_SHOWATTACHMENT_DETAILS = 'COOKIE_SHOWATTACHMENT_DETAILS';
+
+jQuery(document).ready(function ($) {
 
 	function sort($el, sort) {
 		
@@ -20,18 +22,18 @@ jQuery(document).ready(function() {
 		if (sort === 'data-size' || sort === 'data-date') {
 			// number
 			comparator = function(a, b) {
-				return parseInt(jQuery(a).attr(sort), 10) > parseInt(jQuery(b).attr(sort), 10) ? direction : -direction;
+				return parseInt($(a).attr(sort), 10) > parseInt($(b).attr(sort), 10) ? direction : -direction;
 			};
 		} else {
 			// string
 			comparator = function(a, b) {
-				return jQuery(a).attr(sort) > jQuery(b).attr(sort) ? direction : -direction;
+				return $(a).attr(sort) > $(b).attr(sort) ? direction : -direction;
 			};
 		}
 		// find parent with class 'foswikiAttachments
 		var $attachments = $el.parents('.foswikiAttachments');
 		
-		jQuery('.foswikiAttachment', $attachments).sortElements(comparator);
+		$('.foswikiAttachment', $attachments).sortElements(comparator);
 		/*
 		direction = -direction;
 		$el.attr('data-sort-direction', direction);
@@ -40,69 +42,69 @@ jQuery(document).ready(function() {
 	}
 	
 	// find currently selected value and sort
-	jQuery('select.foswikiSort').livequery(function() {
-		sort(jQuery(this), jQuery(this).val());
+	$('select.foswikiSort').livequery(function() {
+		sort($(this), $(this).val());
 		return false;
 	});
 	
-	jQuery('select.foswikiSort').livequery('change', function() {
-		sort(jQuery(this), jQuery(this).val());
+	$('select.foswikiSort').livequery('change', function() {
+		sort($(this), $(this).val());
 		return false;
 	});
 	
-	jQuery('a.foswikiSort').livequery('click', function() {
-		sort(jQuery(this), jQuery(this).attr('data-sort'));
-		return false;
-	});
-	
-	function toggleAttachmentDetails($set, doHide) {
-			
-		var hiding;
-		if (doHide !== undefined) {
-			hiding = doHide;
-		} else {
-			hiding = $set.attr('data-hidedetails');
-			if (hiding === undefined) {
-				hiding = 1;
-			}
-		}
-		
-		// find parent with class 'foswikiAttachments
-		var $attachments = jQuery('.foswikiAttachments');
-		console.log("$attachments=");
-		console.log($attachments);
-
-		if (hiding) {
-			$attachments.addClass('bsHideDetails');
-		} else {
+	function toggleAttachmentDetails($el, showDetails) {			
+		// find corresponding foswikiAttachments
+		var $attachments = $el.parents('.foswikiAttachments');
+		if (showDetails) {
 			$attachments.removeClass('bsHideDetails');
+		} else {
+			$attachments.addClass('bsHideDetails');
 		}
-		$set.attr('data-hidedetails', hiding);
 	}
 	
-	jQuery('a.jqButtonSet').livequery(function() {		
-		toggleAttachmentDetails(jQuery(this));
-		return false;
-	});
-	
-	jQuery('a.bsShow').livequery('click', function() {
-		// find set element
-		var $set = jQuery(this).parents('.jqButtonSet,.foswikiButtonSet');
-		toggleAttachmentDetails($set, 0);
-		return false;
-	});
-	
-	jQuery('a.bsHide').livequery('click', function() {
-		// find set element
-		var $set = jQuery(this).parents('.jqButtonSet,.foswikiButtonSet');
-		toggleAttachmentDetails($set, 1);
-		return false;
-	});
-	
-	jQuery('input.foswikiFocus').livequery(function() {
-			jQuery(this).focus();
+	$(':checkbox[name="showdetails"]').livequery(function () {
+		var pref = parseInt(foswiki.Pref.getPref(COOKIE_SHOWATTACHMENT_DETAILS), 10);
+		if (pref) {
+			$(this).attr('checked', true);
+		} else {
+			$(this).removeAttr('checked');
 		}
-	);
+		var showDetails = $(this).is(':checked') ? 1 : 0;
+		toggleAttachmentDetails($(this), showDetails);
+	});
+	
+	$(':checkbox[name="showdetails"]').livequery('change', function () {
+		var showDetails = $(this).attr('checked') ? 1 : 0;
+		toggleAttachmentDetails($(this), showDetails);
+		foswiki.Pref.setPref(COOKIE_SHOWATTACHMENT_DETAILS, showDetails);
+	});
+	
+	$('.foswikiAttachment .bsVersions').livequery(function() {
+		var PUBURL = foswiki.getPreference('PUBURLPATH') + '/' + foswiki.getPreference('SYSTEMWEB') + '/' + 'BaseSkinJs/';
+		
+		var url = $(this).attr('href') + ';cover=baseajax;def=history';
+		
+		//$(this).addClass('jqSimpleModal {url: \'' + url + '\'}');
+	});
+
+	$('.foswikiAttachment .bsVersions').bind('hidden', function () {
+		console.log("click .foswikiAttachment .bsVersions:" + $(this).attr('href'));
+	})
+/*
+	$('.foswikiAttachment .bsVersions').livequery('click', function() {
+		var PUBURL = foswiki.getPreference('PUBURLPATH') + '/' + foswiki.getPreference('SYSTEMWEB') + '/' + 'BaseSkinJs/';
+		
+		$.facebox.settings.closeImage = PUBURL + 'closelabel.png';
+		$.facebox.settings.loadingImage = PUBURL + 'loading.gif';
+
+		console.log("PUBURL=" + PUBURL);
+		
+		var url = $(this).attr('href') + ';cover=baseajax;def=history';
+		console.log(url);
+		return false;
+	});
+*/
+
 });
 
 

@@ -10,7 +10,7 @@ use warnings qw( FATAL utf8 );
 use Assert;
 
 our $VERSION           = '$Rev$';
-our $RELEASE           = '1.2.2';
+our $RELEASE           = '1.2.3';
 our $SHORTDESCRIPTION  = 'Integration of the Tiny MCE WYSIWYG Editor';
 our $NO_PREFS_IN_TOPIC = 1;
 

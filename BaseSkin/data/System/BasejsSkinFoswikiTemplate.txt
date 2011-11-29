@@ -1,0 +1,35 @@
+%{<verbatim class="tml">
+===================================================
+    Base Skin topic template
+    
+    The basejs template adds JavaScript files to the html head
+===================================================
+}%%TMPL:INCLUDE{"foswiki"}%%{
+---------------------------------------------------
+}%%TMPL:DEF{"head:script"}%%TMPL:PREV%%TMPL:P{
+	"LIBJS"
+	id="JavascriptFiles/foswikilib"
+	requires="JQUERYPLUGIN"
+}%%TMPL:P{
+	"LIBJS"
+	id="JavascriptFiles/foswikiPref"
+	requires="JavascriptFiles/foswikilib,JQUERYPLUGIN"
+}%%TMPL:P{
+	"LIBJS"
+	id="BaseSkinJs/base"
+	requires="JavascriptFiles/foswikilib,JavascriptFiles/foswikiPref,JQUERYPLUGIN"
+}%%TMPL:P{
+	"LIBJS"
+	id="BaseSkinJs/bootstrap-modal"
+	requires="JQUERYPLUGIN"
+}%%TMPL:P{
+	"LIBJS"
+	id="BaseSkinJs/bootstrap-dropdown"
+	requires="JQUERYPLUGIN"
+}%%{
+---------------------------------------------------
+	Add smooth inpage scrolling; see System.JQueryLocalScroll
+---------------------------------------------------
+}%%JQREQUIRE{"localscroll"}%%TMPL:END%%TMPL:END%%{
+===================================================
+</verbatim>}%

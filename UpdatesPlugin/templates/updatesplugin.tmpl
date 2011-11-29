@@ -1,0 +1,39 @@
+%TMPL:DEF{"installedplugins"}%<script>
+var InstalledPlugins = %EXTENSIONVERSIONJSON%;
+</script>%TMPL:END%
+
+%TMPL:DEF{"messagetmpl"}%<script id="foswikiUpdatesTmpl" type="text/x-jquery-tmpl"> 
+<div class="foswikiBroadcastMessage foswikiUpdatesMessage">
+  <table>
+    <tr>
+      <td>
+        %X% 
+        %MAKETEXT{
+          "Info: [_1] extension(s) on your Foswiki can be updated." 
+          args="${nrPlugins}"
+          }%
+      </td>
+      <td>
+        %BUTTON{"%MAKETEXT{"Upgrade"}%" id="foswikiUpdatesPerform" icon="accept"}%
+        %BUTTON{"%MAKETEXT{"Ignore"}%" id="foswikiUpdatesIgnore" icon="cross"}%
+        %CLEAR%
+      </td>
+    </tr>
+  </table>
+</div>
+</script>%TMPL:END%
+
+%TMPL:DEF{"css"}%<literal>
+<style>
+.foswikiUpdatesMessage {
+  display:none;
+  position:absolute;
+  top:0;
+  width:100%;
+  z-index:10000;
+}
+.foswikiUpdatesMessage td {
+  padding-right:1em;
+}
+</style>
+</literal>%TMPL:END%

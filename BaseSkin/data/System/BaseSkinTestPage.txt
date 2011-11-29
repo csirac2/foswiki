@@ -1,6 +1,6 @@
-%META:TOPICINFO{author="BaseUserMapping_333" comment="reprev" date="1315169785" format="1.1" reprev="2" version="2"}%
----+ Heading 1
-
+%META:TOPICINFO{author="BaseUserMapping_333" comment="reprev" date="1321144375" format="1.1" reprev="4" version="4"}%
+---+ !BaseSkin test page
+   
 text
 
 <h2>Heading 2</h2> 
@@ -72,6 +72,19 @@ they won't get hurt (not a guarantee).
       1 level 2
          1 level 3
    1 level 1
+   1 level 1
+   1 level 1
+   1 level 1
+   1 level 1
+   1 level 1
+   1 level 1
+   1 level 1
+   1 level 1
+   1 level 1
+   1 level 1
+   1 level 1
+   1 level 1
+   
 ---+++ TML markup numbered lists
    A. item 1
    A. item 2
@@ -190,6 +203,14 @@ text
 
 and text below the table
 
+%TABLE{initsort="1"}%
+| *Numbers* | *Texts* |
+| 456  | uvw |
+| 123  | xyz |
+| 789  | rst |
+| def  | rst |
+| kqo  | rst |
+
 ---++ verbatim
 <verbatim>
 verbatim text
@@ -230,33 +251,39 @@ Numbered list:
 ---++ Form elements
 
 ---+++ input type="submit"
-text text <input type="submit" class="foswikiButton" value="foswikiButton" /> <input type="submit" class="foswikiButton foswikiButtonDisabled" value="disabled foswikiButton" />
+<input type="submit" class="foswikiButton" value="foswikiButton" /> disabled: <input type="submit" class="foswikiButtonDisabled" value="foswikiButtonDisabled" /> or <input type="submit" class="foswikiButton foswikiButtonDisabled" value="foswikiButton foswikiButtonDisabled" />
 
-text text <input type="submit" class="foswikiButton foswikiSubmit" value="foswikiSubmit" /> <input type="submit" class="foswikiButton foswikiSubmit foswikiButtonDisabled" value="disabled foswikiSubmit" />
+<input type="submit" class="foswikiSubmit" value="foswikiSubmit" /> or <input type="submit" class="foswikiButton foswikiSubmit" value="foswikiButton foswikiSubmit" /> disabled: <input type="submit" class="foswikiSubmitDisabled" value="foswikiSubmitDisabled" /> or <input type="submit" class="foswikiSubmit foswikiButtonDisabled" value="foswikiSubmit foswikiButtonDisabled" />
 
-text text <input type="submit" class="foswikiButton foswikiButtonCancel" value="foswikiButtonCancel" />
-<input type="submit" class="foswikiButton foswikiButtonCancel foswikiButtonDisabled" value="disabled foswikiButtonCancel" />
+<input type="submit" class="foswikiButtonCancel" value="foswikiButtonCancel" /> or <input type="submit" class="foswikiButton foswikiButtonCancel" value="foswikiButton foswikiButtonCancel" /> disabled: 
+<input type="submit" class="foswikiButtonCancel foswikiButtonDisabled" value="foswikiButtonCancel foswikiButtonDisabled" />
 
 ---+++ links
-text text <a href="#" class="foswikiButton">foswikiButton</a> <a href="#" class="foswikiButton foswikiButtonDisabled">disabled foswikiButton</a>
+<a href="#" class="foswikiButton">foswikiButton</a> disabled: <a href="#" class="foswikiButtonDisabled">foswikiButtonDisabled</a> or <a href="#" class="foswikiButton foswikiButtonDisabled">foswikiButton foswikiButtonDisabled</a>
 
-text text <a href="#" class="foswikiButton foswikiSubmit">foswikiSubmit</a> <a href="#" class="foswikiButton foswikiSubmit foswikiButtonDisabled">disabled foswikiSubmit</a>
+<a href="#" class="foswikiSubmit">foswikiSubmit</a> or <a href="#" class="foswikiButton foswikiSubmit">foswikiButton foswikiSubmit</a> disabled: <a href="#" class="foswikiSubmitDisabled">foswikiSubmitDisabled</a> or <a href="#" class="foswikiSubmit foswikiButtonDisabled">foswikiSubmit foswikiButtonDisabled</a>
 
-text text <a href="#" class="foswikiButton foswikiButtonCancel">foswikiButtonCancel</a>
-<a href="#" class="foswikiButton foswikiButtonCancel foswikiButtonDisabled">disabled foswikiButtonCancel</a>
+<a href="#" class="foswikiButtonCancel">foswikiButtonCancel</a> or <a href="#" class="foswikiButton foswikiButtonCancel">foswikiButton foswikiButtonCancel</a>
+disabled: <a href="#" class="foswikiButtonCancel foswikiButtonDisabled">foswikiButtonCancel foswikiButtonDisabled</a>
 
+<a href="#" class="foswikiButtonSmall">foswikiButtonSmall</a> or <a href="#" class="foswikiButton foswikiButtonSmall">foswikiButton foswikiButtonSmall</a>
 
+<a href="#" class="foswikiButtonLarge">foswikiButtonLarge</a> or <a href="#" class="foswikiButton foswikiButtonLarge">foswikiButton foswikiButtonLarge</a>
+ 
 ---+++ buttons
-text text <button class="foswikiButton">foswikiButton</button> <button class="foswikiButton foswikiButtonDisabled">disabled foswikiButton</button>
+<button class="foswikiButton">foswikiButton</button> disabled: 
+<button class="foswikiButtonDisabled">foswikiButtonDisabled</button> or <button class="foswikiButton foswikiButtonDisabled">foswikiButton foswikiButtonDisabled</button>
 
-text text <button class="foswikiButton foswikiSubmit">foswikiSubmit</button> <button href="#" class="foswikiButton foswikiSubmit foswikiButtonDisabled">disabled foswikiSubmit</button>
+<button class="foswikiSubmit">foswikiSubmit</button> or <button class="foswikiButton foswikiSubmit">foswikiButton foswikiSubmit</button> 
+disabled: <button class="foswikiSubmitDisabled">foswikiSubmitDisabled</button> or <button class="foswikiSubmit foswikiButtonDisabled">foswikiSubmit foswikiButtonDisabled</button>
 
-text text <button href="#" class="foswikiButton foswikiButtonCancel">foswikiButtonCancel</button>
-<button href="#" class="foswikiButton foswikiButtonCancel foswikiButtonDisabled">disabled foswikiButtonCancel</button>
+<button class="foswikiButtonCancel">foswikiButtonCancel</button> or <button class="foswikiButton foswikiButtonCancel">foswikiButton foswikiButtonCancel</button>
+disabled: <button class="foswikiButtonCancel foswikiButtonDisabled">foswikiButtonCancel foswikiButtonDisabled</button>
 
-text text <button href="#" class="foswikiButton foswikiButtonSmall">foswikiButtonSmall</button>
+<button class="foswikiButtonSmall">foswikiButtonSmall</button> or <button class="foswikiButton foswikiButtonSmall">foswikiButton foswikiButtonSmall</button>
 
-text text <button href="#" class="foswikiButton foswikiButtonLarge">foswikiButtonLarge</button>
+<button class="foswikiButtonLarge">foswikiButtonLarge</button>
+ or <button class="foswikiButton foswikiButtonLarge">foswikiButton foswikiButtonLarge</button>
 
 ---+++ Input fields 
 <input type="text" size="30" class="foswikiInputField" />
@@ -264,52 +291,15 @@ text text <button href="#" class="foswikiButton foswikiButtonLarge">foswikiButto
 <textarea class="foswikiInputField" cols="20" rows="4"></textarea>
 
 ---++ JQuery buttons
+Should look the same
 
-%BUTTON{
-"Create a new topic"
-icon="add"
-}%
+%BUTTON{"%MAKETEXT{"OK"}%" icon="tick" onclick="alert($(this).text());"}%
+%BUTTON{"%MAKETEXT{"Cancel"}%" icon="cross" onclick="alert($(this).text());"}%
+%BUTTON{"%MAKETEXT{"Info"}%" icon="information" onclick="alert($(this).text());"}%
+%BUTTON{"%MAKETEXT{"Add"}%" icon="add" onclick="alert($(this).text());"}%
+%BUTTON{"%MAKETEXT{"Delete"}%" icon="delete" onclick="alert($(this).text());"}%
+%BUTTON{"%MAKETEXT{"Globe"}%" icon="world_key" onclick="alert('foo')"}%
 %CLEAR%
-
-%BUTTON{
-	"Cancel"
-	icon="cross"
-	class="foswikiButtonCancel"
-}%
-%CLEAR%
-
-%BUTTON{
-	"Cyan"
-	class="cyan"
-}% %BUTTON{
-	"Red"
-	class="red"
-}% %BUTTON{
-	"Green"
-	class="green"
-}%
-%CLEAR%
-
-%BUTTON{
-	"Simple"
-	class="simple"
-}%
-%CLEAR%
-
----++ New buttons: foswikiButton
-%TABLE{databg="#fff" cellpadding="10px"}%
-| Button | <button class="foswikiButton" name="action_button">Create new topic</button> |
-| Link   | <a href="#" class="foswikiButton"><span>Edit</span></a> |
-| Button with icon | <button class="foswikiButton" name="action_button"><span class="foswikiButtonIcon" style="background-image:url(%PUBURLPATH%/%SYSTEMWEB%/DocumentGraphics/add.png);"></span>Create new topic</button> |
-| Button small | <button class="foswikiButton foswikiButtonSmall" name="action_button">Small button</button> |
-| Button with icon, 150% | <button class="foswikiButton foswikiButtonLarge" name="action_button"><span class="foswikiButtonIcon" style="background-image:url(%PUBURLPATH%/%SYSTEMWEB%/DocumentGraphics/add.png);"></span>Create new topic</button> |
-| Link with icon | <a href="#" class="foswikiButton"><span class="foswikiButtonIcon" style="background-image:url(%PUBURLPATH%/%SYSTEMWEB%/DocumentGraphics/add.png);"></span>Edit</a> |
-| Disabled link | <a href="#" class="foswikiButton foswikiButtonDisabled">Edit</a> |
-| Different color links | <a class="foswikiButton foswikiButtonRed" href="#"><span>Red</span></a> <a class="foswikiButton foswikiButtonCyan" href="#"><span>Cyan</span></a> <a class="foswikiButton foswikiButtonGreen" href="#"><span>Green</span></a> <a class="foswikiButton foswikiButtonBlue" href="#"><span>Blue</span></a> |
-| Different color links, disabled | <a class="foswikiButton foswikiButtonRed foswikiButtonDisabled" href="#"><span>Red</span></a> <a class="foswikiButton foswikiButtonCyan foswikiButtonDisabled" href="#"><span>Cyan</span></a> <a class="foswikiButton foswikiButtonGreen foswikiButtonDisabled" href="#"><span>Green</span></a> <a class="foswikiButton foswikiButtonBlue foswikiButtonDisabled" href="#"><span>Blue</span></a> |
-| Row of save actions | <button class="foswikiButton" name="action_button"><span class="foswikiButtonIcon" style="background-image:url(%PUBURLPATH%/%SYSTEMWEB%/DocumentGraphics/choice-yes.png);"></span>Save</button> <button class="foswikiButton" name="action_button"><span class="foswikiButtonIcon" style="background-image:url(%PUBURLPATH%/%SYSTEMWEB%/FamFamFamSilkIcons/eye.png);"></span>Preview</button> <button class="foswikiButton" name="action_button"><span class="foswikiButtonIcon" style="background-image:url(%PUBURLPATH%/%SYSTEMWEB%/FamFamFamSilkIcons/cross.png);"></span>Cancel</button> |
-| Button set | <span class='foswikiButtonSet'><a href='#' class='foswikiButton foswikiButtonLeft'>left</a><a href='#' class='foswikiButton foswikiButtonMiddle'>middle</a><a href='#' class='foswikiButton foswikiButtonMiddle foswikiButtonDisabled'>disabled</a><a href='#' class='foswikiButton foswikiButtonRight'>right</a></span> |
-| Button set small | <span class='foswikiButtonSet'><a href='#' class='foswikiButton foswikiButtonLeft foswikiButtonSmall'>left</a><a href='#' class='foswikiButton foswikiButtonMiddle foswikiButtonSmall'>middle</a><a href='#' class='foswikiButton foswikiButtonMiddle foswikiButtonDisabled foswikiButtonSmall'>disabled</a><a href='#' class='foswikiButton foswikiButtonRight foswikiButtonSmall'>right</a></span> |
 
 ---++ Help text
 
@@ -337,7 +327,7 @@ Normal text. Normal text. Normal text. Normal text. Normal text. Normal text.
 
 
 
----+++ =foswikiImage=
+---+++ foswikiImage
 Normal text. Normal text. Normal text. Normal text. Normal text. Normal text.
 <div class="foswikiImage"><img src="%PUBURLPATH%/%SYSTEMWEB%/BeginnersStartHere/Motorola_logo" height="65" alt="" /></div>
 
@@ -366,7 +356,7 @@ Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. No
 text after
 
 ---+++ foswikiMessage
-<span class="foswikiMessage">This is a message.</span>
+Text before <span class="foswikiMessage">This is a message</span> text after.
 
 
 ---+++ foswikiHorizontalList
@@ -391,9 +381,13 @@ text after
 	<div class="foswikiClear"></div>
 </div>
 
+   * Set ALLOWTOPICCHANGE = AdminGroup
 
 %META:FORM{name="UserForm"}%
 %META:FIELD{name="FirstName" attributes="M" title="FirstName" value="Test"}%
 %META:FILEATTACHMENT{name="Paul_Cezanne_169.jpg" attachment="Paul_Cezanne_169.jpg" attr="" comment="Hill asdlkasj dlkasj dlkasj dlkasj dlkasj dlkasj dlasj dlasj dlasj dl asjdlasjdlasj dlasjdlas jdlasjdlasdjlasjdlasjdlasjdlasjdlasjdlasdj la dlkasj dlkasj dlkasj dlasj dlasj dlasj dl asjdlasjdlasj dlasjdlas jdlasjdlasdjlasjdlasjdlasjdlasjdlasjdlasdj la" date="1315169785" path="houses-on-the-hill.jpg" size="100603" user="BaseUserMapping_333" version="4"}%
 %META:FILEATTACHMENT{name="Paper004.pdf" attachment="Paper004.pdf" attr="" comment="" date="1314736990" path="Paper004.pdf" size="717980" user="BaseUserMapping_333" version="1"}%
 %META:FILEATTACHMENT{name="ISS1.jpg" attachment="ISS1.jpg" attr="" comment="ISS" date="1314737307" path="iss-sta1.jpg" size="57087" user="BaseUserMapping_666" version="2"}%
+%META:FILEATTACHMENT{name="movie.mov" attachment="movie.mov" attr="" comment="" date="1321141302" path="movie.mov" size="102997" user="BaseUserMapping_333" version="1"}%
+%META:FILEATTACHMENT{name="triangle.svg" attachment="triangle.svg" attr="" comment="" date="1321144346" path="triangle.svg" size="726" user="BaseUserMapping_333" version="1"}%
+%META:FILEATTACHMENT{name="prologue.txt" attachment="prologue.txt" attr="" comment="" date="1321144375" path="prologue.txt" size="46" user="BaseUserMapping_333" version="1"}%

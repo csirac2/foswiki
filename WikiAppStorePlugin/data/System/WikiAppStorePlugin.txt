@@ -1,0 +1,86 @@
+%META:TOPICPARENT{name="Plugins"}%
+<!--
+One line description, required for extensions repository catalog.
+   * Set SHORTDESCRIPTION = Enable users to share/test drive Foswiki Wiki Apps
+-->
+---+!! Wiki AppStore Plugin 
+
+%SHORTDESCRIPTION%
+
+%TOC%
+
+---++ Usage
+
+Wiki Applications (Wiki Apps) are applications built from one or more wiki topics that usually contain [[macros]]. Most Wiki Apps require no additional software to be installed on your server, and can be used as-is, or can be used as templates for your own custom wiki apps.
+
+Many wiki apps are useful to a lot of people and have been shared on foswiki.org. However the process of evaluating and installing the applications has in the past been rather clumsy and error prone. This plugin addresses this problem.
+
+The plugin provides simple ways to:
+   * try out Wiki Apps on foswiki.org in a personal Sandbox "playpen",
+   * create/package Wiki Apps to share with the Foswiki community,
+   * install Wiki Apps in a reliable and repeatable way.
+
+(At the time of writing the installer is not ready, but is planned for a future release.)
+
+---+++ Allowing users to try out Wiki Apps
+
+The simplest way to try out a wiki applications is to install the application and play
+with it. This plugin helps with this by supporting the installation of the application
+in a personalized "playpen" web under the Sandbox web.
+
+Wiki Apps have to be rooted at an _application topic_ which provides a portal for the application to be used. To allow a user to test a Wiki App, simply add the following [[macro]] anywhere in the application topic.
+
+Alternatively, create a separate overview topic for the application, and add the macro there (this is the preferred method).
+
+<pre>
+%<nop>APPSTORE_TRYME%
+</pre>
+
+In the same topic, define a [[preference settings][preference]] called =MANIFEST=. This must be a comma-separated list of topic names, the first of which is assumed to be the application topic.
+
+For example,
+<pre>
+   * <nop>Set MANIFEST = MeetingMinutes, CreateNewMeeting, MeetingTemplate
+</pre>
+
+When the topic containing the =%<nop>APPSTORE_TRYME%= macro is viewed, the macro will be expanded to a button which, when pressed, will:
+   1 Create a playpen called =Sandbox/%<nop>WIKINAME%= e.g. Sandbox/%WIKINAME%. If it already exists, the existing web will be re-used.
+   1 Check that any required extensions (e.g. Plugins) are installed,
+   1 Verify that the topics exist, and copy them to the playpen web,
+   1 Add a default <nop>Sandbox/%WIKINAME%/WebHome topic, listing the Wiki Apps available in the playpen web, and advise the user that it is a temporary area which will be cleared down after a defined period of inactivity.
+   1 Redirect the view to the application topic just created in the playpen web,
+
+This action can be repeated any number of times, with all subsequent copied topics overwriting any existing topics in the playpen
+
+---+++ Simplifying installation of Wiki Apps
+
+Installing a Wiki App involves creating the topics listing in the =MANIFEST= in the user's local installation of Foswiki. To simplify this, add the following macro anywhere in the same topic as the =%<nop>APPSTORE_TRYME%=.
+
+<pre>
+%<nop>APPSTORE_PACKAGEME%
+</pre>
+
+When expanded, this macro will provide a bullet list of the topics. When the topics in this list are clicked, a new window will open up displaying the raw text of the topic. This raw text can then be copy/pasted to a topic of the same name in your local install of Foswiki. 
+
+(This is definitely an area which will be improved in future releases)
+
+---++ Examples
+
+See Foswiki:WikiApps/WebHome for Wiki App examples and how this plugin is used.
+
+---++ Installation Instructions
+
+%$INSTALL_INSTRUCTIONS%
+
+---++ Info
+
+|  Author(s): | Foswiki:Main/PadraigLennon, Foswiki:Main/CrawfordCurrie |
+|  Copyright: | &copy; |
+|  License: | [[http://www.gnu.org/licenses/gpl.html][GPL (Gnu General Public License)]] |
+|  Release: | %$RELEASE% |
+|  Version: | %$VERSION% |
+|  Change History: | <!-- versions below in reverse order -->&nbsp; |
+|  Dependencies: | %$DEPENDENCIES% |
+|  Home page: | Foswiki:Extensions/AppStorePlugin |
+|  Support: | Foswiki:Support/AppStorePlugin |
+

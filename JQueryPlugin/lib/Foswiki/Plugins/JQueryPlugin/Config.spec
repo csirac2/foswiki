@@ -26,8 +26,8 @@ $Foswiki::cfg{JQueryPlugin}{NoConflict} = 0;
 # **STRING**
 $Foswiki::cfg{JQueryPlugin}{DefaultPlugins} = '';
 
-# **SELECT jquery-1.4.3, jquery-1.4.4, jquery-1.5, jquery-1.5.1, jquery-1.5.2, jquery-1.6.1, jquery-1.6.2, jquery-1.6.3, jquery-1.6.4**
-$Foswiki::cfg{JQueryPlugin}{JQueryVersion} = 'jquery-1.6.4';
+# **SELECT jquery-1.4.3, jquery-1.4.4, jquery-1.5, jquery-1.5.1, jquery-1.5.2, jquery-1.6.1, jquery-1.6.2, jquery-1.6.3, jquery-1.6.4, jquery-1.7, jquery-1.7.1**
+$Foswiki::cfg{JQueryPlugin}{JQueryVersion} = 'jquery-1.7.1';
 
 # **SELECT ,base, flickr, foswiki, lightness, redmond, smoothness**
 $Foswiki::cfg{JQueryPlugin}{JQueryTheme} = 'foswiki';
@@ -66,7 +66,9 @@ $Foswiki::cfg{JQueryPlugin}{Plugins}{Button}{Enabled} = 1;
 $Foswiki::cfg{JQueryPlugin}{Plugins}{BlockUI}{Enabled} = 1;
 
 # **BOOLEAN**
-$Foswiki::cfg{JQueryPlugin}{Plugins}{Chili}{Enabled} = 1;
+# Warning: this plugin is corrupts the displayed text on Firefox 7 and Safari Rev. 6-17-2011 due to errors in the underlying regular expression  code.
+# The issue is fixed in Firefox 8.
+$Foswiki::cfg{JQueryPlugin}{Plugins}{Chili}{Enabled} = 0;
 
 # **BOOLEAN**
 $Foswiki::cfg{JQueryPlugin}{Plugins}{Corner}{Enabled} = 1;
@@ -225,5 +227,8 @@ $Foswiki::cfg{JQueryPlugin}{Plugins}{Validate}{Enabled} = 1;
 
 # **BOOLEAN**
 $Foswiki::cfg{JQueryPlugin}{Plugins}{WikiWord}{Enabled} = 1;
+
+# **BOOLEAN**
+$Foswiki::cfg{JQueryPlugin}{Plugins}{Loader}{Enabled} = 1;
 
 1;

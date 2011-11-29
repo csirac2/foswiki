@@ -1,0 +1,51 @@
+/*!
+ * BaseSkin @VERSION
+ *
+ * Copyright 2011 Foswiki and contributors
+ *
+ * Designed by Arthur Clemens
+ * Date: @DATE
+ */
+
+/*!
+ * -----------------------------------------------------------------------------
+ * First load the original twitter-bootstrap
+ * Modified for Foswiki:
+ * Imports baseskin-variables.less instead of variables.less
+ */
+ 
+/*!
+ * Bootstrap @VERSION
+ *
+ * Copyright 2011 Twitter, Inc
+ * Licensed under the Apache License v2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Designed and built with all the love in the world @twitter by @mdo and @fat.
+ * Date: @DATE
+ */
+
+// CSS Reset
+@import "twitter-bootstrap/reset.less";
+
+// Core variables and mixins
+//@import "variables.less"; // Modify this for custom colors, font-sizes, etc
+@import "baseskin-variables.less"; // Modify this for custom colors, font-sizes, etc
+@import "twitter-bootstrap/mixins.less";
+
+// Grid system and page structure
+@import "twitter-bootstrap/scaffolding.less";
+
+// Styled patterns and elements
+@import "twitter-bootstrap/type.less";
+@import "twitter-bootstrap/forms.less";
+//@import "twitter-bootstrap/tables.less"; // don't use table style but foswikiTable instead
+@import "twitter-bootstrap/patterns.less";
+
+
+/*!
+ * -----------------------------------------------------------------------------
+ * Now load Foswiki style
+ */
+
+@import "baseskin.less";

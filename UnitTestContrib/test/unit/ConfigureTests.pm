@@ -36,7 +36,7 @@ sub set_up {
 
     $this->{rootdir}  = $root;
     $this->{user}     = $Foswiki::cfg{AdminUserLogin};
-    $this->{session}  = new Foswiki( $this->{user} );
+    $this->{session}  = Foswiki->new( $this->{user} );
     $this->{test_web} = 'Testsystemweb1234';
     my $webObject = Foswiki::Meta->new( $this->{session}, $this->{test_web} );
     $webObject->populateNewWeb();
@@ -51,17 +51,20 @@ sub set_up {
       Foswiki::Meta->new( $this->{session}, $this->{sandbox_subweb} );
     $webObject->populateNewWeb();
     $this->{tempdir} = $Foswiki::cfg{TempfileDir} . '/test_ConfigureTests';
-    rmtree( $this->{tempdir} ) if (-e $this->{tempdir});    # Cleanup any old tests
+    rmtree( $this->{tempdir} )
+      if ( -e $this->{tempdir} );    # Cleanup any old tests
     mkpath( $this->{tempdir} );
     $this->{scriptdir}       = $this->{tempdir} . '/bin';
     $Foswiki::cfg{ScriptDir} = $this->{scriptdir};
     $this->{toolsdir}        = $this->{tempdir} . '/tools';
     $Foswiki::cfg{ToolsDir}  = $this->{toolsdir};
-    $this->{logdir}        = $this->{tempdir} . '/logs';
+    $this->{logdir}          = $this->{tempdir} . '/logs';
     $Foswiki::cfg{Log}{Dir}  = $this->{logdir};
 
     $Foswiki::cfg{TrashWebName}   = $this->{trash_web};
     $Foswiki::cfg{SandboxWebName} = $this->{sandbox_web};
+
+    return;
 }
 
 sub tear_down {
@@ -73,11 +76,14 @@ sub tear_down {
     rmtree( $this->{tempdir} );    # Cleanup any old tests
     $this->SUPER::tear_down();
 
+    return;
 }
 
 sub removeWeb {
     my ( $this, $web ) = @_;
     $this->removeWebFixture( $this->{session}, $web );
+
+    return;
 }
 
 # Parse a cfg; change some values; save the changes
@@ -87,8 +93,8 @@ sub test_parseSave {
     my %defaultCfg = ( not  => "rag" );
     my %cfg        = ( guff => "muff" );
 
-    my $valuer = new Foswiki::Configure::Valuer( \%defaultCfg, \%cfg );
-    my $root = new Foswiki::Configure::Root();
+    my $valuer = Foswiki::Configure::Valuer->new( \%defaultCfg, \%cfg );
+    my $root = Foswiki::Configure::Root->new();
     my ( $fh, $fhname ) = File::Temp::tempfile( DIR => $this->{tempdir} );
     print $fh <<'EXAMPLE';
 # Crud
@@ -126,7 +132,7 @@ EXAMPLE
     Foswiki::Configure::FoswikiCfg::_parse( $fhname, $root, 1 );
 
     # nothing should have changed
-    my $saver = new Foswiki::Configure::FoswikiCfg();
+    my $saver = Foswiki::Configure::FoswikiCfg->new();
     $saver->{valuer}  = $valuer;
     $saver->{root}    = $root;
     $saver->{content} = '';
@@ -138,15 +144,22 @@ EXAMPLE
     $cfg{MandatoryBoolean} = 0;
     $cfg{Types}{Chosen}    = 'Foswiki::Configure::Types::STRING';
     $cfg{OptionalRegex}    = qr/^X*$/;
-    $cfg{DontIgnore}       = 'now is';
-    $saver->{content}      = '';
-    $out                   = $saver->_save();
-    my $expectacle = <<'EXAMPLE';
-$Foswiki::cfg{MandatoryBoolean} = 0;
-$Foswiki::cfg{MandatoryPath} = 'fixed';
-$Foswiki::cfg{OptionalRegex} = '^X*$';
-$Foswiki::cfg{DontIgnore} = 'now is';
-$Foswiki::cfg{Types}{Chosen} = 'Foswiki::Configure::Types::STRING';
+    my $expected_regex;
+    if ( $^V lt v5.14.0 ) {
+        $expected_regex = '\'^X*$\'';
+    }
+    else {
+        $expected_regex = "qr/$cfg{OptionalRegex}/";
+    }
+    $cfg{DontIgnore}  = 'now is';
+    $saver->{content} = '';
+    $out              = $saver->_save();
+    my $expectacle = <<"EXAMPLE";
+\$Foswiki::cfg{MandatoryBoolean} = 0;
+\$Foswiki::cfg{MandatoryPath} = 'fixed';
+\$Foswiki::cfg{OptionalRegex} = $expected_regex;
+\$Foswiki::cfg{DontIgnore} = 'now is';
+\$Foswiki::cfg{Types}{Chosen} = 'Foswiki::Configure::Types::STRING';
 1;
 EXAMPLE
     my @a = split( "\n", $expectacle );
@@ -155,12 +168,14 @@ EXAMPLE
     foreach my $a (@a) {
         $this->assert_str_equals( $a, shift @b );
     }
+
+    return;
 }
 
 # Test cumulative additions to the config
 sub test_2parse {
     my $this = shift;
-    my $root = new Foswiki::Configure::Root();
+    my $root = Foswiki::Configure::Root->new();
 
     $this->assert_null( $root->getValueObject('{One}') );
     $this->assert_null( $root->getValueObject('{Two}') );
@@ -193,11 +208,13 @@ EXAMPLE
     # make sure they are both present
     $this->assert_not_null( $root->getValueObject('{One}') );
     $this->assert_not_null( $root->getValueObject('{Two}') );
+
+    return;
 }
 
 sub test_loadpluggables {
     my $this = shift;
-    my $root = new Foswiki::Configure::Root();
+    my $root = Foswiki::Configure::Root->new();
     my ( $f1, $f1name ) =
       File::Temp::tempfile( DIR => $this->{tempdir} )
       ;    #File::Temp::tempfile( unlink => 1 );
@@ -215,13 +232,15 @@ EXAMPLE
     $vo = $root->getValueObject('{Plugins}{TablePlugin}{Enabled}');
     $this->assert_not_null($vo);
     $this->assert_str_equals( 'BOOLEAN', $vo->getType()->{name} );
+
+    return;
 }
 
 # Test cumulative additions to the config with a potential conflict
 sub test_conflict {
     my $this = shift;
 
-    my $root = new Foswiki::Configure::Root();
+    my $root = Foswiki::Configure::Root->new();
 
     my ( $f1, $f1name ) =
       File::Temp::tempfile( DIR => $this->{tempdir} )
@@ -266,6 +285,8 @@ EXAMPLE
     $vo = $root->getValueObject('{Three}');
     $this->assert_not_null($vo);
     $this->assert_str_equals( 'UNKNOWN', $vo->getType()->{name} );
+
+    return;
 }
 
 sub test_resection {
@@ -275,8 +296,8 @@ sub test_resection {
     $cfg{One}   = 'One';
     $cfg{Two}   = 'Two';
     $cfg{Three} = 'Three';
-    my $valuer = new Foswiki::Configure::Valuer( \%defaultCfg, \%cfg );
-    my $root = new Foswiki::Configure::Root();
+    my $valuer = Foswiki::Configure::Valuer->new( \%defaultCfg, \%cfg );
+    my $root = Foswiki::Configure::Root->new();
 
     my ( $f1, $f1name ) =
       File::Temp::tempfile( DIR => $this->{tempdir} )
@@ -300,7 +321,7 @@ EXAMPLE
     $cfg{One}   = 1;
     $cfg{Two}   = 2;
     $cfg{Three} = 3;
-    my $saver = new Foswiki::Configure::FoswikiCfg();
+    my $saver = Foswiki::Configure::FoswikiCfg->new();
     $saver->{valuer}  = $valuer;
     $saver->{root}    = $root;
     $saver->{content} = '';
@@ -312,14 +333,16 @@ $Foswiki::cfg{Three} = 3;
 1;
 SPUTUM
     $this->assert_str_equals( $expectorate, $out );
+
+    return;
 }
 
 sub test_UI {
     my $this       = shift;
-    my $root       = new Foswiki::Configure::Root();
+    my $root       = Foswiki::Configure::Root->new();
     my %defaultCfg = ( Value => "before" );
     my %cfg        = ( Value => "after" );
-    my $valuer     = new Foswiki::Configure::Valuer( \%defaultCfg, \%cfg );
+    my $valuer     = Foswiki::Configure::Valuer->new( \%defaultCfg, \%cfg );
 
     my ( $f1, $f1name ) =
       File::Temp::tempfile( DIR => $this->{tempdir} )
@@ -344,11 +367,13 @@ EXAMPLE
     $defaultCfg{One} = "Eno";
 
     my $ui       = Foswiki::Configure::UI::loadUI( 'Root', $root );
-    my $controls = new Foswiki::Configure::GlobalControls();
+    my $controls = Foswiki::Configure::GlobalControls->new();
     my $result   = $ui->createUI( $root, $valuer, $controls );
 
     # visual check
     #print $result;
+
+    return;
 }
 
 #                print F '| ',gmtime(),' | ',$this->{user},' | ',$txt," |\n";
@@ -550,13 +575,20 @@ sub test_Util_mapTarget {
     $results = Foswiki::Configure::Util::mapTarget( "C:/asdf/", "$file" );
     $this->assert_str_equals( "C:/asdf/cgi-bin/compare.pl", $results );
 
-# Remap bin directory and script suffix -  Include spaces in the path
+    # Remap bin directory and script suffix -  Include spaces in the path
 
     $Foswiki::cfg{ScriptSuffix} = '.pl';
-    $Foswiki::cfg{ScriptDir}    = 'C:/Program Files (x86)/Apache Software Foundation/Apache2.2/cgi-bin/wiki/bin';
-    $file                       = 'bin/compare';
-    $results = Foswiki::Configure::Util::mapTarget( 'C:/Program Files (x86)/Apache Software Foundation/Apache2.2/cgi-bin/wiki/', "$file" );
-    $this->assert_str_equals( 'C:/Program Files (x86)/Apache Software Foundation/Apache2.2/cgi-bin/wiki/bin/compare.pl', $results );
+    $Foswiki::cfg{ScriptDir} =
+'C:/Program Files (x86)/Apache Software Foundation/Apache2.2/cgi-bin/wiki/bin';
+    $file    = 'bin/compare';
+    $results = Foswiki::Configure::Util::mapTarget(
+'C:/Program Files (x86)/Apache Software Foundation/Apache2.2/cgi-bin/wiki/',
+        "$file"
+    );
+    $this->assert_str_equals(
+'C:/Program Files (x86)/Apache Software Foundation/Apache2.2/cgi-bin/wiki/bin/compare.pl',
+        $results
+    );
 
     # Remap the data/mime.types file location
 
@@ -589,6 +621,7 @@ sub test_Util_mapTarget {
     $Foswiki::cfg{HomeTopicName}     = $saveHome;
     $Foswiki::cfg{MimeTypesFileName} = $saveMime;
 
+    return;
 }
 
 #
@@ -724,6 +757,7 @@ sub test_Util_getMappedWebTopic {
     $Foswiki::cfg{HomeTopicName}     = $saveHome;
     $Foswiki::cfg{MimeTypesFileName} = $saveMime;
 
+    return;
 }
 
 sub test_Util_listDir {
@@ -771,6 +805,7 @@ sub test_Util_listDir {
 "listDir returned incorrect number of directories for empty/missing directory"
     );
 
+    return;
 }
 
 sub test_Util_getPerlLocation {
@@ -834,6 +869,7 @@ DONE
     $Foswiki::cfg{ScriptDir} = $holddir;
     rmtree($tempdir);    # Cleanup any old tests
 
+    return;
 }
 
 sub _doLocationTest {
@@ -846,12 +882,13 @@ sub _doLocationTest {
         open( my $fh, '>', "$tempdir/configure$Foswiki::cfg{ScriptSuffix}" )
           || die "Unable to open \n $! \n\n ";
         print $fh "$shebang \n";
-        close($fh);
+        $this->assert( close($fh) );
     }
 
     my $perl = Foswiki::Configure::Util::getPerlLocation();
     $this->assert_str_equals( $expected, $perl );
 
+    return;
 }
 
 sub test_Util_rewriteShebang {
@@ -865,12 +902,20 @@ sub test_Util_rewriteShebang {
         'C:\asdf\perl.exe', '#! C:\asdf\perl.exe -wT' );
     _doRewriteTest( $this, $tempdir, '#!/usr/bin/perl -wT',
         '/usr/bin/perl', '#! /usr/bin/perl -wT' );
-    _doRewriteTest( $this, $tempdir, '#! /usr/bin/perl -wT',
-        '/usr/bin/perl', '#! /usr/bin/perl -wT', 'No change required' );
+    _doRewriteTest(
+        $this, $tempdir, '#! /usr/bin/perl -wT',
+        '/usr/bin/perl',
+        '#! /usr/bin/perl -wT',
+        'No change required'
+    );
     _doRewriteTest( $this, $tempdir, '#!/usr/bin/perl -wT',
         '/usr/bin/perl', '#! /usr/bin/perl -wT' );
-    _doRewriteTest( $this, $tempdir, '#! /usr/bin/perl ',
-        '/usr/bin/perl', '#! /usr/bin/perl ', 'No change required' );
+    _doRewriteTest(
+        $this, $tempdir, '#! /usr/bin/perl ',
+        '/usr/bin/perl',
+        '#! /usr/bin/perl ',
+        'No change required'
+    );
     _doRewriteTest( $this, $tempdir, '#! /usr/bin/perl -wT ',
         '/my/bin/perl', '#! /my/bin/perl -wT ' );
     _doRewriteTest(
@@ -918,6 +963,7 @@ sub test_Util_rewriteShebang {
         "/usr/shebang" );
     $this->assert_str_equals( 'Not a file', $err );
 
+    return;
 }
 
 sub _doRewriteTest {
@@ -930,12 +976,12 @@ sub _doRewriteTest {
 
     open( my $fh, '>', "$tempdir/myscript$Foswiki::cfg{ScriptSuffix}" )
       || die "Unable to open \n $! \n\n ";
-    print $fh <<DONE;
+    print $fh <<"DONE";
 $testline
 #!blah
 bleh
 DONE
-    close($fh);
+    $this->assert( close($fh) );
 
     my $err = Foswiki::Configure::Util::rewriteShebang(
         "$tempdir/myscript$Foswiki::cfg{ScriptSuffix}", "$shebang" );
@@ -948,6 +994,8 @@ DONE
         _testShebang( $this, "$tempdir/myscript$Foswiki::cfg{ScriptSuffix}",
             "$expected" );
     }
+
+    return;
 }
 
 sub _testShebang {
@@ -963,13 +1011,15 @@ sub _testShebang {
 
         $ShebangLine = <$bfh>;
         chomp $ShebangLine;
-        close $bfh;
+        $this->assert( close($bfh) );
     }
     else {
         die "Open failed $! ";
     }
 
     $this->assert_str_equals( $expected, $ShebangLine );
+
+    return;
 }
 
 sub _makefile {
@@ -983,7 +1033,9 @@ sub _makefile {
     open( my $fh, '>', "$path/$file" )
       or die "Unable to open $path/$file for writing: $!\n";
     print $fh "$content \n";
-    close($fh);
+    close($fh) or die "Couldn't close $path/$file: $!\n";
+
+    return;
 }
 
 sub test_Package_makeBackup {
@@ -1008,7 +1060,7 @@ sub test_Package_makeBackup {
 
     use Foswiki::Configure::Package;
     my $pkg =
-      new Foswiki::Configure::Package( $root, "$extension", $this->{session} );
+      Foswiki::Configure::Package->new( $root, "$extension", $this->{session} );
 
     ( $result, $err ) =
       $pkg->loadInstaller( { DIR => $tempdir, USELOCAL => 1 } );
@@ -1022,39 +1074,32 @@ sub test_Package_makeBackup {
     $this->assert_matches( qr/Backup saved into/, $msg );
     $result = $pkg->uninstall();
     my @expFiles = (
-'Testsandboxweb1234/Subweb/TestTopic43.txt',
-'Testsandboxweb1234/TestTopic1.txt',
-'Testsandboxweb1234/TestTopic43.txt',
-'Testsandboxweb1234/Subweb/TestTopic43/file3.att',
-'Testsandboxweb1234/Subweb/TestTopic43/subdir-1.2.3/file4.att',
-'Testsandboxweb1234/TestTopic1/file.att',
-'Testsandboxweb1234/TestTopic43/file.att',
-'Testsandboxweb1234/TestTopic43/file2.att',
-'configure/pkgdata/MyPlugin_installer'
- );
+        'Testsandboxweb1234/Subweb/TestTopic43.txt',
+        'Testsandboxweb1234/TestTopic1.txt',
+        'Testsandboxweb1234/TestTopic43.txt',
+        'Testsandboxweb1234/Subweb/TestTopic43/file3.att',
+        'Testsandboxweb1234/Subweb/TestTopic43/subdir-1.2.3/file4.att',
+        'Testsandboxweb1234/TestTopic1/file.att',
+        'Testsandboxweb1234/TestTopic43/file.att',
+        'Testsandboxweb1234/TestTopic43/file2.att',
+        'configure/pkgdata/MyPlugin_installer'
+    );
 
     push @expFiles, "$this->{scriptdir}/shbtest1";
     push @expFiles, "$this->{toolsdir}/shbtest2";
 
-    foreach my $expFile ( @expFiles ) {
+    foreach my $expFile (@expFiles) {
+
         #print STDERR "Checkkng $expFile\n";
         $this->assert_matches( qr/$expFile/, $result, "Missing file $expFile" );
-        }
+    }
 
     $pkg->finish();
 
+    return;
 }
 
-#
-# Utility subroutine to build the files for an installable package
-#
-sub _makePackage {
-    my ( $tempdir, $plugin ) = @_;
-
-    open( my $fh, '>',
-        "$tempdir/${plugin}_installer$Foswiki::cfg{ScriptSuffix}" )
-      || die "Unable to open \n $! \n\n ";
-    print $fh <<'DONE';
+my $INSTALL_HEAD = <<'HERE';
 #!blah
 bleh
 
@@ -1066,6 +1111,8 @@ sub preuninstall {
 sub postuninstall {
 
     # # No POSTUNINSTALL script;
+
+    return;
 }
 
 sub preinstall {
@@ -1077,11 +1124,13 @@ sub postinstall {
 
     my $this = shift;   # Get the object instance passed to the routine
     if ($this) {        # Verify that you are running in the new environment
-DONE
-    print $fh "        my \$file = \"$tempdir/obsolete.pl\";\n";
-    print $fh <<'DONE';
+HERE
+
+my $INSTALL_FOOT = <<'HERE';
         return "Removed $file" if unlink $file;
     }
+
+    return;
 }
 
 Foswiki::Extender::install( $PACKAGES_URL, 'CommentPlugin', 'CommentPlugin', @DATA );
@@ -1127,8 +1176,21 @@ File::Spec, >0,1,cpan,This module is shipped as part of standard perl
 Cwd, >55,1,cpan,This module is shipped as part of standard perl
 htmldoc, >24.3,1,c,Required for generating PDF
 
-DONE
-    close($fh);
+HERE
+
+#
+# Utility subroutine to build the files for an installable package
+#
+sub _makePackage {
+    my ( $tempdir, $plugin ) = @_;
+
+    open( my $fh, '>',
+        "$tempdir/${plugin}_installer$Foswiki::cfg{ScriptSuffix}" )
+      || die "Unable to open \n $! \n\n ";
+    print $fh $INSTALL_HEAD;
+    print $fh "        my \$file = \"$tempdir/obsolete.pl\";\n";
+    print $fh $INSTALL_FOOT;
+    close($fh) or die "Couldn't close: $!\n";
     _makefile( "$tempdir/data/Sandbox", "TestTopic1.txt", <<'DONE');
 %META:TOPICINFO{author="BaseUserMapping_333" comment="reprev" date="1267729185" format="1.1" reprev="1.1" version="1.1"}%
 Test rev 132412341234
@@ -1173,6 +1235,8 @@ DONE
         "file4.att", <<'DONE');
 Test file data
 DONE
+
+    return;
 }
 
 sub test_Package_sub_install {
@@ -1203,7 +1267,7 @@ DONE
   #
   #
     my $pkg =
-      new Foswiki::Configure::Package( $root, 'MyPlugin', $this->{session} );
+      Foswiki::Configure::Package->new( $root, 'MyPlugin', $this->{session} );
 
     ( $result, $err ) =
       $pkg->loadInstaller( { DIR => $tempdir, USELOCAL => 1 } );
@@ -1217,13 +1281,14 @@ DONE
 
     _makePackage( $tempdir, $extension );
     $pkg =
-      new Foswiki::Configure::Package( $root, 'MyPlugin', $this->{session} );
+      Foswiki::Configure::Package->new( $root, 'MyPlugin', $this->{session} );
     ( $result, $err ) =
       $pkg->loadInstaller( { DIR => $tempdir, USELOCAL => 1 } );
     ( $result, $err ) = $pkg->_install( { DIR => $tempdir, EXPANDED => 1 } );
     $this->assert_str_equals( '', $err );
 
-    my $expresult = "Installed:  bin/shbtest1 as $Foswiki::cfg{ScriptDir}/shbtest1
+    my $expresult = <<"HERE";
+Installed:  bin/shbtest1 as $Foswiki::cfg{ScriptDir}/shbtest1
 Installed:  data/Sandbox/Subweb/TestTopic43.txt as $Foswiki::cfg{DataDir}/$Foswiki::cfg{SandboxWebName}/Subweb/TestTopic43.txt
 Installed:  data/Sandbox/TestTopic1.txt as $Foswiki::cfg{DataDir}/$Foswiki::cfg{SandboxWebName}/TestTopic1.txt
 Installed:  data/Sandbox/TestTopic43.txt as $Foswiki::cfg{DataDir}/$Foswiki::cfg{SandboxWebName}/TestTopic43.txt
@@ -1234,7 +1299,7 @@ Installed:  pub/Sandbox/TestTopic43/file.att as $Foswiki::cfg{PubDir}/$Foswiki::
 Installed:  pub/Sandbox/TestTopic43/file2.att as $Foswiki::cfg{PubDir}/$Foswiki::cfg{SandboxWebName}/TestTopic43/file2.att
 Installed:  tools/shbtest2 as $Foswiki::cfg{ToolsDir}/shbtest2
 Installed:  MyPlugin_installer to $Foswiki::cfg{WorkingDir}/configure/pkgdata
-";
+HERE
 
     $this->assert_str_equals( $expresult, $result,
         'Verify Checked in vs. Installed' );
@@ -1277,7 +1342,7 @@ Installed:  MyPlugin_installer to $Foswiki::cfg{WorkingDir}/configure/pkgdata
     _makePackage( $tempdir, $extension );
 
     my $pkg2 =
-      new Foswiki::Configure::Package( $root, 'MyPlugin', $this->{session} );
+      Foswiki::Configure::Package->new( $root, 'MyPlugin', $this->{session} );
     ( $result, $err ) =
       $pkg2->loadInstaller( { DIR => $tempdir, USELOCAL => 1 } );
 
@@ -1341,10 +1406,13 @@ Installed:  MyPlugin_installer to $Foswiki::cfg{WorkingDir}/configure/pkgdata
     foreach my $dep ( @{$install} ) {
         $mods .= "$dep->{module};";
     }
-    my $expected =
-        'Filtrx::Invalid::Blah;'
-      . ( eval "use Time::ParseDate 2003.0211;1;" ? '' : 'Time::ParseDate;' )
-      . 'Cwd;';
+    my $expected = 'Filtrx::Invalid::Blah;' . (
+        eval {
+            require Time::ParseDate;
+            Time::ParseDate->VERSION(2003.0211);
+            1;
+        } ? '' : 'Time::ParseDate;'
+    ) . 'Cwd;';
     $this->assert_str_equals( $expected, $mods );
     $this->assert_str_equals( $expected, $mods,
         'CPAN modules to be installed' );
@@ -1386,35 +1454,38 @@ qr/^Foswiki::Contrib::OptionalDependency version >=14754 required(.*)^ -- perl m
     my $results = $pkg2->uninstall();
 
     my @expFiles = (
-'Testsandboxweb1234/Subweb/TestTopic43.txt',
-'Testsandboxweb1234/Subweb/TestTopic43.txt,v',
-'Testsandboxweb1234/TestTopic1.txt',
-'Testsandboxweb1234/TestTopic43.txt',
-'Testsandboxweb1234/TestTopic43.txt,v',
-'Testsandboxweb1234/Subweb/TestTopic43/file3.att',
-'Testsandboxweb1234/Subweb/TestTopic43/file3.att,v',
-'Testsandboxweb1234/Subweb/TestTopic43/subdir-1.2.3/file4.att',
-'Testsandboxweb1234/TestTopic1/file.att',
-'Testsandboxweb1234/TestTopic43/file.att',
-'Testsandboxweb1234/TestTopic43/file.att,v',
-'Testsandboxweb1234/TestTopic43/file2.att',
-'Testsandboxweb1234/TestTopic43/file2.att,v',
-'configure/pkgdata/MyPlugin_installer'
-);
+        'Testsandboxweb1234/Subweb/TestTopic43.txt',
+        'Testsandboxweb1234/Subweb/TestTopic43.txt,v',
+        'Testsandboxweb1234/TestTopic1.txt',
+        'Testsandboxweb1234/TestTopic43.txt',
+        'Testsandboxweb1234/TestTopic43.txt,v',
+        'Testsandboxweb1234/Subweb/TestTopic43/file3.att',
+        'Testsandboxweb1234/Subweb/TestTopic43/file3.att,v',
+        'Testsandboxweb1234/Subweb/TestTopic43/subdir-1.2.3/file4.att',
+        'Testsandboxweb1234/TestTopic1/file.att',
+        'Testsandboxweb1234/TestTopic43/file.att',
+        'Testsandboxweb1234/TestTopic43/file.att,v',
+        'Testsandboxweb1234/TestTopic43/file2.att',
+        'Testsandboxweb1234/TestTopic43/file2.att,v',
+        'configure/pkgdata/MyPlugin_installer'
+    );
 
     push @expFiles, "$this->{scriptdir}/shbtest1";
     push @expFiles, "$this->{toolsdir}/shbtest2";
 
-    foreach my $expFile ( @expFiles ) {
+    foreach my $expFile (@expFiles) {
+
         #print STDERR "Checkkng $expFile\n";
-        $this->assert_matches( qr/$expFile/, $results, "Missing file $expFile" );
-        }
+        $this->assert_matches( qr/$expFile/, $results,
+            "Missing file $expFile" );
+    }
 
     $pkg2->finish();
     undef $pkg2;
 
     rmtree($tempdir);
 
+    return;
 }
 
 sub test_Package_install {
@@ -1442,7 +1513,7 @@ DONE
   #
   #
     my $pkg =
-      new Foswiki::Configure::Package( $root, 'MyPlugin', $this->{session} );
+      Foswiki::Configure::Package->new( $root, 'MyPlugin', $this->{session} );
     ( $result, $err ) =
       $pkg->loadInstaller( { DIR => $tempdir, USELOCAL => 1 } );
     $pkg->uninstall();
@@ -1454,7 +1525,7 @@ DONE
    #
 
     _makePackage( $tempdir, $extension );
-    $pkg = new Foswiki::Configure::Package(
+    $pkg = Foswiki::Configure::Package->new(
         $root,
         'MyPlugin',
         $this->{session},
@@ -1469,25 +1540,30 @@ DONE
     );
     ( $result, $plugins, $cpan ) = $pkg->install();
 
-    $this->assert_matches( qr/.*MyPlugin-[0-9]{8,8}-[0-9]{6,6}-Install\.log/, $pkg->logfile() );
+    $this->assert_matches( qr/.*MyPlugin-[0-9]{8,8}-[0-9]{6,6}-Install\.log/,
+        $pkg->logfile() );
 
-    foreach my $pn ( keys %$plugins ) {
+    foreach my $pn ( keys %{$plugins} ) {
         print "PLUGIN $pn \n";
     }
 
     my $cplist = '';
-    foreach my $cpdep ( sort { lc($a) cmp lc($b) } keys %$cpan ) {
+    foreach my $cpdep ( sort { lc($a) cmp lc($b) } keys %{$cpan} ) {
         $cplist .= "$cpdep;";
     }
     $this->assert_str_equals(
-        'Cwd;Filtrx::Invalid::Blah;'
-          . (
-            eval "use Time::ParseDate 2003.0211;1;" ? '' : 'Time::ParseDate;' ),
+        'Cwd;Filtrx::Invalid::Blah;' . (
+            eval {
+                require Time::ParseDate;
+                Time::ParseDate->VERSION(2003.0211);
+                1;
+            } ? '' : 'Time::ParseDate;'
+        ),
         $cplist,
         "Unexpected CPAN Dependencies"
     );
 
-    my $expresult = <<HERE;
+    my $expresult = <<"HERE";
 Creating Backup of MyPlugin ...
 
 Nothing to backup
@@ -1553,6 +1629,7 @@ HERE
 
     rmtree($tempdir);
 
+    return;
 }
 
 sub test_Util_createArchive_shellZip {
@@ -1572,19 +1649,19 @@ sub test_Util_createArchive_shellZip {
 
     eval {
         local ( *STDOUT, *STDERR );
-        use File::Spec;
+        require File::Spec;
+
         my $blah = system( 'zip -v >' . File::Spec->devnull() . ' 2>&1' );
 
         #print "zip returns $? ($blah) \n";
         die $! unless ( $? == 0 );
         1;
-      }
-      or do {
+    } or do {
         my $mess = $@;
         $this->expect_failure();
         $this->annotate("CANNOT RUN shell test for zip archive:  $mess");
         $this->assert(0);
-      };
+    };
 
     ( $file, $rslt ) =
       Foswiki::Configure::Util::createArchive( "$extbkup", "$tempdir", '0',
@@ -1603,6 +1680,8 @@ sub test_Util_createArchive_shellZip {
         "$tempdir was not removed by the archive operation" );
 
     unlink "$tempdir/$extbkup";    # Clean up old files if left behind
+
+    return;
 }
 
 sub test_Util_createArchive_shellTar {
@@ -1622,20 +1701,19 @@ sub test_Util_createArchive_shellTar {
 
     eval {
         local ( *STDOUT, *STDERR );
-        use File::Spec;
+        require File::Spec;
         my $blah =
           system( 'tar --version >' . File::Spec->devnull() . ' 2>&1' );
 
         #print "tar returns $? ($blah) \n";
         die $! unless ( $? == 0 );
         1;
-      }
-      or do {
+    } or do {
         my $mess = $@;
         $this->expect_failure();
         $this->annotate("CANNOT RUN shell test for tar archive:  $mess");
         $this->assert(0);
-      };
+    };
 
     ( $file, $rslt ) =
       Foswiki::Configure::Util::createArchive( "$extbkup", "$tempdir", '0',
@@ -1655,6 +1733,7 @@ sub test_Util_createArchive_shellTar {
 
     unlink($file);    # Cleanup for next test
 
+    return;
 }
 
 sub test_Util_createArchive_perlTar {
@@ -1672,16 +1751,13 @@ sub test_Util_createArchive_perlTar {
     mkpath("$tempdir/$extbkup");
     _makePackage( "$tempdir/$extbkup", $extension );
 
-    eval 'use Archive::Tar;
-       1;
-       '
-      or do {
+    eval { require Archive::Tar; 1; } or do {
         my $mess = $@;
         $mess =~ s/\(\@INC contains:.*$//s;
         $this->expect_failure();
         $this->annotate("CANNOT RUN test for tar archive:  $mess");
         $this->assert(0);
-      };
+    };
 
     ( $file, $rslt ) =
       Foswiki::Configure::Util::createArchive( "$extbkup", "$tempdir", '0',
@@ -1700,6 +1776,8 @@ sub test_Util_createArchive_perlTar {
         "$tempdir was not removed by the archive operation" );
 
     unlink "$tempdir/$extbkup";    # Clean up old files if left behind
+
+    return;
 }
 
 sub test_Util_createArchive_perlZip {
@@ -1717,16 +1795,13 @@ sub test_Util_createArchive_perlZip {
     mkpath("$tempdir/$extbkup");
     _makePackage( "$tempdir/$extbkup", $extension );
 
-    eval 'use Archive::Zip;
-       1;
-       '
-      or do {
+    eval { require Archive::Zip; 1; } or do {
         my $mess = $@;
         $mess =~ s/\(\@INC contains:.*$//s;
         $this->expect_failure();
         $this->annotate("CANNOT RUN test for zip archive:  $mess");
         $this->assert(0);
-      };
+    };
 
     ( $file, $rslt ) =
       Foswiki::Configure::Util::createArchive( "$extbkup", "$tempdir", '0',
@@ -1745,6 +1820,8 @@ sub test_Util_createArchive_perlZip {
         "$tempdir was not removed by the archive operation" );
 
     unlink "$tempdir/$extbkup";    # Clean up old files if left behind
+
+    return;
 }
 
 #
@@ -1755,7 +1832,7 @@ sub test_Package_loadInstaller {
     my $root = $this->{rootdir};
 
     my $tempdir = $this->{tempdir} . '/test_Package_loadInstaller';
-    rmtree($tempdir);              # Clean up old files if left behind
+    rmtree($tempdir);    # Clean up old files if left behind
     mkpath($tempdir);
 
     my $repository = {
@@ -1764,7 +1841,8 @@ sub test_Package_loadInstaller {
         pub  => 'http://foswiki.org/pub/Extensions/'
     };
     my $pkg =
-      new Foswiki::Configure::Package( $root, 'EmptyPlugin', $this->{session} );
+      Foswiki::Configure::Package->new( $root, 'EmptyPlugin',
+        $this->{session} );
     $pkg->repository($repository);
     my ( $result, $err ) =
       $pkg->loadInstaller( { DIR => $tempdir, USELOCAL => 1 } );
@@ -1794,6 +1872,8 @@ qr#Unable to find EmptyPlugin locally in (.*) ...fetching installer from http://
         'Failed to discover plugin in manifest' );
     $pkg->finish();
     undef $pkg;
+
+    return;
 }
 
 sub test_Load_expandValue {
@@ -1803,6 +1883,8 @@ sub test_Load_expandValue {
     require Foswiki::Configure::Load;
     Foswiki::Configure::Load::expandValue($logv);
     $this->assert_str_equals( "$Foswiki::cfg{WorkingDir}/test", $logv );
+
+    return;
 }
 
 sub test_Package_fetchFile {
@@ -1817,7 +1899,7 @@ sub test_Package_fetchFile {
 
     my ( $resp, $file );
     try {
-        my $pkg = new Foswiki::Configure::Package( $root, 'EmptyPlugin' );
+        my $pkg = Foswiki::Configure::Package->new( $root, 'EmptyPlugin' );
         $pkg->repository($repository);
 
         ( $resp, $file ) = $pkg->_fetchFile('_installer');
@@ -1826,6 +1908,8 @@ sub test_Package_fetchFile {
     except {
         my $E = shift;
     }
+
+    return;
 }
 
 #
@@ -1849,7 +1933,7 @@ sub test_Package_errors {
     # Verify error when download fails
     #
     my $pkg =
-      new Foswiki::Configure::Package( $root, 'EmptyPluginx', $this->{session},
+      Foswiki::Configure::Package->new( $root, 'EmptyPluginx', $this->{session},
         { DIR => $tempdir, USELOCAL => 1 } );
     $pkg->repository($repository);
     my ( $result, $err ) = $pkg->loadInstaller();
@@ -1868,7 +1952,7 @@ HERE
     _makePackage( $tempdir, $extension );
 
     $pkg =
-      new Foswiki::Configure::Package( $root, 'MyPlugin', $this->{session},
+      Foswiki::Configure::Package->new( $root, 'MyPlugin', $this->{session},
         { DIR => $tempdir, USELOCAL => 1 } );
     ( $result, $err ) = $pkg->loadInstaller();
 
@@ -1888,7 +1972,7 @@ DONE
     # Verify error expanding .zip file
     #
     $pkg =
-      new Foswiki::Configure::Package( $root, 'MyPlugin', $this->{session},
+      Foswiki::Configure::Package->new( $root, 'MyPlugin', $this->{session},
         { DIR => $tempdir, USELOCAL => 1 } );
     ( $result, $err ) = $pkg->loadInstaller();
     _makefile( $tempdir, "MyPlugin.zip", <<'DONE');
@@ -1901,6 +1985,7 @@ DONE
     $pkg->finish();
     undef $pkg;
 
+    return;
 }
 
 1;

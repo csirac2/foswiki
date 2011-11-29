@@ -1,1 +1,55 @@
-top bar
+<noautolink><div class="foswikiTopbar" data-dropdown="dropdown">
+	<div class="foswikiTopbarContents">
+		<div class="foswikiContainer">
+			<ul class="foswikiLogo">
+				<li><img src='%PUBURL%/%SYSTEMWEB%/BaseSkin/foswiki-logo-top.png' /></li>
+			</ul>
+			<ul>
+				<li class="menu">
+					<a href="%SCRIPTURL{view}%/%WEB%/%HOMETOPIC%" class="menu">%MAKETEXT{"[_1] Web" args="%WEB%"}%</a>
+					<ul class="menu-dropdown">
+						<li>[[%SCRIPTURLPATH{"view"}%/%BASEWEB%/WebCreateNewTopic?topicparent=%BASETOPIC%][%MAKETEXT{"Create New Topic"}%]]</li>						
+						<li>[[WebTopicList][%MAKETEXT{"Index"}%]]</li>
+						<li>[[%BASEWEB%.WebSearch][%MAKETEXT{"Search"}%]]</li>
+						<li>[[WebChanges][%MAKETEXT{"Changes"}%]]</li>
+						<li>[[WebNotify][%MAKETEXT{"Notifications"}%]]</li>
+						<li>[[WebRss][%MAKETEXT{"RSS Feed"}%]]</li>
+						<li>[[WebStatistics][%MAKETEXT{"Statistics"}%]]</li>
+						<li>[[WebPreferences][%MAKETEXT{"Preferences"}%]]</li>
+						<li class="divider"></li>
+						<li><p>Other Webs</p></li>
+						<li><a href="#">Web 2</a></li>
+						<li><a href="#">Web 3</a></li>
+						<li class="divider"></li>
+						<li><a href="#">Customize web list...</a></li>
+					</ul>
+				</li>
+				<li>[[%BASEWEB%.%BASETOPIC%][%BASETOPIC%]]</li>
+			</ul>
+			<ul class="nav secondary-nav">
+				<form action="">
+					<input type="text" placeholder="Search">
+				</form>
+				<!--
+				<li class="menu">
+					<a href="#" class="menu">My groups</a>
+					<ul class="menu-dropdown">
+						<li><a href="#">Secondary link</a></li>
+						<li><a href="#">Something else here</a></li>
+						<li class="divider"></li>
+						<li><a href="#">Another link</a></li>
+					</ul>
+				</li>
+				-->
+				<li class="menu">
+					<a href="%SCRIPTURL{login}%/%BASEWEB%/%BASETOPIC%" class="menu">%MAKETEXT{"Log in"}%</a>
+					<ul class="menu-dropdown">
+						<li><a href="#">Create account</a></li>
+						<li class="divider"></li>
+						<li><a href="#">About this site</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div></noautolink>

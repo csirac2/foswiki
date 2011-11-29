@@ -1,0 +1,69 @@
+%{<verbatim class="tml">
+===================================================
+	Base Skin topic template
+
+	The basecss template adds CSS files to the html head:
+		- TODO: external font files
+		- base.css - unless preference BASESKIN_USE_CSS_FILE is set
+		- files defined in BASESKIN_USE_CSS_FILE
+		- files defined in BASESKIN_ADD_CSS_FILE
+		- CSS text defined in BASESKIN_ADD_CSS
+===================================================
+}%%TMPL:INCLUDE{"foswiki"}%%{
+---------------------------------------------------
+	TODO Link to font should be added here
+---------------------------------------------------
+}%%TMPL:DEF{"head:css"}%%ADDTOZONE{
+	"head-base"
+	id="font"
+	text=""
+}%%{
+---------------------------------------------------
+	Loads CSS files defined in BASESKIN_USE_CSS_FILE if set
+---------------------------------------------------
+}%%IF{
+	"defined BASESKIN_USE_CSS_FILE AND $BASESKIN_USE_CSS_FILE!=''"
+	then="$percntTMPL:P{
+			\"CSS\"
+			id=\"BASESKIN_USE_CSS_FILE\"
+			requires=\"\"
+			url=\"%BASESKIN_USE_CSS_FILE%\"
+			}$percnt"
+	else="$percntTMPL:P{\"_less\"}$percnt"
+}%%{
+---------------------------------------------------
+	Loads CSSs file defined in BASESKIN_ADD_CSS_FILE if set
+---------------------------------------------------
+}%%IF{
+	"defined BASESKIN_ADD_CSS_FILE AND $BASESKIN_ADD_CSS_FILE!=''"
+	then="$percntTMPL:P{
+			\"CSS\"
+			id=\"BASESKIN_ADD_CSS_FILE\"
+			requires=\"BaseSkinCss/base,BASESKIN_USE_CSS_FILE\"
+			url=\"%BASESKIN_ADD_CSS_FILE%\"
+			}$percnt"
+}%%TMPL:END%%{
+---------------------------------------------------
+}%%TMPL:DEF{"_less"}%%TMPL:P{
+	"LIBJS"
+	id="BaseSkinCss/less-1.1.3.min"
+	requires=""
+}%%TMPL:P{
+	"LIBLESS"
+	id="BaseSkinCss/baseskin-bootstrap"
+	requires=""
+}%%{
+---------------------------------------------------
+}%%TMPL:DEF{"_css"}%%TMPL:P{
+	"LIBCSS"
+	id="BaseSkinCss/baseskin"
+	requires=""
+}%%TMPL:END%%{
+===================================================
+</verbatim>}%
+
+
+
+
+
+

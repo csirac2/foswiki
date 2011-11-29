@@ -13,15 +13,7 @@
 ---------------------------------------------------
 	Top table row definition for topic attachments and top table in attach screen
 ---------------------------------------------------
-}%%TMPL:DEF{ATTACH:files:header(toprow)}%<div class='foswikiToolHeader'>
-<select class='foswikiSelect foswikiSort'>
-	<option value="data-file">%MAKETEXT{"Ordered by name"}%</option>
-	<option value="data-date">%MAKETEXT{"Ordered by date"}%</option>
-	<option value="data-size">%MAKETEXT{"Ordered by size"}%</option>
-	<option value="data-ext">%MAKETEXT{"Ordered by kind"}%</option>
-	<option value="data-user">%MAKETEXT{"Ordered by user"}%</option>
-	<option value="data-rev">%MAKETEXT{"Ordered by version"}%</option>
-</select><span><label><input type="checkbox" class="foswikiCheckbox" name="showdetails" />%MAKETEXT{"Show details"}%</label></span>
+}%%TMPL:DEF{ATTACH:files:header(toprow)}%<div class='foswikiToolbar'>
 <ul class='foswikiToolButtonRow'>
 	<li>
 		<a href="%SCRIPTURLPATH{"attach"}%/%WEB%/%TOPIC%" class="foswikiButton">Manage</a>
@@ -30,21 +22,25 @@
 		<a href="%SCRIPTURLPATH{"attach"}%/%WEB%/%TOPIC%" class="foswikiButton">Upload new</a>
 	</li>
 </ul>
+<select class='foswikiSelect foswikiSort span3'>
+	<option value="data-file">%MAKETEXT{"Sort by name"}%</option>
+	<option value="data-date">%MAKETEXT{"Sort by date"}%</option>
+	<option value="data-size">%MAKETEXT{"Sort by size"}%</option>
+	<option value="data-ext">%MAKETEXT{"Sort by file type"}%</option>
+	<option value="data-user">%MAKETEXT{"Sort by user"}%</option>
+	<option value="data-rev">%MAKETEXT{"Sort by version"}%</option>
+</select>
 <div class="foswikiClear"></div>
 </div>%TMPL:P{
 	"LIBJS"
 	id="BaseSkinJs/base_attachments"
 	requires="JavascriptFiles/foswikilib, JavascriptFiles/foswikiPref, JQUERYPLUGIN, BaseSkinJs/base"
-}%%TMPL:P{
-	"LIBJS"
-	id="BaseSkinJs/facebox"
-	requires="BaseSkinJs/base_attachments"
-}%%JQREQUIRE{"simplemodal"}%%TMPL:END%%{
+}%%TMPL:END%%{
 ---------------------------------------------------
 	Header definition for topic attachments and top table in attach screen
 ---------------------------------------------------
 }%%TMPL:DEF{ATTACH:files:header(basic)}%<div class="foswikiAttachments foswikiSearchResults">
-<h4>%MAKETEXT{"Attachments on this topic"}%</h4>
+<h3>%MAKETEXT{"Topic attachments"}%</h3>
 %TMPL:P{ATTACH:files:header(toprow)}%<ul>%TMPL:END%%{
 ---------------------------------------------------
 	A basic row definition, for attachment table and attach screen
@@ -53,15 +49,17 @@
 }%%TMPL:DEF{ATTACH:files:row(basic)}%<li class="foswikiAttachment foswikiSearchResult" data-size="%A_FILESIZE%" data-ext="%A_EXT%" data-user="%A_USER%" data-file="%A_EFILE%" data-date="%A_EPOCH%" data-rev="%A_REV%" data-comment="<literal>%A_COMMENT%</literal>">
 	<ul>
 		<li class='foswikiSearchResultImage'>
-			%A_ICON%
+			<img src='%PUBURLPATH%/%SYSTEMWEB%/BaseSkinFileIcons/%A_EXT%-large.png' />
 		</li><li class='foswikiSearchResultContents'>
-			<span class="foswikiSearchResultTitle"><a href="%ATTACHURLPATH%/%ENCODE{%A_FILE%}%"><noautolink>%A_FILE%</noautolink></a></span> <span class='foswikiHint'>&sdot; %A_SIZE%%IF{
+			<span class="foswikiSearchResultTitle"><a href="%ATTACHURLPATH%/%ENCODE{%A_FILE%}%"><noautolink>%A_FILE%</noautolink></a></span>
+			<div class='foswikiSearchResultMeta'>%MAKETEXT{"version [_1]" args="%A_REV%"}% &sdot; %MAKETEXT{"uploaded by [_1] on [_2]" args="%A_USER%, %A_DATE%"}% &sdot; %A_SIZE% %IF{
 					"'%A_REV%'!='1'"
-					then=" &sdot; <a href='%SCRIPTURLPATH{"attach"}%/%WEB%/%TOPIC%?filename=%ENCODE{"%A_FILE%"}%;tab=history' class='foswikiUnvisited bsVersions'>%MAKETEXT{"versions"}%</a>"
-				}% &sdot; <a href="%SCRIPTURLPATH{"attach"}%/%WEB%/%TOPIC%?filename=%ENCODE{"%A_FILE%"}%" class="foswikiUnvisited" title="%MAKETEXT{"change, update, previous revisions, move, delete..."}%" rel="nofollow">edit</a></span>
-			<div class='foswikiSummary'> %A_COMMENT% </div><span class='foswikiSearchResultMeta'>%MAKETEXT{"version [_1]" args="%A_REV%"}% &sdot; %MAKETEXT{"uploaded by [_1] on [_2]" args="%A_USER%, %A_DATE%"}%</span>
+					then=" &sdot; <a href='%SCRIPTURLPATH{"attach"}%/%WEB%/%TOPIC%?filename=%ENCODE{"%A_FILE%"}%;tab=history' class='foswikiUnvisited bsVersions' data-controls-modal='my-modal' data-backdrop='static'>%MAKETEXT{"versions"}%</a>"
+				}% &sdot; <a href="%SCRIPTURLPATH{"attach"}%/%WEB%/%TOPIC%?filename=%ENCODE{"%A_FILE%"}%" class="foswikiUnvisited" title="%MAKETEXT{"change, update, previous revisions, move, delete..."}%" rel="nofollow">edit</a></div>
+			<div class='foswikiSummary'> %A_COMMENT% </div>
 		</li>
 	</ul>
+	<div class='foswikiClear'></div>
 </li>%TMPL:END%%{
 ---------------------------------------------------
 	Header for topic attachment table
@@ -99,14 +97,14 @@
 ---------------------------------------------------
 	Top table row definition for topic attachments and top table in attach screen
 ---------------------------------------------------
-}%%TMPL:DEF{ATTACH:files:header(toprow)(basic)}%<div class='foswikiToolHeader'>
+}%%TMPL:DEF{ATTACH:files:header(toprow)(basic)}%<div class='foswikiToolbar'>
 <select class='foswikiSelect foswikiSort'>
-	<option value="data-rev">%MAKETEXT{"Ordered by version"}%</option>
+	<option value="data-rev">%MAKETEXT{"Sort by version"}%</option>
 %{
 	as long as we cannot retrieve the different file sizes we don't sort on it
-	<option value="data-size">%MAKETEXT{"Ordered by size"}%</option>-->
+	<option value="data-size">%MAKETEXT{"Sort by size"}%</option>-->
 }%
-	<option value="data-user">%MAKETEXT{"Ordered by user"}%</option>
+	<option value="data-user">%MAKETEXT{"Sort by user"}%</option>
 </select>
 <div class="foswikiClear"></div>
 </div>%TMPL:END%%{
@@ -117,12 +115,13 @@
 }%%TMPL:DEF{ATTACH:versions:row}%<li class="foswikiAttachment foswikiSearchResult" data-size="%A_FILESIZE%" data-ext="%A_EXT%" data-user="%A_USER%" data-file="%A_EFILE%" data-date="%A_EPOCH%" data-rev="%A_REV%" data-comment="<literal>%A_COMMENT%</literal>">
 	<ul>
 		<li class='foswikiSearchResultImage'>
-			%A_ICON%
+			<img src='%PUBURLPATH%/%SYSTEMWEB%/BaseSkinFileIcons/%A_EXT%-large.png' />
 		</li><li class='foswikiSearchResultContents'>
-			<span class="foswikiSearchResultTitle"><a href="%SCRIPTURL{viewfile}%/%WEB%/%TOPIC%?filename=%ENCODE{%A_FILE%}%;rev=%A_REV%"><noautolink>%MAKETEXT{"Version [_1]" args="%A_REV%"}%</noautolink></a></span>
+			<div class="foswikiSearchResultTitle"><a href="%SCRIPTURL{viewfile}%/%WEB%/%TOPIC%?filename=%ENCODE{%A_FILE%}%;rev=%A_REV%"><noautolink>%MAKETEXT{"Version [_1]" args="%A_REV%"}%</noautolink></a></div>
 			<div class='foswikiSummary'> %A_COMMENT% </div><span class='foswikiSearchResultMeta'>%MAKETEXT{"uploaded by [_1] on [_2]" args="[[%A_USER%][%A_USERNAME%]], %A_DATE%"}%</span>
 		</li>
 	</ul>
+	<div class='foswikiClear'></div>
 </li>%TMPL:END%%{
 ---------------------------------------------------
 	Footer for versions table in attach screen

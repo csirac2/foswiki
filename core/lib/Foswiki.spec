@@ -331,7 +331,7 @@ $Foswiki::cfg{LoginManager} = 'Foswiki::LoginManager::TemplateLogin';
 # to require a valid user for access to these scripts.  <code>edit</code> and
 # <code>save</code> should be removed from this list if the guest user is permitted to
 # edit topics without authentication.
-$Foswiki::cfg{AuthScripts} = 'attach,edit,manage,rename,save,upload,viewauth,viewfileauth,previewauth,rdiffauth,restauth,rest';
+$Foswiki::cfg{AuthScripts} = 'attach,compareauth,edit,manage,previewauth,rdiffauth,rename,rest,restauth,save,statistics,upload,viewauth,viewfileauth';
 
 # **BOOLEAN EXPERT**
 # Browsers typically remember your login and passwords to make authentication
@@ -1627,6 +1627,8 @@ $Foswiki::cfg{Plugins}{MailerContribPlugin}{Enabled} = 1;
 $Foswiki::cfg{Plugins}{MailerContribPlugin}{Module} = 'Foswiki::Plugins::MailerContribPlugin';
 $Foswiki::cfg{Plugins}{SubscribePlugin}{Enabled} = 1;
 $Foswiki::cfg{Plugins}{SubscribePlugin}{Module} = 'Foswiki::Plugins::SubscribePlugin';
+$Foswiki::cfg{Plugins}{UpdatesPlugin}{Enabled} = 1;
+$Foswiki::cfg{Plugins}{UpdatesPlugin}{Module} = 'Foswiki::Plugins::UpdatesPlugin';
 
 #---++ Plugin settings
 #<p>Expert settings controlling extension operation.</p>

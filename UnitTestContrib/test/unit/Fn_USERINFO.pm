@@ -22,18 +22,19 @@ sub set_up {
     my $this = shift;
     $this->SUPER::set_up(@_);
     my ($topicObject) =
-      Foswiki::Func::readTopic( $this->{users_web}, "GropeGroup");
-    $topicObject->text("   * Set GROUP = ScumBag,WikiGuest\n" );
+      Foswiki::Func::readTopic( $this->{users_web}, "GropeGroup" );
+    $topicObject->text("   * Set GROUP = ScumBag,WikiGuest\n");
     $topicObject->save();
     $topicObject->finish();
     ($topicObject) =
-      Foswiki::Func::readTopic( $this->{users_web}, "FriendsOfGropeGroup");
-    $topicObject->text("   * Set GROUP = AdminUser, GropeGroup\n" );
+      Foswiki::Func::readTopic( $this->{users_web}, "FriendsOfGropeGroup" );
+    $topicObject->text("   * Set GROUP = AdminUser, GropeGroup\n");
     $topicObject->save();
     $topicObject->finish();
     ($topicObject) =
-      Foswiki::Func::readTopic( $this->{users_web}, "FriendsOfFriendsOfGropeGroup");
-    $topicObject->text("   * Set GROUP = AdminUser, FriendsOfGropeGroup\n" );
+      Foswiki::Func::readTopic( $this->{users_web},
+        "FriendsOfFriendsOfGropeGroup" );
+    $topicObject->text("   * Set GROUP = AdminUser, FriendsOfGropeGroup\n");
     $topicObject->save();
     $topicObject->finish();
 }
@@ -123,7 +124,7 @@ sub test_isadmin {
     my $ui = $this->{test_topicObject}->expandMacros(<<"HERE");
 %USERINFO{"$Foswiki::cfg{AdminUserWikiName}" format="$testformat"}%
 HERE
-    my $adminEmail = $Foswiki::cfg{WebMasterEmail} || '';
+    my $adminEmail = $Foswiki::cfg{WebMasterEmail} || 'email not set';
     my $adminusername =
       Foswiki::Func::wikiToUserName( $Foswiki::cfg{AdminUserWikiName} );
     $this->assert_str_equals( <<"HERE", $ui );

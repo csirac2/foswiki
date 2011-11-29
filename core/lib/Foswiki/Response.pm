@@ -107,12 +107,14 @@ sub header {
 
     # Ugly hack to avoid html escape in CGI::Util::rearrange
     local $CGI::Q = { escape => 0 };
-    my ( $type, $status, $cookie, $charset, $expires, $attachment, @other ) =
+
+    # SMELL: CGI::Util is documented as not having any public subroutines
+    my ( $type, $status, $cookie, $charset, $expires, @other ) =
       CGI::Util::rearrange(
         [
             [ 'TYPE',   'CONTENT_TYPE', 'CONTENT-TYPE' ], 'STATUS',
             [ 'COOKIE', 'COOKIES' ],    'CHARSET',
-            'EXPIRES', 'ATTACHMENT',
+            'EXPIRES',
         ],
         @p
       );
@@ -128,6 +130,7 @@ sub header {
 
         # Don't use \s because of perl bug 21951
         next unless my ( $header, $value ) = /([^ \r\n\t=]+)=\"?(.+?)\"?$/;
+
         $header = lc($header);
         $header =~ s/\b(\w)/\u$1/g;
         if ( exists $this->{headers}->{$header} ) {
@@ -165,9 +168,6 @@ sub header {
       if ( defined $expires );
     $this->{headers}->{Date} = CGI::Util::expires( 0, 'http' )
       if defined $expires || $cookie;
-    $this->{headers}->{'Content-Disposition'} =
-      "attachment; filename=\"$attachment\""
-      if $attachment;
 
     $this->{headers}->{'Content-Type'} = $type if $type ne '';
 }

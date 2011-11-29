@@ -1,0 +1,273 @@
+/* Variables.less
+ * Variables to customize the look and feel of Bootstrap
+ * ----------------------------------------------------- */
+
+
+// Links
+@linkColor:         #0069d6;
+@linkColorHover:    darken(@linkColor, 15);
+
+// Grays
+@black:             #000;
+@grayDark:          lighten(@black, 25%);
+@gray:              lighten(@black, 50%);
+@grayLight:         lighten(@black, 75%);
+@grayLighter:       lighten(@black, 90%);
+@white:             #fff;
+
+// Accent Colors
+@blue:              #049CDB;
+@blueDark:          #0064CD;
+@green:             #46a546;
+@red:               #9d261d;
+@yellow:            #ffc40d;
+@orange:            #f89406;
+@pink:              #c3325f;
+@purple:            #7a43b6;
+
+// Baseline grid
+@basefont:          13px;
+@baseline:          18px;
+
+// Griditude
+// Modify the grid styles in mixins.less
+@gridColumns:       16;
+@gridColumnWidth:   40px;
+@gridGutterWidth:   20px;
+@extraSpace:        (@gridGutterWidth * 2); // For our grid calculations
+@siteWidth:         (@gridColumns * @gridColumnWidth) + (@gridGutterWidth * (@gridColumns - 1));
+
+// Color Scheme
+// Use this to roll your own color schemes if you like (unused by Bootstrap by default)
+@baseColor:         @blue;                  // Set a base color
+@complement:        spin(@baseColor, 180);  // Determine a complementary color
+@split1:            spin(@baseColor, 158);  // Split complements
+@split2:            spin(@baseColor, -158);
+@triad1:            spin(@baseColor, 135);  // Triads colors
+@triad2:            spin(@baseColor, -135);
+@tetra1:            spin(@baseColor, 90);   // Tetra colors
+@tetra2:            spin(@baseColor, -90);
+@analog1:           spin(@baseColor, 22);   // Analogs colors
+@analog2:           spin(@baseColor, -22);
+
+
+
+// More variables coming soon:
+// - @basefont to @baseFontSize
+// - @baseline to @baseLineHeight
+// - @baseFontFamily
+// - @primaryButtonColor
+// - anything else? File an issue on GitHub
+
+
+
+
+
+// Added variables and mixins for Foswiki
+
+@baseline:          21px;
+
+@fw_link_color:       #0069d6;
+@linkColorHover:      darken(@linkColor, 15);
+@fw_link_color_gray:  #6699c9;
+
+@fw_font_family_main: sans-serif;
+@fw_font_family_serif: georgia, serif;
+@fw_font_family_code: Monaco, Andale Mono, Courier New, monospace; 
+
+@fw_strand1_init: @basefont;
+@fw_strand2_init: 16;
+
+@fw_ratio_golden: 1.618;			// 1:1.618
+@fw_ratio_musical_fifth: 1.5;		// 2:3
+@fw_ratio_musical_fourth: 1.333;	// 3:4
+@fw_ratio: @fw_ratio_musical_fourth;
+
+@fw_body_line_height: 21; //$ratio_golden * $body_font_size; // could be a number as well, like 18 (pixels)
+
+@fw_block_corner: 3px;
+
+@fw_color_primary: #3fa209; // distinctive color, not blue
+@fw_color_header_main: @fw_color_primary;
+@fw_color_header: #222;
+@fw_color_text: #000;
+@fw_color_text_toned_down: #444;
+@fw_color_alert: #f00;
+@fw_color_hint: #888;
+@fw_color_text_light: #aaa;
+@fw_color_border_light: #e5e5e5;
+@fw_color_border_medium: #dedfe2;
+@fw_color_border_dark: #cdced3;
+@fw_color_heading_secondary: #53637D;
+@fw_color_background_neutral: #f6f6f6;
+@fw_color_background_message: #fceec1;
+@fw_color_background_help: #e5fce1;
+@fw_color_tool_background_gradient_light: #ededed;
+@fw_color_tool_background_gradient_dark: #cacaca;
+@fw_color_tool_border: @fw_color_tool_background_gradient_dark;
+
+// Using 2 strands to be used interleaved.
+@fw_strand1_ratio_1: @fw_strand1_init;
+
+// larger - sizes in pixels
+@fw_strand1_ratio_up_1: @fw_strand1_ratio_1 * @fw_ratio;
+@fw_strand1_ratio_up_2: @fw_strand1_ratio_up_1 * @fw_ratio;
+@fw_strand1_ratio_up_3: @fw_strand1_ratio_up_2 * @fw_ratio;
+@fw_strand1_ratio_up_4: @fw_strand1_ratio_up_3 * @fw_ratio;
+@fw_strand1_ratio_up_5: @fw_strand1_ratio_up_4 * @fw_ratio;
+@fw_strand1_ratio_up_6: @fw_strand1_ratio_up_5 * @fw_ratio;
+@fw_strand1_ratio_up_7: @fw_strand1_ratio_up_6 * @fw_ratio;
+@fw_strand1_ratio_up_8: @fw_strand1_ratio_up_7 * @fw_ratio;
+@fw_strand1_ratio_up_9: @fw_strand1_ratio_up_8 * @fw_ratio;
+@fw_strand1_ratio_up_10: @fw_strand1_ratio_up_9 * @fw_ratio;
+@fw_strand1_ratio_up_11: @fw_strand1_ratio_up_10 * @fw_ratio;
+@fw_strand1_ratio_up_12: @fw_strand1_ratio_up_11 * @fw_ratio;
+@fw_strand1_ratio_up_13: @fw_strand1_ratio_up_12 * @fw_ratio;
+@fw_strand1_ratio_up_14: @fw_strand1_ratio_up_13 * @fw_ratio;
+@fw_strand1_ratio_up_15: @fw_strand1_ratio_up_14 * @fw_ratio;
+
+// smaller - sizes in pixels
+@fw_strand1_ratio_down_1: @fw_strand1_ratio_1 / @fw_ratio;
+@fw_strand1_ratio_down_2: @fw_strand1_ratio_down_1 / @fw_ratio;
+
+// strand 2
+
+@fw_strand2_ratio_1: @fw_strand2_init;
+
+// larger - sizes in pixels
+@fw_strand2_ratio_up_1: @fw_strand2_ratio_1 * @fw_ratio;
+@fw_strand2_ratio_up_2: @fw_strand2_ratio_up_1 * @fw_ratio;
+@fw_strand2_ratio_up_3: @fw_strand2_ratio_up_2 * @fw_ratio;
+@fw_strand2_ratio_up_4: @fw_strand2_ratio_up_3 * @fw_ratio;
+@fw_strand2_ratio_up_5: @fw_strand2_ratio_up_4 * @fw_ratio;
+@fw_strand2_ratio_up_6: @fw_strand2_ratio_up_5 * @fw_ratio;
+@fw_strand2_ratio_up_7: @fw_strand2_ratio_up_6 * @fw_ratio;
+@fw_strand2_ratio_up_8: @fw_strand2_ratio_up_7 * @fw_ratio;
+@fw_strand2_ratio_up_9: @fw_strand2_ratio_up_8 * @fw_ratio;
+@fw_strand2_ratio_up_10: @fw_strand2_ratio_up_9 * @fw_ratio;
+@fw_strand2_ratio_up_11: @fw_strand2_ratio_up_10 * @fw_ratio;
+@fw_strand2_ratio_up_12: @fw_strand2_ratio_up_11 * @fw_ratio;
+@fw_strand2_ratio_up_13: @fw_strand2_ratio_up_12 * @fw_ratio;
+@fw_strand2_ratio_up_14: @fw_strand2_ratio_up_13 * @fw_ratio;
+@fw_strand2_ratio_up_15: @fw_strand2_ratio_up_14 * @fw_ratio;
+
+// smaller - sizes in pixels
+@fw_strand2_ratio_down_1: @fw_strand2_ratio_1 / @fw_ratio;
+@fw_strand2_ratio_down_2: @fw_strand2_ratio_down_1 / @fw_ratio;
+
+// set ratios for common elements
+
+// font sizes
+@fw_size_small:    @fw_strand2_ratio_down_1;
+@fw_size_smallish: 0.9 * @fw_strand1_ratio_1;
+@fw_size_code:     @fw_size_smallish;
+@fw_size_p:        @fw_strand1_ratio_1;
+@fw_size_h6:       @fw_strand1_ratio_1;
+@fw_size_h5:       @fw_strand2_ratio_1;
+@fw_size_h4:       @fw_strand1_ratio_up_1;
+@fw_size_h3:       @fw_strand2_ratio_up_1;
+@fw_size_h2:       @fw_strand1_ratio_up_2;
+@fw_size_h1:       @fw_strand2_ratio_up_2;
+
+// block padding
+@fw_size_block_padding_em: 0em + @fw_strand1_ratio_up_1 / @basefont;
+@fw_size_block_padding_px: 0px + @fw_strand1_ratio_up_1;
+
+@fw_size_block_padding_flattened_em: 0em + @fw_strand1_ratio_down_1 / @basefont;
+@fw_size_block_padding_flattened_px: 0px + @fw_strand1_ratio_down_1;
+
+@fw_size_padding_menu_em: 0em + @fw_strand1_ratio_down_2 / @basefont;
+@fw_size_padding_menu_px: 0px + @fw_strand2_ratio_down_1;
+
+@fw_contentSidePadding: (@siteWidth - @fw_strand2_ratio_up_10) / 2;
+@fw_inner_content_width: @siteWidth - 2*@fw_contentSidePadding;
+@fw_topbar_height: 40px;
+@fw_body_side_margin: 0em + @fw_strand2_ratio_up_1 / @basefont;
+
+.fw_em_font_size(@size) {
+	font-size: 0em + (@size / @basefont);
+}
+.fw_em_line_height(@size) {
+	line-height: 0em + (@fw_body_line_height / @size);
+}
+.fw_em_margin_top(@size) {
+	margin-top: 0em + (@fw_body_line_height / @size);
+}
+.fw_em_margin_bottom(@size) {
+	margin-bottom: 0em + (@fw_body_line_height / @size);
+}
+
+.fw_heading_1() {
+	line-height: 1;
+	.fw_em_font_size(@fw_size_h1);
+	.fw_em_margin_top(@fw_size_h1);
+	.fw_em_margin_bottom(@fw_size_h1);
+}
+.fw_heading_2() {
+	line-height: 1;
+	.fw_em_font_size(@fw_size_h2);
+	.fw_em_margin_top(@fw_size_h2);
+	.fw_em_margin_bottom(@fw_size_h2);
+}
+.fw_heading_3() {
+	line-height: 1;
+	.fw_em_font_size(@fw_size_h3);
+	.fw_em_margin_top(@fw_size_h3);
+	.fw_em_margin_bottom(@fw_size_h3);
+}
+.fw_heading_4() {
+	line-height: 1;
+	.fw_em_font_size(@fw_size_h4);
+	.fw_em_margin_top(@fw_size_h4);
+	.fw_em_margin_bottom(@fw_size_h4);
+}
+.fw_heading_5() {
+	line-height: 1;
+	.fw_em_font_size(@fw_size_h5);
+	.fw_em_margin_top(@fw_size_h5);
+	.fw_em_margin_bottom(@fw_size_h5);
+}
+.fw_heading_6() {
+	line-height: 1;
+	.fw_em_font_size(@fw_size_h6);
+	.fw_em_margin_top(@fw_size_h6);
+	.fw_em_margin_bottom(@fw_size_h6);
+}
+.fw_inline_p() {
+	.fw_em_line_height(@fw_size_p);
+	.fw_em_font_size(@fw_size_p);
+}
+.fw_block_p() {
+	.fw_em_margin_top(@fw_size_p);
+	.fw_em_margin_bottom(@fw_size_p);
+}
+.fw_block_padding_all () {
+	padding-top: @fw_size_block_padding_em;
+	padding-bottom: @fw_size_block_padding_em;
+	padding-left: @fw_size_block_padding_px;
+	padding-right: @fw_size_block_padding_px;
+}
+.fw_block_padding_vertical_only () {
+	padding-top: @fw_size_block_padding_em;
+	padding-bottom: @fw_size_block_padding_em;
+	padding-left: 0;
+	padding-right: 0;
+}
+.fw_menu_padding_all () {
+	padding-top: @fw_size_padding_menu_em;
+	padding-bottom: @fw_size_padding_menu_em;
+	padding-left: @fw_size_padding_menu_px;
+	padding-right: @fw_size_padding_menu_px;
+}
+.fw_menu_padding_vertical_only () {
+	padding-top: @fw_size_padding_menu_em;
+	padding-bottom: @fw_size_padding_menu_em;
+	padding-left: 0;
+	padding-right: 0;
+}
+.fw_menu_padding_horizontal_only () {
+	padding-top: 0;
+	padding-bottom: 0;
+	padding-left: @fw_size_padding_menu_px;
+	padding-right: @fw_size_padding_menu_px;
+}

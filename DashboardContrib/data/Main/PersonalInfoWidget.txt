@@ -1,0 +1,4 @@
+%STARTSECTION{"widget"}%%INCLUDE{
+  "PersonalInfo" 
+  section="personalInfo"
+}%%ENDSECTION{"widget"}%

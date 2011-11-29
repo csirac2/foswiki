@@ -1,0 +1,27 @@
+%{<verbatim class="tml">
+===================================================
+	Base Skin topic template
+	
+	Use:
+		- with urlparam 'cover': 'baseajax'
+		- with urlparam 'def': one of the names in attachagain (without prefix 'attach:'
+		
+===================================================
+}%%TMPL:INCLUDE{"attachagain"}%%{
+---------------------------------------------------
+	Trim the page contents to only have 'content'
+	Class names 'foswikiManagePage' and 'foswikiAjaxPage' are set on foswikiPage section because Facebox strips away the body tag.
+---------------------------------------------------
+}%%TMPL:DEF{"page"}%<section class="foswikiPage foswikiManagePage foswikiAjaxPage">
+%TMPL:P{"content"}%
+</section>%TMPL:END%%{
+---------------------------------------------------
+	Show content according to urlparam 'def'
+---------------------------------------------------
+}%%TMPL:DEF{"content"}%<div class="foswikiTopic">%IF{
+	"defined def AND $def!=''"
+	then="$percntTMPL:P{attach:%URLPARAM{"def"}%}$percnt"
+}%
+</div>%TMPL:END%%{
+===================================================
+</verbatim>}%

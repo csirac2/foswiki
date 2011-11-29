@@ -47,7 +47,10 @@ sub viewfile {
     my $fileName;
     my $pathInfo;
 
-    if ( defined( $ENV{REDIRECT_STATUS} ) && $ENV{REDIRECT_STATUS} != 200 && defined( $ENV{REQUEST_URI} ) ) {
+    if (   defined( $ENV{REDIRECT_STATUS} )
+        && $ENV{REDIRECT_STATUS} != 200
+        && defined( $ENV{REQUEST_URI} ) )
+    {
 
         # this is a redirect - can be used to make 404,401 etc URL's
         # more foswiki tailored and is also used in TWikiCompatibility
@@ -77,20 +80,20 @@ sub viewfile {
 
         # work out the web, topic and filename
         my @web;
-        my $pel = Foswiki::Sandbox::untaint(
-                    $path[0],
-                    \&Foswiki::Sandbox::validateWebName);
+        my $pel =
+          Foswiki::Sandbox::untaint( $path[0],
+            \&Foswiki::Sandbox::validateWebName );
 
-        while ( $pel && $session->webExists( join('/', @web, $pel ) ) ) {
+        while ( $pel && $session->webExists( join( '/', @web, $pel ) ) ) {
             push( @web, $pel );
             shift(@path);
-            $pel = Foswiki::Sandbox::untaint(
-                $path[0],
-                \&Foswiki::Sandbox::validateWebName); 
+            $pel =
+              Foswiki::Sandbox::untaint( $path[0],
+                \&Foswiki::Sandbox::validateWebName );
         }
 
-        $web = join('/', @web);
-        unless ( $web ) {
+        $web = join( '/', @web );
+        unless ($web) {
             throw Foswiki::OopsException(
                 'attention',
                 def    => 'no_such_attachment',
@@ -106,9 +109,9 @@ sub viewfile {
         $session->{webName} = $web;
 
         # The next element on the path has to be the topic name
-        $topic = Foswiki::Sandbox::untaint(
-                    shift(@path),
-                    \&Foswiki::Sandbox::validateTopicName);
+        $topic =
+          Foswiki::Sandbox::untaint( shift(@path),
+            \&Foswiki::Sandbox::validateTopicName );
 
         if ( !$topic ) {
             throw Foswiki::OopsException(
@@ -120,6 +123,7 @@ sub viewfile {
                 params => [ 'viewfile', '?' ]
             );
         }
+
         # See comment about webName above
         $session->{topicName} = $topic;
 
@@ -145,7 +149,6 @@ sub viewfile {
     # simply sanitizing the attachment name won't work.
     $fileName = Foswiki::Sandbox::untaint( $fileName,
         \&Foswiki::Sandbox::validateAttachmentName );
-
 
     #print STDERR "VIEWFILE: web($web), topic($topic), file($fileName)\n";
 
@@ -173,13 +176,18 @@ sub viewfile {
 
     my $fh = $topicObject->openAttachment( $fileName, '<', version => $rev );
 
-    my $type  = _suffixToMimeType($fileName);
-    my $dispo = 'inline;filename=' . $fileName;
+    my $type = _suffixToMimeType($fileName);
 
     #re-set to 200, in case this was a 404 or other redirect
     $session->{response}->status(200);
-    $session->{response}
-      ->header( -type => $type, qq(Content-Disposition="$dispo") );
+
+# Write a custom Content_Disposition header.  The -attachment option does not
+# write the file as "inline", so graphics would get a File Save dialog instead of displayed.
+    $session->{response}->header(
+        -type                => $type,
+        -content_disposition => "inline; filename=$fileName"
+    );
+
     local $/;
 
     # SMELL: Maybe could be less memory hungry if we could

@@ -12,12 +12,14 @@
 ---------------------------------------------------
 	Header definition for topic attachments and top table in attach screen
 ---------------------------------------------------
-}%%TMPL:DEF{FORM:display:header}%
-<div class="foswikiForm">
-%IF{
-	"context preview"
-	then="%TMPL:P{FORM:display:header:titlename}%" else="%TMPL:P{FORM:display:header:titlelink}%"
+}%%TMPL:DEF{FORM:display:header}%<div class='foswikiForm'>
+<h3>%MAKETEXT{"Topic data"}%</h3>
+<div class='foswikiToolbar'>%TMPL:P{FORM:display:header:titlename}%%IF{
+	"not context preview"
+	then="%TMPL:P{FORM:display:header:titlelink}%"
 }%
+<div class='foswikiClear'></div>
+</div>
 <table class='foswikiTable foswikiFormTable' border='1' summary='%MAKETEXT{"Form data"}%'>%TMPL:END%%{
 ---------------------------------------------------
 	Each row
@@ -30,11 +32,10 @@
 ---------------------------------------------------
 	Title link in header
 ---------------------------------------------------
-}%%TMPL:DEF{FORM:display:header:titlelink}%<div class='foswikiRight'><a href='%SCRIPTURL{edit}%/%WEB%/%TOPIC%?t=%GMTIME{$epoch}%;action=form' class='foswikiButton'>%MAKETEXT{"Edit form data"}%</a></div>
-<div class='foswikiLarge foswikiUnvisited'><noautolink>%A_TITLE%</noautolink></div>%TMPL:END%%{
+}%%TMPL:DEF{FORM:display:header:titlelink}%<div class='foswikiToolButtonRow'><a href='%SCRIPTURL{edit}%/%WEB%/%TOPIC%?t=%GMTIME{$epoch}%;action=form' class='foswikiButton'>%MAKETEXT{"Edit form data"}%</a></div>%TMPL:END%%{
 ---------------------------------------------------
 	Title name in header
 ---------------------------------------------------
-}%%TMPL:DEF{FORM:display:header:titlename}%<noautolink><h3>%A_TITLE%</h3></noautolink>%TMPL:END%%{
+}%%TMPL:DEF{FORM:display:header:titlename}%<noautolink><div class='foswikiToolbarHeader'>%A_TITLE%</div></noautolink>%TMPL:END%%{
 ===================================================
 </verbatim>}%

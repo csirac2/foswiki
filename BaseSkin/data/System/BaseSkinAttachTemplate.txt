@@ -7,7 +7,7 @@
 		- attachagain template
 		
 ===================================================
-}%%TMPL:INCLUDE{"document"}%%TMPL:INCLUDE{"view"}%%{
+}%%TMPL:INCLUDE{"view"}%%{
 ---------------------------------------------------
 	This is a manage page
 ---------------------------------------------------
@@ -71,22 +71,32 @@
 ---------------------------------------------------
 }%%TMPL:DEF{"attach:comment"}%<div class="foswikiFormStep">
 %TMPL:P{"attach:comment:title"}%
-<textarea class="foswikiInputField" name="filecomment" rows="2" cols="60" placeholder="%MAKETEXT{"Describe the file so other people know what it is."}%">%FILECOMMENT%</textarea>
+<textarea class="foswikiInputField span8" name="filecomment" rows="2" cols="60" placeholder="%MAKETEXT{"Describe the file so other people know what it is."}%">%FILECOMMENT%</textarea>
 </div>%TMPL:END%%{
 ---------------------------------------------------
 	
 ---------------------------------------------------
 }%%TMPL:DEF{"attach:properties"}%<div class="foswikiFormStep">
 %TMPL:P{"attach:properties:title"}%
-<label><input type="checkbox" class="foswikiCheckbox" name="hidefile" %HIDEFILE% />%MAKETEXT{"Do not show in topic attachment list"}%</label>
+<p><label><input type="checkbox" class="foswikiCheckbox" name="hidefile" %HIDEFILE% />%MAKETEXT{"Do not show in topic attachment list"}%</label></p>
 </div>%TMPL:P{"changepropertiesaction"}%%TMPL:END%%{
 ---------------------------------------------------
 	
 ---------------------------------------------------
 }%%TMPL:DEF{"attach:new:createlink"}%<div class="foswikiFormStep">
-<h3>%MAKETEXT{"Create link / show image in topic"}%</h3>
-<p><label><input type="checkbox" class="foswikiCheckbox" name="createlink" %ATTACHLINKBOX% />%MAKETEXT{"Create link"}%</label> <span class='foswikiHint'>%MAKETEXT{"The link (or image) will be placed at the end of the topic. Its format is set with =ATTACHEDFILELINKFORMAT=."}%</span></p>
+<h3>%MAKETEXT{"Create a link to this attachment"}%</h3>
+%TMPL:P{"attach:createlink:info"}%
+<p><label><input type="checkbox" class="foswikiCheckbox" name="createlink" %ATTACHLINKBOX% />%MAKETEXT{"Create link"}%</label></p>
 </div>%TMPL:P{"changepropertiesaction"}%%TMPL:END%%{
+---------------------------------------------------
+	
+---------------------------------------------------
+}%%TMPL:DEF{"attach:createlink:info"}%<div class='foswikiHelp'>
+   * %MAKETEXT{"A link will be created at the end of the topic."}%
+   * %MAKETEXT{"Image files: the image will be displayed."}%
+   * %MAKETEXT{"Other file types: a link to the file will be displayed."}%
+   * %MAKETEXT{"The link format is set with =ATTACHEDFILELINKFORMAT=."}%
+</div>%TMPL:END%%{
 ---------------------------------------------------
 	
 ---------------------------------------------------
@@ -96,7 +106,7 @@
 ---------------------------------------------------
 	
 ---------------------------------------------------
-}%%TMPL:DEF{"attach:help"}%%INCLUDE{"%SYSTEMWEB%.FileAttachment"}%%TMPL:END%%{
+}%%TMPL:DEF{"attach:help"}%<h2>%MAKETEXT{"Help on using attachments"}%</h2>%INCLUDE{"%SYSTEMWEB%.FileAttachment" section="attach:info"}%%TMPL:END%%{
 ---------------------------------------------------
 	
 ---------------------------------------------------

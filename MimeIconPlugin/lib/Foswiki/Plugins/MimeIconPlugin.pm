@@ -1,6 +1,6 @@
 # Plugin for Foswiki - The Free and Open Source Wiki, http://foswiki.org/
 #
-# MimeIconPlugin is Copyright (C) 2010 Michael Daum http://michaeldaumconsulting.com
+# MimeIconPlugin is Copyright (C) 2010-2011 Michael Daum http://michaeldaumconsulting.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -27,7 +27,7 @@ use warnings;
 use Foswiki::Func ();
 
 our $VERSION = '$Rev$';
-our $RELEASE = '1.0';
+our $RELEASE = '1.1';
 our $SHORTDESCRIPTION = 'Icon sets for mimetypes';
 our $NO_PREFS_IN_TOPIC = 1;
 our $baseWeb;
@@ -64,14 +64,11 @@ sub MIMEICON {
   my $theme = $params->{theme};
   my $format = $params->{format};
 
-  $format = "<img class='foswikiIcon' src='%URL%' width='%SIZE%' height='%SIZE%' alt='%NAME%' />"
+  $format = "<img class='foswikiIcon' src='\$url' width='\$size' height='\$size' alt='\$name' />"
     unless defined $format;
 
   $theme = $Foswiki::cfg{Plugins}{MimeIconPlugin}{Theme} || 'oxygen'
     unless defined $theme;
-
-  readIconMapping($theme) 
-    unless defined $cache{$theme.':sizes'};
 
   $extension =~ s/^.*\.//;
   $extension =~ s/^\s+//;
@@ -85,9 +82,9 @@ sub MIMEICON {
 
   # formatting result
   my $result = $format;
-  $result =~ s/%NAME%/$iconName/g;
-  $result =~ s/%URL%/$iconPath/g;
-  $result =~ s/%SIZE%/$size/g;
+  $result =~ s/(%NAME%|\$name\b)/$iconName/g;
+  $result =~ s/(%URL%|\$url\b)/$iconPath/g;
+  $result =~ s/(%SIZE%|\$size\b)/$size/g;
 
   print STDERR "MimeIconPlugin - extension=$extension, icon=$iconName, iconPath=$iconPath\n"
     if $Foswiki::cfg{Plugins}{MimeIconPlugin}{Debug};
@@ -104,10 +101,13 @@ returns the name and path of an icon given an extension.
 sub getIcon {
   my ($extension, $theme, $size, $fromFallback) = @_;
 
+  readIconMapping($theme) 
+    unless defined $cache{$theme.':sizes'};
+
   my $iconName = $cache{ $theme . ':' . $extension };
   my $iconPath = $cache{ $theme . ':' . $extension . ':' . $size };
 
-  return ($iconName, $iconPath) if defined $iconPath;
+  return ($iconName, $iconPath) if defined $iconName && defined $iconPath;
 
   unless ($iconName) {
 
@@ -157,7 +157,7 @@ sub getIcon {
 
       # no icon found
       if ($extension eq 'unknown') {
-        print STDERR "ERROR: no default icon when asking for $fromFallback\n";
+        print STDERR "ERROR: no default icon when asking for '$fromFallback'\n";
         return;
       }
 
@@ -182,6 +182,9 @@ returns the closest icon size available for a theme
 
 sub getBestSize {
   my ($theme, $size) = @_;
+
+  readIconMapping($theme) 
+    unless defined $cache{$theme.':sizes'};
 
   if (defined $cache{$theme.':knownsizes'}{$size}) {
     return $size;

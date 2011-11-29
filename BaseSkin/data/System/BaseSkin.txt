@@ -10,6 +10,8 @@ Base skin to build other skins upon.
 ---++ About Base Skin
 TO WRITE
 
+=basecss= and =basejs= use [[http://twitter.github.com/bootstrap/][Twitter bootstrap]] to provide a base layer of user interface functionality.
+
 ---++ Modular skin parts
 Base Skin is built with modular, progressive parts, making it possible to load only the parts you need. For instance, you might only need the CSS, not the javascript of Base Skin.
 
@@ -19,7 +21,6 @@ The progressive loading is done by using a topic template for each part.
 | *Part name* | *What it does* | *Defined in topic template* |
 | =base=   | Sets the base structure of the document (HTML page). | %SYSTEMWEB%.BaseSkinViewTemplate (and this loads %SYSTEMWEB%.BaseSkinDocumentTemplate) |
 | =basecss= | Loads CSS file [[%PUBURLPATH%/%SYSTEMWEB%/BaseSkinCss/base_src.css][base.css]] that contains a style reset, sets default styling for HTML elements and implements Foswiki styles. %BR% =base.css= is not loaded if preference =BASESKIN_USE_CSS_FILE= is set to another CSS file. | %SYSTEMWEB%.BaseCssSkinViewTemplate |
-| =basecssgrid= | Loads [[%PUBURLPATH%/%SYSTEMWEB%/BaseSkinCssGrid/grid_src.css][grid_src.css]] that implements a typographic grid and an adaptive grid to cater for different screen sizes. | %SYSTEMWEB%.BaseCssGridSkinViewTemplate |
 | =basejs= | Loads a javascript file that implements dynamic interaction with topic contents. | %SYSTEMWEB%.BaseJsSkinViewTemplate |
 
 ---+++ From specific to generic
@@ -41,7 +42,6 @@ How to choose the right skin parts from Base Skin? The table below describes wha
 | *Skin setting* | *Try* | *What do you see* | *Why would I need this* |
 | =Set SKIN = %RED%base%ENDCOLOR%= | [[%SCRIPTURL{view}%/%WEB%/%TEST_TOPIC%?skin=base][test]] | No Base Skin CSS or Javascript is loaded, only that what is inserted by other extensions. | You are building something from scratch using the bare minimum. You might be developing a new skin that uses Foswiki's template structure, and you are building your own CSS and Javascript from the ground up. | 
 | =Set SKIN = %RED%basecss%ENDCOLOR%,base= | [[%SCRIPTURL{view}%/%WEB%/%TEST_TOPIC%?skin=basecss,base][test]] | Basic formatting and Foswiki styles like =foswikiNotification= and =foswikiAlert= are implemented. | You are using Foswiki topic contents and it would be handy to have some styles defined. You are developing your own application with your own Javascript. |
-| =Set SKIN = %RED%basecssgrid%ENDCOLOR%,base= | [[%SCRIPTURL{view}%/%WEB%/%TEST_TOPIC%?skin=basecssgrid,basejs,basecss,base][test]] | Text is layed out for readability. Other screen sizes are supported. Resize the page to see reformatting. | Even though you are developing your own CSS, you find it useful to have the site accessible on different devices. |
 | =Set SKIN = %RED%basejs%ENDCOLOR%,base= | [[%SCRIPTURL{view}%/%WEB%/%TEST_TOPIC%?skin=basejs,basecss,base][test]] | ... | You want to use Foswiki's functionalities like dynamic topic interaction. |
 
 And as said above, you can also use all parts together:
@@ -51,7 +51,7 @@ And as said above, you can also use all parts together:
 
 ---++ Customizing
 ---+++ Using different CSS
-To change the default style (set with skin path parts =base= and optionally =basecssgrid=) you can either:
+To change the default style (set with skin path parts =base=) you can either:
    1 Override the base CSS
    1 Add to the base CSS
 
@@ -71,14 +71,22 @@ For example:
    * <nop>Set BASESKIN_ADD_CSS_FILE = %<nop>PUBURL%/%<nop>MAINWEB%/<nop>SitePreferences/nicer_logo.css,%<nop>PUBURL%/%<nop>MAINWEB%/<nop>SitePreferences/projects.css
 </pre>
 
+---++ Design decisions
+---+++ Scroll javascript is needed when using a fixed top bar
+The topic action bar stays glued at the top, even when the page is scrolled. The height of the topic action bar overlaps the page contents. When clicking an anchor link, the anchored header would normally be hidden behind the topic action bar. A smart scrolling script reads the topic action bar height and lets the page scroll just a bit less to make the anchor visible.
+
+When no javascript is available the topic action bar does not have a fixed position and will scroll along with the page contents.
+
+So in the case you are using your own javascript, you either:
+   * include scrolling javascript; see =base_src.js= how it works
+   * make the topic action bar style =position: relative=
+
+
 ---++ Testing
 ---+++ Test page
 A page with a lot of different markup:
    * %TEST_TOPIC%
 
----++ Baseline grid
-Pass url paramater =devgrid=1=, for instance: [[%SCRIPTURL{view}%/%WEB%/%TEST_TOPIC%?skin=basejs,basecssgrid,basecss,base;devgrid=1][test baseline grid]]
-   
 ---++ Background
 This skin has all templates as topics. This makes it easier to have access to template code. The downside is that template topics will be searchable and will show up in search results.
 
@@ -117,5 +125,5 @@ Leave remarks, suggestions and other feedback in http://foswiki.org/Support/%TOP
 
 <!--
    * Local TEST_TOPIC = BaseSkinTestPage
-   * Local SKIN_PATH = basejs,basecssgrid,basecss,base
+   * Local SKIN_PATH = basejs,basecss,base
 -->

@@ -107,15 +107,6 @@
 ---------------------------------------------------
 	
 ---------------------------------------------------
-}%%TMPL:DEF{"attach:createlink:info"}%<p>%MAKETEXT{"Place a link at the end of the topic."}%</p>
-<div class='foswikiHelp'>
-   * %MAKETEXT{"Image files: the image will be displayed."}%
-   * %MAKETEXT{"Other file types: a link to the file will be displayed."}%
-   * %MAKETEXT{"The link format is set with =ATTACHEDFILELINKFORMAT=."}%
-</div>%TMPL:END%%{
----------------------------------------------------
-	
----------------------------------------------------
 }%%TMPL:DEF{"attach:createlink:topic"}%<div class='foswikiFormStep'>
 <h3>%MAKETEXT{"Select web and topic"}%</h3>
 <select name="web" class="foswikiSelect">
@@ -192,12 +183,11 @@
 ---------------------------------------------------
 	
 ---------------------------------------------------
-}%%TMPL:DEF{"attach:move:title"}%<h2>%MAKETEXT{"Move attachment"}%</h2>%TMPL:END%%{
+}%%TMPL:DEF{"attach:move:title"}%<h2>%MAKETEXT{"Move the attachment and any history to a new location"}%</h2>%TMPL:END%%{
 ---------------------------------------------------
 	
 ---------------------------------------------------
-}%%TMPL:DEF{"attach:move:info"}%<p>%MAKETEXT{"Move the attachment and any history to a new location."}%</p>
-<div class='foswikiHelp'>%{
+}%%TMPL:DEF{"attach:move:info"}%<div class='foswikiHelp'>%{
 
 	no bullet list because we only have 1 line
 	
@@ -252,12 +242,11 @@
 ---------------------------------------------------
 	
 ---------------------------------------------------
-}%%TMPL:DEF{"attach:delete:title"}%<h2>%MAKETEXT{"Move attachment to Trash"}%</h2>%TMPL:END%%{
+}%%TMPL:DEF{"attach:delete:title"}%<h2>%MAKETEXT{"Move the attachment and any history to the [_1] web" args="%TRASHWEB%"}%</h2>%TMPL:END%%{
 ---------------------------------------------------
 	
 ---------------------------------------------------
-}%%TMPL:DEF{"attach:delete:info"}%<p>%MAKETEXT{"Move the attachment and any history to the [_1] web." args="%TRASHWEB%"}%</p>
-<div class='foswikiHelp'>
+}%%TMPL:DEF{"attach:delete:info"}%<div class='foswikiHelp'>
    * %MAKETEXT{"URLs that refer to the attachment will not be updated automatically; this may lead to broken links."}%
    * %MAKETEXT{"You can always restore a trashed attachment from [_1] web." args="%TRASHWEB%"}%
 </div>
